@@ -22,30 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.api.common.item.inventory.custom;
+package org.spongepowered.common.mixin.api.item.inventory;
 
-import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.entity.item.EntityMinecartContainer;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.tileentity.TileEntityLockable;
+import org.spongepowered.api.item.inventory.ContainerType;
+import org.spongepowered.api.item.inventory.menu.InventoryMenu;
+import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.entity.player.SpongeUserInventory;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
+import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
 
-import java.util.Optional;
+@Mixin(ViewableCustomInventory.class)
+public abstract class CustomViewableInventoryMixin_API extends MixinCustomInventory implements ViewableInventory {
 
-@SuppressWarnings("rawtypes")
-@Mixin(CustomInventory.class)
-public abstract class CustomInventoryMixin_API implements Inventory, CarriedInventory<Carrier> {
-
-    @Shadow(remap = false) private Carrier carrier;
-    @Shadow(remap = false) @Final private PluginContainer plugin;
+    @Shadow(remap = false) private ContainerType type;
 
     @Override
-    public Optional<Carrier> getCarrier() {
-        return Optional.ofNullable(this.carrier);
+    public ContainerType getType() {
+        return this.type;
     }
-
 }

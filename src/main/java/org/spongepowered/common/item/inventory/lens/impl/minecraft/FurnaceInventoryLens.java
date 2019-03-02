@@ -40,6 +40,11 @@ public class FurnaceInventoryLens extends RealLens {
     private FuelSlotLensImpl fuel;
     private OutputSlotLensImpl output;
 
+    public FurnaceInventoryLens(SlotProvider sp) {
+        super(0, 3, VanillaAdapter.class);
+        this.init(sp);
+    }
+
     public FurnaceInventoryLens(final InventoryAdapter adapter, final SlotProvider slots) {
         this(0, adapter, slots);
     }

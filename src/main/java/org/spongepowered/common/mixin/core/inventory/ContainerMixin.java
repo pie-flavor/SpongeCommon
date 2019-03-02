@@ -74,6 +74,7 @@ import org.spongepowered.common.event.tracking.phase.packet.PacketPhaseUtil;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.SlotCollectionIterator;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
@@ -114,6 +115,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
     private boolean impl$firePreview = true;
     private boolean impl$inUse = false;
     private boolean impl$captureSuccess = false;
+    private SpongeInventoryMenu impl$menu;
     private boolean impl$captureInventory = false;
     private boolean impl$shiftCraft = false;
     //private boolean postPreCraftEvent = true; // used to prevent multiple craft events to fire when setting multiple slots simultaneously
@@ -122,7 +124,6 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
     private List<SlotTransaction> impl$capturedCraftPreviewTransactions = new ArrayList<>();
     private boolean impl$isLensInitialized;
     @Nullable private Map<Integer, SlotAdapter> impl$adapters;
-    @Nullable private InventoryArchetype impl$archetype;
     @Nullable private Carrier impl$carrier;
     @Nullable Predicate<PlayerEntity> impl$canInteractWithPredicate;
     @Nullable private LinkedHashMap<IInventory, Set<Slot>> impl$allInventories;
@@ -173,14 +174,6 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
             }
         }
         return this.impl$adapters;
-    }
-
-    @Override
-    public InventoryArchetype bridge$getArchetype() {
-        if (this.impl$archetype == null) {
-            this.impl$archetype = ContainerUtil.getArchetype((Container) (Object) this);
-        }
-        return this.impl$archetype;
     }
 
     @Override
@@ -242,58 +235,99 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
 
     @Override
     public void bridge$detectAndSendChanges(final boolean captureOnly) {
+
+        // Code-Flow changed from vanilla completely!
+
+        // We first collect all differences and check if cancelled for readonly menu changes
+        boolean readOnlyCancel = false;
+        List<Integer> changes = new ArrayList<>();
+
         for (int i = 0; i < this.inventorySlots.size(); ++i) {
             final Slot slot = this.inventorySlots.get(i);
-            final ItemStack itemstack = slot.getStack();
-            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
-
-            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
-
-                // Sponge start
-                if (this.impl$captureInventory) {
-                    final ItemStackSnapshot originalItem = itemstack1.isEmpty() ? ItemStackSnapshot.NONE
-                            : ((org.spongepowered.api.item.inventory.ItemStack) itemstack1).createSnapshot();
-                    final ItemStackSnapshot newItem = itemstack.isEmpty() ? ItemStackSnapshot.NONE
-                            : ((org.spongepowered.api.item.inventory.ItemStack) itemstack).createSnapshot();
-
-                    org.spongepowered.api.item.inventory.Slot adapter = null;
-                    try {
-                        adapter = this.bridge$getContainerSlot(i);
-                        SlotTransaction newTransaction = new SlotTransaction(adapter, originalItem, newItem);
-                        if (this.impl$shiftCraft) {
-                            this.impl$capturedCraftShiftTransactions.add(newTransaction);
-                        } else {
-                            if (!this.impl$capturedCraftPreviewTransactions.isEmpty()) { // Check if Preview transaction is this transaction
-                                final SlotTransaction previewTransaction = this.impl$capturedCraftPreviewTransactions.get(0);
-                                if (previewTransaction.equals(newTransaction)) {
-                                    newTransaction = null;
-                                }
-                            }
-                            if (newTransaction != null) {
-                                this.impl$capturedSlotTransactions.add(newTransaction);
-                            }
+            final ItemStack newStack = slot.getStack();
+            ItemStack oldStack = this.inventoryItemStacks.get(i);
+            if (!ItemStack.areItemStacksEqual(oldStack, newStack)) {
+                changes.add(i);
+                if (this.menu != null) {
+                    if (this.menu.isReadOnly()) { // readonly menu cancels if there is any change outside of the players inventory
+                        if (!(slot.inventory instanceof InventoryPlayer)) {
+                            readOnlyCancel = true;
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        SpongeImpl.getLogger().error("SlotIndex out of LensBounds! Did the Container change after creation?", e);
                     }
+                }
+            }
+        }
+
+        if (readOnlyCancel) {
+            // revert all changes if readonly
+            for (Integer i : changes) {
+                final Slot slot = this.inventorySlots.get(i);
+                ItemStack oldStack = this.inventoryItemStacks.get(i);
+                slot.putStack(oldStack);
+                // Send reverted slots to clients
+                for (IContainerListener listener : this.listeners) {
+                    listener.sendSlotContents(((Container) (Object) this), i, oldStack);
+                }
+            }
+        } else {
+            // For each change
+            for (Integer i : changes) {
+                final Slot slot = this.inventorySlots.get(i);
+                ItemStack newStack = slot.getStack();
+                ItemStack oldStack = this.inventoryItemStacks.get(i);
+
+                // Check for on change menu callbacks
+                if (this.menu != null && !this.menu.onChange(newStack, oldStack, this, i, slot)) {
+                    slot.putStack(oldStack); // revert changes
+                } else {
+                    // Capture changes for inventory events
+                    this.capture(i, newStack, oldStack);
 
                     // This flag is set only when the client sends an invalid CPacketWindowClickItem packet.
                     // We simply capture in order to send the proper changes back to client.
                     if (captureOnly) {
                         continue;
                     }
-                }
-                // Sponge end
-
-                itemstack1 = itemstack.copy();
-                this.inventoryItemStacks.set(i, itemstack1);
-
-                for (final IContainerListener listener : this.listeners) {
-                    listener.sendSlotContents((Container) (Object) this, i, itemstack1);
+                    // Perform vanilla logic - updating inventory stack - notify listeners
+                    newStack = newStack.isEmpty() ? ItemStack.EMPTY : newStack.copy();
+                    this.inventoryItemStacks.set(i, newStack);
+                    // TODO forge checks !itemstack1.equals(itemstack, true) before doing this
+                    for (IContainerListener listener : this.listeners) {
+                        listener.sendSlotContents(((Container) (Object) this), i, newStack);
+                    }
                 }
             }
         }
-        this.impl$markClean();
+
+        this.markClean();
+    }
+
+    private void capture(Integer index, ItemStack itemstack, ItemStack itemstack1) {
+        if (this.impl$captureInventory) {
+            final ItemStackSnapshot originalItem = ItemStackUtil.snapshotOf(itemstack1);
+            final ItemStackSnapshot newItem = ItemStackUtil.snapshotOf(itemstack);
+
+            org.spongepowered.api.item.inventory.Slot adapter = null;
+            try {
+                adapter = this.getContainerSlot(index);
+                SlotTransaction newTransaction = new SlotTransaction(adapter, originalItem, newItem);
+                if (this.impl$shiftCraft) {
+                    this.impl$capturedCraftPreviewTransactions.add(newTransaction);
+                } else {
+                    if (!this.impl$capturedCraftPreviewTransactions.isEmpty()) { // Check if Preview transaction is this transaction
+                        SlotTransaction previewTransaction = this.impl$capturedCraftPreviewTransactions.get(0);
+                        if (previewTransaction.equals(newTransaction)) {
+                            newTransaction = null;
+                        }
+                    }
+                    if (newTransaction != null) {
+                        this.impl$capturedSlotTransactions.add(newTransaction);
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                SpongeImpl.getLogger().error("SlotIndex out of LensBounds! Did the Container change after creation?", e);
+            }
+        }
     }
 
     protected void impl$markClean() {
@@ -322,6 +356,32 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
                 this.impl$capturedSlotTransactions.add(new SlotTransaction(adapter, originalItem, newItem));
             }
         }
+    }
+
+    @Inject(method = "slotClick", at = @At(value = "HEAD"), cancellable = true)
+    private void impl$onClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir) {
+        if (this.impl$menu != null) {
+            if (!this.impl$menu.onClick(slotId, dragType, clickTypeIn, player, this)) {
+                cir.setReturnValue(ItemStack.EMPTY);
+                // TODO maybe need to send rollback packets to client
+            }
+        }
+    }
+
+    @Inject(method = "onContainerClosed", at = @At(value = "HEAD"))
+    private void onOnContainerClosed(EntityPlayer player, CallbackInfo ci) {
+        this.unTrackInteractable(this.viewed);
+        if (this.impl$menu != null) {
+            this.impl$menu.onClose(this);
+            this.impl$menu.onClose(player, this);
+        }
+        this.impl$menu = null;
+        this.viewed = null;
+    }
+
+    @Override
+    public void bridge$setMenu(SpongeInventoryMenu menu) {
+        this.impl$menu = menu;
     }
 
     @Nullable

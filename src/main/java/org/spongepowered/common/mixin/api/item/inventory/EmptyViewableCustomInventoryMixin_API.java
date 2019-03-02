@@ -22,30 +22,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.api.common.item.inventory.custom;
+package org.spongepowered.common.mixin.core.item.inventory;
 
 import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
+import org.spongepowered.api.item.inventory.ContainerType;
+import org.spongepowered.api.item.inventory.custom.ContainerType;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.item.inventory.custom.EmptyViewableCustomInventory;
+import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
+import org.spongepowered.common.mixin.core.inventory.MixinInventoryBasic;
 
 import java.util.Optional;
 
 @SuppressWarnings("rawtypes")
-@Mixin(CustomInventory.class)
-public abstract class CustomInventoryMixin_API implements Inventory, CarriedInventory<Carrier> {
+@Mixin(EmptyViewableCustomInventory.class)
+public abstract class MixinEmptyViewableCustomInventory implements ViewableInventory, CarriedInventory<Carrier> {
 
     @Shadow(remap = false) private Carrier carrier;
-    @Shadow(remap = false) @Final private PluginContainer plugin;
+    @Shadow(remap = false) private ContainerType type;
+
+    @Override
+    public ContainerType getType() {
+        return this.type;
+    }
 
     @Override
     public Optional<Carrier> getCarrier() {
         return Optional.ofNullable(this.carrier);
     }
-
 }
