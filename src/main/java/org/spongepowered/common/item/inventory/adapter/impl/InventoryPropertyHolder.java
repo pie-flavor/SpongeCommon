@@ -22,41 +22,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.core.common.item.inventory.custom;
+package org.spongepowered.common.item.inventory.adapter.impl;
 
+import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.InventoryProperty;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
+import org.spongepowered.common.SpongeImpl;
+import org.spongepowered.common.data.property.store.common.InventoryPropertyStore;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.item.inventory.custom.CustomLens;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
-@Mixin(CustomInventory.class)
-public abstract class CustomInventoryMixin implements InventoryAdapter, InventoryAdapterBridge {
-
-    @Shadow(remap = false) private PluginContainer plugin;
-    @Shadow(remap = false) private SlotProvider slots;
-    @Shadow(remap = false) private Lens lens;
-
-    @Shadow public abstract int getSizeInventory();
+public interface InventoryPropertyHolder extends Inventory {
 
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
-        return new SlotCollection.Builder().add(this.inv.getSizeInventory()).build();
+    default OptionalDouble getDoubleProperty(Property<Double> property) {
+        return getProperty(property).map(OptionalDouble::of).orElse(OptionalDouble.empty());
     }
 
-    @SuppressWarnings("Unchecked")
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
-        return new CustomLens(this.getSizeInventory(), (Class<? extends Inventory>) this.getClass(), slots, this.archetype, this.properties);
+    default OptionalInt getIntProperty(Property<Integer> property) {
+        return getProperty(property).map(OptionalInt::of).orElse(OptionalInt.empty());
+    }
+
+    @Override
+    default <V> Optional<V> getProperty(Inventory child, Property<V> property) {
+        return InventoryPropertyStore.getProperty(this, child, property);
+    }
+
+    @Override
+    default <V> Optional<V> getProperty(Property<V> property) {
+        if (parent() == this) {
+            return InventoryPropertyStore.getRootProperty(this, property);
+        }
+        return parent().getProperty(this, property);
+    }
+
+    @Override
+    default Map<Property<?>, ?> getProperties() {
+        return SpongeImpl.getPropertyRegistry().getPropertiesFor(this);
     }
 
 }

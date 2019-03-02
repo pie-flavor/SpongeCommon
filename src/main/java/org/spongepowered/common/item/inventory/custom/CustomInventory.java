@@ -32,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IInteractionObject;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ContainerType;
@@ -55,7 +56,11 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.item.inventory.archetype.CompositeInventoryArchetype;
+import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -66,52 +71,27 @@ import java.util.function.Consumer;
 
 public class CustomInventory implements IInventory, IInteractionObject {
 
+    private final List<Inventory> inventories;
+    private SlotProvider slots;
+    private Lens lens;
+    private Fabric fabric;
+    private Map<Property<?>, Object> properties = new HashMap<>();
+    private int size;
+    private Carrier carrier;
+    private final PluginContainer plugin;
+
+
     public static final String INVENTORY_CAPACITY = InventoryCapacity.class.getSimpleName().toLowerCase(Locale.ENGLISH);
     public static final String INVENTORY_DIMENSION = InventoryDimension.class.getSimpleName().toLowerCase(Locale.ENGLISH);
     public static final String TITLE = InventoryTitle.class.getSimpleName().toLowerCase(Locale.ENGLISH);
     private final Map<Class<? extends InteractInventoryEvent>, List<Consumer<? extends InteractInventoryEvent>>> listeners;
-    private final PluginContainer plugin;
 
     private net.minecraft.inventory.Inventory inv;
     protected InventoryArchetype archetype;
-    private Map<String, InventoryProperty<?, ?>> properties;
-    private Carrier carrier;
 
     private Set<PlayerEntity> viewers = new HashSet<>();
     private boolean registered;
-
-    @SuppressWarnings("deprecation")
-    public CustomInventory(final InventoryArchetype archetype, final Map<String, InventoryProperty<?, ?>> properties, final Carrier carrier,
-            final Map<Class<? extends InteractInventoryEvent>, List<Consumer<? extends InteractInventoryEvent>>> listeners, final PluginContainer plugin) {
-        this.archetype = archetype;
-        this.properties = properties;
-        this.carrier = carrier;
-        this.listeners = listeners;
-        this.plugin = plugin;
-
-        final int count;
-        final InventoryDimension size = (InventoryDimension)properties.get(INVENTORY_DIMENSION); // TODO INVENTORY_CAPACITY
-        if (size != null) {
-            count = size.getColumns() * size.getRows();
-        } else {
-            count = getSlotCount(archetype);
-        }
-
-        final InventoryTitle titleProperty = (InventoryTitle) properties.getOrDefault(TITLE, archetype.getProperty(TITLE).orElse(null));
-        final boolean isCustom = !(titleProperty != null && titleProperty.getValue() instanceof TranslatableText);
-
-        final String title = titleProperty == null ? "" :
-                isCustom ? TextSerializers.LEGACY_FORMATTING_CODE.serialize(titleProperty.getValue())
-                        : ((TranslatableText) titleProperty.getValue()).getTranslation().getId();
-        this.inv = new net.minecraft.inventory.Inventory(title, isCustom, count);
-
-        // Updates the Inventory for all viewers on any change
-        this.inv.func_110134_a(i -> this.viewers.forEach(v -> {
-            v.field_71070_bA.func_75142_b();
-        }));
-
-
-    }
+    private ITextComponent customInventory = new TextComponentString("Custom Inventory");
 
     private void doRegistration() {
         for (final Map.Entry<Class<? extends InteractInventoryEvent>, List<Consumer<? extends InteractInventoryEvent>>> entry: this.listeners.entrySet()) {
@@ -120,145 +100,125 @@ public class CustomInventory implements IInventory, IInteractionObject {
         this.registered = true;
     }
 
-    private static int getSlotCount(final InventoryArchetype archetype) {
-        final Optional<InventoryDimension> dimension = archetype.getProperty(InventoryDimension.class, INVENTORY_DIMENSION);
-        if (dimension.isPresent()) {
-            return dimension.get().getColumns() * dimension.get().getRows();
-        }
-        final Optional<InventoryCapacity> capacity = archetype.getProperty(InventoryCapacity.class, INVENTORY_CAPACITY);
-        if (capacity.isPresent()) {
-            return capacity.get().getValue();
-        }
 
-        int count = 0;
-        final List<InventoryArchetype> childs = archetype.getChildArchetypes();
-        if (childs.isEmpty()) {
-            throw new IllegalArgumentException("Missing dimensions!");
-        }
-        for (final InventoryArchetype childArchetype : childs) {
-            count += getSlotCount(childArchetype);
-        }
-        return count;
-    }
-
-    public InventoryArchetype getArchetype() {
-        return this.archetype;
-    }
-
-    @Override
-    public Container func_174876_a(final PlayerInventory playerInventory, final PlayerEntity playerIn) {
-
-        // To be viewable the Inventory has to implement IInteractionObject and thus provide a Container
-        // displayChest falls back to Chest for IInventory instance
-
-        // if the ArcheType given is CHEST or DOUBLECHEST
-        // TODO how can this be checked? ContainerProperty? (Class<? extends Container>)
-        // vanilla ContainerChest takes the Size of the InventoryBasic / 9 as rows
-
-
-        // Display property?
-        // TODO custom container including filters and other slot stuff
-        this.viewers.add(playerIn);
-
-        if (this.archetype instanceof CompositeInventoryArchetype) {
-            final CompositeInventoryArchetype.ContainerProvider provider = ((CompositeInventoryArchetype) this.archetype).getContainerProvider();
-            if (provider != null) {
-                return provider.provide(this, playerIn);
-            }
-        }
-        return new CustomContainer(playerIn, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        final String key = AbstractInventoryProperty.getDefaultKey(ContainerType.class).toString();
-        final InventoryProperty<?, ?> property = this.properties.get(key);
-        if (property instanceof ContainerType) {
-            if (property.getValue() instanceof SpongeContainerType) {
-                return ((SpongeContainerType) property.getValue()).getInternalId(); // Handle Vanilla EntityHorse GuiId
-            }
-            return ((ContainerType) property).getValue().getId();
-        }
-        final ContainerType guiId = this.archetype.getProperty(ContainerType.class, key).map(ContainerType::getValue).orElse(ContainerTypes.GENERIC_9x3);
-        if (guiId instanceof SpongeContainerType) {
-            return ((SpongeContainerType) guiId).getInternalId(); // Handle Vanilla EntityHorse GuiId
-        }
-        return guiId.getId();
+    public CustomInventory(int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
+        this.size = size;
+        this.properties.put(InventoryProperties.UNIQUE_ID, identity);
+        this.carrier = carrier;
+        this.lens = lens;
+        this.slots = provider;
+        this.inventories = inventories;
+        this.plugin = SpongeImplHooks.getActiveModContainer();
     }
 
     // IInventory delegation
 
+
+    @Nullable
     @Override
-    public ITextComponent func_145748_c_() {
-        return this.inv.func_145748_c_();
+    public ITextComponent getCustomName()
+    {
+        return this.customInventory
     }
 
     @Override
-    public String func_70005_c_() {
-        return this.inv.func_70005_c_();
+    public String getName() {
+        return this.customInventory;
     }
 
     @Override
-    public boolean func_145818_k_() {
-        return this.inv.func_145818_k_();
+    public boolean hasCustomName() {
+        return false;
     }
 
     @Override
     public int getSizeInventory() {
-        return this.inv.getSizeInventory();
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.inv.isEmpty();
+        return this.size != 0;
     }
 
     @Override
     public ItemStack getStackInSlot(final int index) {
-        return this.inv.getStackInSlot(index);
+        int offset = 0;
+        for (Inventory inv : this.inventories) {
+            if (inv.capacity() > index - offset) {
+                offset += inv.capacity();
+                continue;
+            }
+            return inv.peek(SlotIndex.of(index - offset)).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack decrStackSize(final int index, final int count) {
-        return this.inv.decrStackSize(index, count);
+        int offset = 0;
+        for (Inventory inv : this.inventories) {
+            if (inv.capacity() > index - offset) {
+                offset += inv.capacity();
+                continue;
+            }
+            return inv.poll(SlotIndex.of(index - offset), count).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack removeStackFromSlot(final int index) {
-        return this.inv.removeStackFromSlot(index);
+        int offset = 0;
+        for (Inventory inv : this.inventories) {
+            if (inv.capacity() > index - offset) {
+                offset += inv.capacity();
+                continue;
+            }
+            return inv.poll(SlotIndex.of(index - offset)).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
     public void setInventorySlotContents(final int index, final ItemStack stack) {
-        this.inv.setInventorySlotContents(index, stack);
+        int offset = 0;
+        for (Inventory inv : this.inventories) {
+            if (inv.capacity() > index - offset) {
+                offset += inv.capacity();
+                continue;
+            }
+            inv.set(SlotIndex.of(index - offset), ItemStackUtil.fromNative(stack));
+        }
     }
 
     @Override
     public int getInventoryStackLimit() {
-        return this.inv.getInventoryStackLimit();
+        return 64;
     }
 
     @Override
     public void markDirty() {
-        this.inv.markDirty();
+        for (Inventory inventory : this.inventories) {
+            if (inventory instanceof IInventory) {
+                ((IInventory) inventory).markDirty();
+            }
+        }
     }
 
     @Override
-    public boolean func_70300_a(final PlayerEntity player) {
-        return this.inv.func_70300_a(player);
+    public boolean isUsableByPlayer(final PlayerEntity player) {
+        return true;
     }
 
     @Override
-    public void func_174889_b(final PlayerEntity player) {
-        this.viewers.add(player);
-        this.inv.func_174889_b(player);
-        this.ensureListenersRegistered();
+    public void openInventory(final PlayerEntity player) {
+        // ? this.ensureListenersRegistered();
     }
 
     @Override
-    public void func_174886_c(final PlayerEntity player) {
-        this.viewers.remove(player);
-        this.inv.func_174886_c(player);
+    public void closeInventory(final PlayerEntity player) {
+/* ?
         if (this.viewers.isEmpty()) {
             Task.builder().execute(() -> {
                 if (this.viewers.isEmpty()) {
@@ -267,34 +227,37 @@ public class CustomInventory implements IInventory, IInteractionObject {
                 }
             }).delayTicks(1).submit(SpongeImpl.getPlugin());
         }
+
+ */
     }
 
     @Override
     public boolean isItemValidForSlot(final int index, final ItemStack stack) {
-        return this.inv.isItemValidForSlot(index, stack);
+        return true;
     }
 
     @Override
     public int getField(final int id) {
-        return this.inv.getField(id);
+        return 0;
     }
 
     @Override
     public void setField(final int id, final int value) {
-        this.inv.setField(id, value);
     }
 
     @Override
     public int getFieldCount() {
-        return this.inv.getFieldCount();
+        return 0;
     }
 
     @Override
     public void clear() {
-        this.inv.clear();
+        for (Inventory inventory : this.inventories) {
+            inventory.clear();
+        }
     }
 
-    public Map<String, InventoryProperty<?, ?>> getProperties() {
+    public Map<Property<?>, ?> getProperties() {
         return this.properties;
     }
 

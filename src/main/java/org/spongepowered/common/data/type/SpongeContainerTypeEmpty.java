@@ -22,30 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.api.common.item.inventory.custom;
+package org.spongepowered.common.data.type;
 
-import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import org.spongepowered.api.CatalogKey;
+import org.spongepowered.api.item.inventory.ContainerType;
+import org.spongepowered.api.item.inventory.custom.ContainerType;
+import org.spongepowered.common.SpongeCatalogType;
+import org.spongepowered.common.registry.RegistryHelper;
+import org.spongepowered.common.registry.type.item.ContainerTypeRegistryModule;
 
-import java.util.Optional;
+/**
+ * Container is backed by internal Inventory
+ */
+public class SpongeContainerTypeEmpty extends SpongeCatalogType implements ContainerType
+{
 
-@SuppressWarnings("rawtypes")
-@Mixin(CustomInventory.class)
-public abstract class CustomInventoryMixin_API implements Inventory, CarriedInventory<Carrier> {
+    private ContainerTypeRegistryModule.ContainerProvider containerProvider;
 
-    @Shadow(remap = false) private Carrier carrier;
-    @Shadow(remap = false) @Final private PluginContainer plugin;
+    public SpongeContainerTypeEmpty(final CatalogKey key, ContainerTypeRegistryModule.ContainerProvider containerProvider) {
+        super(key, RegistryHelper.name(key));
+        this.containerProvider = containerProvider;
+    }
 
-    @Override
-    public Optional<Carrier> getCarrier() {
-        return Optional.ofNullable(this.carrier);
+    public Container provideContainer(IInventory viewed, EntityPlayer viewing) {
+        return this.containerProvider.provide(viewed, viewing);
     }
 
 }

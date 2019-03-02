@@ -24,13 +24,14 @@
  */
 package org.spongepowered.common.item.inventory.query.operation;
 
+import org.spongepowered.api.data.property.PropertyMatcher;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
 
-public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<InventoryProperty<?, ?>> {
+public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<PropertyMatcher<?>> {
 
     private final InventoryProperty<?, ?> property;
 
@@ -44,11 +45,28 @@ public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<
         if (parent == null) {
             return false;
         }
-        for (InventoryProperty<?, ?> lensProperty : parent.getProperties(lens)) {
-            if (this.property.matches(lensProperty)) {
-                return true;
+
+
+        // Check for custom inventory properties first
+        // TODO check if this works
+        Collection<?> invs = inventory.allInventories();
+        if (invs.size() > 0) {
+            Object inv = invs.iterator().next();
+            if (inv instanceof CustomInventory) {
+                Object value = ((CustomInventory) inv).getProperties().get(this.propertyMatcher.getProperty());
+                if (this.propertyMatcher.matches(value)) {
+                    return true;
+                }
             }
         }
+
+        // Check for lens properties
+//??
+//        for (InventoryProperty<?, ?> lensProperty : parent.getProperties(lens)) {
+//            if (this.property.matches(lensProperty)) {
+//                return true;
+//            }
+//        }
         return false;
     }
 

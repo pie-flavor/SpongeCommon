@@ -178,12 +178,12 @@ public class SlotAdapter extends AbstractInventoryAdapter implements Slot {
     }
 
     @Override
-    public int size() {
+    public int freeCapacity() {
         return !this.slot.getStack(this.bridge$getFabric()).isEmpty()? 1 : 0;
     }
 
     @Override
-    public int totalItems() {
+    public int totalQuantity() {
         return this.slot.getStack(this.bridge$getFabric()).getCount();
     }
 

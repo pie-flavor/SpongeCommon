@@ -35,6 +35,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.common.bridge.inventory.TrackedInventoryBridge;
+import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,4 +82,6 @@ public interface ContainerBridge {
     boolean bridge$isInUse();
 
     boolean bridge$capturePossible();
+
+    void bridge$setMenu(SpongeInventoryMenu menu);
 }

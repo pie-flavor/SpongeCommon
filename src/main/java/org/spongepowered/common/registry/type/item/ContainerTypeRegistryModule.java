@@ -27,6 +27,10 @@ package org.spongepowered.common.registry.type.item;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.gui.ContainerType;
@@ -37,14 +41,22 @@ import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.CatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.common.data.type.SpongeContainerType;
+import org.spongepowered.common.item.inventory.lens.LensCreator;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-public class ContainerTypeRegistryModule implements CatalogRegistryModule<ContainerType>, AdditionalCatalogRegistryModule<ContainerType> {
+public class ContainerTypeRegistryModule extends AbstractCatalogRegistryModule<ContainerType> implements AdditionalCatalogRegistryModule<ContainerType> {
 
     public static ContainerTypeRegistryModule getInstance() {
         return Holder.INSTANCE;
@@ -65,34 +77,46 @@ public class ContainerTypeRegistryModule implements CatalogRegistryModule<Contai
 
     @Override
     public void registerDefaults() {
-        this.register("minecraft:chest");
-        this.register("minecraft:furnace");
-        this.register("minecraft:dispenser");
-        this.register("minecraft:crafting_table");
-        this.register("minecraft:brewing_stand");
-        this.register("minecraft:hopper");
-        this.register("minecraft:beacon");
-        this.register("minecraft:enchanting_table");
-        this.register("minecraft:anvil");
-        this.register("minecraft:villager");
-        this.register("minecraft:horse", "EntityHorse");
-        this.register("minecraft:shulker_box");
+        this.register(CatalogKey.minecraft("chest"),        (i, p) -> new ContainerChest(p.inventory, i, p), 9, 3);
+        this.register(CatalogKey.minecraft("double_chest"), (i, p) -> new ContainerChest(p.inventory, i, p), 9, 6);
+        this.register(CatalogKey.minecraft("furnace"),      (i, p) -> new ContainerFurnace(p.inventory, i), FurnaceInventoryLens::new, 3);
+        this.register(CatalogKey.minecraft("dispenser"),    (i, p) -> new ContainerDispenser(p.inventory, i), 3, 3);
+        this.register(CatalogKey.minecraft("brewing_stand"),(i, p) -> new ContainerBrewingStand(p.inventory, i), BrewingStandInventoryLens::new, 5);
+        this.register(CatalogKey.minecraft("hopper"),       (i, p) -> new ContainerHopper(p.inventory, i, p), 5, 1);
+        this.register(CatalogKey.minecraft("shulker_box"),  (i, p) -> new ContainerShulkerBox(p.inventory, i, p), 9, 3);
+
+        this.registerEmpty(CatalogKey.minecraft("crafting_table"),  (i, p) -> new ContainerWorkbench(p.inventory, p.getEntityWorld(), p.getPosition()));
+        this.registerEmpty(CatalogKey.minecraft("enchanting_table"),(i, p) -> new ContainerEnchantment(p.inventory, p.getEntityWorld(), p.getPosition()));
+        this.registerEmpty(CatalogKey.minecraft("anvil"),           (i, p) -> new ContainerRepair(p.inventory, p.getEntityWorld(), p.getPosition(), p));
+        this.registerEmpty(CatalogKey.minecraft("beacon"),          (i, p) -> new ContainerBeacon(p.inventory, i));
+
+        this.registerEntity(CatalogKey.minecraft("villager"));
+        this.registerEntity(CatalogKey.minecraft("horse")); // "EntityHorse"
+    }
+    private void registerEntity(CatalogKey key) {
+        this.map.put(key, new SpongeContainerTypeEntity(key));
+    }
+    private void registerEmpty(final CatalogKey key, ContainerProvider provider) {
+        this.map.put(key, new SpongeContainerTypeEmpty(key, provider));
+    }
+    private void register(final CatalogKey key, ContainerProvider provider, LensCreator lensCreator, int size, int width, int height) {
+        this.map.put(key, new SpongeContainerType(key, size, width, height, lensCreator, provider));
+    }
+    private void register(final CatalogKey key, ContainerProvider provider, int width, int height) {
+        this.register(key, provider, sp -> new GridInventoryLensImpl(width, height, sp), width * height, width, height);
+    }
+    private void register(final CatalogKey key, ContainerProvider provider, LensCreator lensCreator, int size) {
+        this.register(key, provider, lensCreator, size, 0, 0);
     }
 
-    private void register(String id) {
-        this.guiIdMap.put(id, new SpongeContainerType(id));
-    }
 
-    private void register(String id, String internalId) {
-        this.guiIdMap.put(id, new SpongeContainerType(id, internalId));
-    }
 
     @Override
     public void registerAdditionalCatalog(ContainerType guiId) {
-        if (this.guiIdMap.containsKey(guiId.getId())) {
+        if (this.map.containsKey(guiId.getKey())) {
             throw new IllegalArgumentException("GuiId is already registered");
         }
-        this.guiIdMap.put(guiId.getId(), guiId);
+        this.map.put(guiId.getKey(), guiId);
     }
 
     private ContainerTypeRegistryModule() {
@@ -100,5 +124,17 @@ public class ContainerTypeRegistryModule implements CatalogRegistryModule<Contai
 
     private static final class Holder {
         static final ContainerTypeRegistryModule INSTANCE = new ContainerTypeRegistryModule();
+    }
+
+    private static final class Holder {
+        static final ContainerTypeRegistryModule INSTANCE = new ContainerTypeRegistryModule();
+    }
+
+
+    /**
+     * Provides a {@link Container} for a {@link EntityPlayer} viewing an {@link IInventory}
+     */
+    public static interface ContainerProvider {
+        Container provide(IInventory viewed, EntityPlayer viewing);
     }
 }
