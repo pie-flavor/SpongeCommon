@@ -25,6 +25,9 @@ buildscript {
     }
 }
 
+repositories {
+    mavenLocal()
+}
 // Create task to resolve SpongeAPI revision
 apply from: 'api-revision.gradle'
 
@@ -58,8 +61,10 @@ dependencies {
     compile(testPlugins) {
         exclude module: 'spongeapi'
     }
-    compile 'org.ow2.asm:asm-debug-all:5.2'
-    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+    compile 'org.ow2.asm:asm-tree:6.2'
+    compile 'org.ow2.asm:asm-commons:6.2'
+    compile 'org.ow2.asm:asm-util:6.2'
+    compile('org.spongepowered:mixin:0.8-preview-SNAPSHOT') {
         exclude module: 'launchwrapper'
     }
 
