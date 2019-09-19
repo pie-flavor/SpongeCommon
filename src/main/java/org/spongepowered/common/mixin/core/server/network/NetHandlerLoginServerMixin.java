@@ -26,7 +26,6 @@ package org.spongepowered.common.mixin.core.server.network;
 
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.login.server.SPacketDisconnect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.network.NetHandlerLoginServer;
 import net.minecraft.util.text.ITextComponent;
@@ -40,7 +39,7 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.network.RemoteConnection;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.asm.lib.Opcodes;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

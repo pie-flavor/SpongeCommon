@@ -22,13 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.bridge.advancements;
+package org.spongepowered.common.mixin.core.advancements;
 
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.ICriterionTrigger;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public interface ICriterionTrigger$ListenerBridge {
+@Mixin(ICriterionTrigger.Listener.class)
+public interface ICriterionTrigger$ListenerAccessor {
 
-    Advancement bridge$getAdvancement();
+    @Accessor("advancement") Advancement accessor$getAdvancement();
 
-    String bridge$getCriterionName();
+    @Accessor("criterionName") String accessor$getCriterionName();
 }

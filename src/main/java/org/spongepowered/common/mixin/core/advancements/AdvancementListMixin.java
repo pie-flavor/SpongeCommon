@@ -39,12 +39,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.SpongeImplHooks;
-import org.spongepowered.common.bridge.advancements.AdvancementListBridge;
 import org.spongepowered.common.event.ShouldFire;
 import org.spongepowered.common.event.registry.SpongeGameRegistryRegisterEvent;
 import org.spongepowered.common.event.tracking.phase.plugin.EventListenerPhaseContext;
 import org.spongepowered.common.event.tracking.phase.plugin.PluginPhase;
-import org.spongepowered.common.registry.type.advancement.AdvancementMap;
 import org.spongepowered.common.registry.type.advancement.AdvancementRegistryModule;
 import org.spongepowered.common.registry.type.advancement.AdvancementTreeRegistryModule;
 import org.spongepowered.common.registry.type.advancement.RootAdvancementSet;
@@ -52,17 +50,12 @@ import org.spongepowered.common.registry.type.advancement.RootAdvancementSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 @Mixin(AdvancementList.class)
-public class AdvancementListMixin implements AdvancementListBridge {
+public class AdvancementListMixin {
 
     @Shadow @Final private static Logger LOGGER;
 
-    @Shadow @Final @Mutable private Map<ResourceLocation, Advancement> advancements = new AdvancementMap();
     @Shadow @Final @Mutable private Set<Advancement> roots = new RootAdvancementSet();
-    @Shadow @Final private Set<Advancement> nonRoots;
-    @Shadow @Nullable private AdvancementList.Listener listener;
 
     @Inject(method = "loadAdvancements", at = @At(value = "INVOKE", shift = At.Shift.BEFORE,
             target = "Ljava/util/Map;size()I", remap = false))
@@ -104,23 +97,4 @@ public class AdvancementListMixin implements AdvancementListBridge {
         LOGGER.info("Loaded " + this.roots.size() + " advancement trees");
     }
 
-    @Override
-    public Map<ResourceLocation, Advancement> bridge$getAdvancements() {
-        return this.advancements;
-    }
-
-    @Override
-    public Set<Advancement> bridge$getRootsSet() {
-        return this.roots;
-    }
-
-    @Override
-    public Set<Advancement> bridge$getNonRootsSet() {
-        return this.nonRoots;
-    }
-
-    @Override
-    public AdvancementList.Listener bridge$getListener() {
-        return this.listener;
-    }
 }

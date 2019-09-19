@@ -57,18 +57,16 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
      * Since the value is configurable, the first time searching for
      * other items, this value is cached.
      */
-    private double cachedRadius = -1;
+    private double impl$cachedRadius = -1;
 
-    private int previousPickupDelay = MAGIC_PREVIOUS;
-    private boolean infinitePickupDelay;
-    private int previousDespawnDelay = MAGIC_PREVIOUS;
-    private boolean infiniteDespawnDelay;
-
-    public float dropChance = 1.0f;
+    private int impl$previousPickupDelay = MAGIC_PREVIOUS;
+    private boolean impl$infinitePickupDelay;
+    private int impl$previousDespawnDelay = MAGIC_PREVIOUS;
+    private boolean impl$infiniteDespawnDelay;
 
     @Override
     public boolean bridge$infinitePickupDelay() {
-        return this.infinitePickupDelay;
+        return this.impl$infinitePickupDelay;
     }
 
     @ModifyConstant(method = "searchForOtherItemsNearby", constant = @Constant(doubleValue = 0.5D))
@@ -76,39 +74,39 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
         if (this.world.isRemote || ((WorldBridge) this.world).bridge$isFake()) {
             return originalRadius;
         }
-        if (this.cachedRadius == -1) {
+        if (this.impl$cachedRadius == -1) {
             final double configRadius = ((WorldInfoBridge) this.world.getWorldInfo()).bridge$getConfigAdapter().getConfig().getWorld().getItemMergeRadius();
-            this.cachedRadius = configRadius < 0 ? 0 : configRadius;
+            this.impl$cachedRadius = configRadius < 0 ? 0 : configRadius;
         }
-        return this.cachedRadius;
+        return this.impl$cachedRadius;
     }
 
     @Override
     public int bridge$getPickupDelay() {
-        return this.infinitePickupDelay ? this.previousPickupDelay : this.pickupDelay;
+        return this.impl$infinitePickupDelay ? this.impl$previousPickupDelay : this.pickupDelay;
     }
 
     @Override
     public void bridge$setPickupDelay(final int delay, final boolean infinite) {
         this.pickupDelay = delay;
-        final boolean previous = this.infinitePickupDelay;
-        this.infinitePickupDelay = infinite;
+        final boolean previous = this.impl$infinitePickupDelay;
+        this.impl$infinitePickupDelay = infinite;
         if (infinite && !previous) {
-            this.previousPickupDelay = this.pickupDelay;
+            this.impl$previousPickupDelay = this.pickupDelay;
             this.pickupDelay = Constants.Entity.Item.MAGIC_NO_PICKUP;
         } else if (!infinite) {
-            this.previousPickupDelay = MAGIC_PREVIOUS;
+            this.impl$previousPickupDelay = MAGIC_PREVIOUS;
         }
     }
 
     @Override
     public boolean bridge$infiniteDespawnDelay() {
-        return this.infiniteDespawnDelay;
+        return this.impl$infiniteDespawnDelay;
     }
 
     @Override
     public int bridge$getDespawnDelay() {
-        return 6000 - (this.infiniteDespawnDelay ? this.previousDespawnDelay : this.age);
+        return 6000 - (this.impl$infiniteDespawnDelay ? this.impl$previousDespawnDelay : this.age);
     }
 
     @Override
@@ -119,13 +117,13 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
     @Override
     public void bridge$setDespawnDelay(final int delay, final boolean infinite) {
         this.age = 6000 - delay;
-        final boolean previous = this.infiniteDespawnDelay;
-        this.infiniteDespawnDelay = infinite;
+        final boolean previous = this.impl$infiniteDespawnDelay;
+        this.impl$infiniteDespawnDelay = infinite;
         if (infinite && !previous) {
-            this.previousDespawnDelay = this.age;
+            this.impl$previousDespawnDelay = this.age;
             this.age = Constants.Entity.Item.MAGIC_NO_DESPAWN;
         } else if (!infinite) {
-            this.previousDespawnDelay = MAGIC_PREVIOUS;
+            this.impl$previousDespawnDelay = MAGIC_PREVIOUS;
         }
     }
 
@@ -133,39 +131,39 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
     public void spongeImpl$readFromSpongeCompound(final NBTTagCompound compound) {
         super.spongeImpl$readFromSpongeCompound(compound);
 
-        this.infinitePickupDelay = compound.getBoolean(Constants.Sponge.Entity.Item.INFINITE_PICKUP_DELAY);
+        this.impl$infinitePickupDelay = compound.getBoolean(Constants.Sponge.Entity.Item.INFINITE_PICKUP_DELAY);
         if (compound.hasKey(Constants.Sponge.Entity.Item.PREVIOUS_PICKUP_DELAY, Constants.NBT.TAG_ANY_NUMERIC)) {
-            this.previousPickupDelay = compound.getInteger(Constants.Sponge.Entity.Item.PREVIOUS_PICKUP_DELAY);
+            this.impl$previousPickupDelay = compound.getInteger(Constants.Sponge.Entity.Item.PREVIOUS_PICKUP_DELAY);
         } else {
-            this.previousPickupDelay = MAGIC_PREVIOUS;
+            this.impl$previousPickupDelay = MAGIC_PREVIOUS;
         }
-        this.infiniteDespawnDelay = compound.getBoolean(Constants.Sponge.Entity.Item.INFINITE_DESPAWN_DELAY);
+        this.impl$infiniteDespawnDelay = compound.getBoolean(Constants.Sponge.Entity.Item.INFINITE_DESPAWN_DELAY);
         if (compound.hasKey(Constants.Sponge.Entity.Item.PREVIOUS_DESPAWN_DELAY, Constants.NBT.TAG_ANY_NUMERIC)) {
-            this.previousDespawnDelay = compound.getInteger(Constants.Sponge.Entity.Item.PREVIOUS_DESPAWN_DELAY);
+            this.impl$previousDespawnDelay = compound.getInteger(Constants.Sponge.Entity.Item.PREVIOUS_DESPAWN_DELAY);
         } else {
-            this.previousDespawnDelay = MAGIC_PREVIOUS;
+            this.impl$previousDespawnDelay = MAGIC_PREVIOUS;
         }
 
-        if (this.infinitePickupDelay) {
-            if (this.previousPickupDelay != this.pickupDelay) {
-                this.previousPickupDelay = this.pickupDelay;
+        if (this.impl$infinitePickupDelay) {
+            if (this.impl$previousPickupDelay != this.pickupDelay) {
+                this.impl$previousPickupDelay = this.pickupDelay;
             }
 
             this.pickupDelay = Constants.Entity.Item.MAGIC_NO_PICKUP;
-        } else if (this.pickupDelay == Constants.Entity.Item.MAGIC_NO_PICKUP && this.previousPickupDelay != MAGIC_PREVIOUS) {
-            this.pickupDelay = this.previousPickupDelay;
-            this.previousPickupDelay = MAGIC_PREVIOUS;
+        } else if (this.pickupDelay == Constants.Entity.Item.MAGIC_NO_PICKUP && this.impl$previousPickupDelay != MAGIC_PREVIOUS) {
+            this.pickupDelay = this.impl$previousPickupDelay;
+            this.impl$previousPickupDelay = MAGIC_PREVIOUS;
         }
 
-        if (this.infiniteDespawnDelay) {
-            if (this.previousDespawnDelay != this.age) {
-                this.previousDespawnDelay = this.age;
+        if (this.impl$infiniteDespawnDelay) {
+            if (this.impl$previousDespawnDelay != this.age) {
+                this.impl$previousDespawnDelay = this.age;
             }
 
             this.age = Constants.Entity.Item.MAGIC_NO_DESPAWN;
-        } else if (this.age == Constants.Entity.Item.MAGIC_NO_DESPAWN && this.previousDespawnDelay != MAGIC_PREVIOUS) {
-            this.age = this.previousDespawnDelay;
-            this.previousDespawnDelay = MAGIC_PREVIOUS;
+        } else if (this.age == Constants.Entity.Item.MAGIC_NO_DESPAWN && this.impl$previousDespawnDelay != MAGIC_PREVIOUS) {
+            this.age = this.impl$previousDespawnDelay;
+            this.impl$previousDespawnDelay = MAGIC_PREVIOUS;
         }
     }
 
@@ -173,10 +171,10 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
     public void spongeImpl$writeToSpongeCompound(final NBTTagCompound compound) {
         super.spongeImpl$writeToSpongeCompound(compound);
 
-        compound.setBoolean(Constants.Sponge.Entity.Item.INFINITE_PICKUP_DELAY, this.infinitePickupDelay);
-        compound.setShort(Constants.Sponge.Entity.Item.PREVIOUS_PICKUP_DELAY, (short) this.previousPickupDelay);
-        compound.setBoolean(Constants.Sponge.Entity.Item.INFINITE_DESPAWN_DELAY, this.infiniteDespawnDelay);
-        compound.setShort(Constants.Sponge.Entity.Item.PREVIOUS_DESPAWN_DELAY, (short) this.previousDespawnDelay);
+        compound.setBoolean(Constants.Sponge.Entity.Item.INFINITE_PICKUP_DELAY, this.impl$infinitePickupDelay);
+        compound.setShort(Constants.Sponge.Entity.Item.PREVIOUS_PICKUP_DELAY, (short) this.impl$previousPickupDelay);
+        compound.setBoolean(Constants.Sponge.Entity.Item.INFINITE_DESPAWN_DELAY, this.impl$infiniteDespawnDelay);
+        compound.setShort(Constants.Sponge.Entity.Item.PREVIOUS_DESPAWN_DELAY, (short) this.impl$previousDespawnDelay);
     }
 
     @Inject(

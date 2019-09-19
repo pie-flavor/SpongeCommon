@@ -44,13 +44,6 @@ import java.util.Map;
 @Mixin(Scoreboard.class)
 public abstract class ScoreboardMixin implements ScoreboardBridge {
 
-    @Shadow @Final private Map<IScoreCriteria, List<ScoreObjective>> scoreObjectiveCriterias;
-    @Shadow @Final private Map<String, ScoreObjective> scoreObjectives;
-    @Shadow @Final private Map<String, Map<ScoreObjective, Score>> entitiesScoreObjectives;
-    @Shadow @Final private Map<String, ScorePlayerTeam> teams;
-    @Shadow @Final private Map<String, ScorePlayerTeam> teamMemberships;
-    @Shadow @Final private ScoreObjective[] objectiveDisplaySlots;
-
     private boolean impl$isClient;
 
     @SuppressWarnings("ConstantConditions")
@@ -62,36 +55,5 @@ public abstract class ScoreboardMixin implements ScoreboardBridge {
     @Override
     public boolean bridge$isClient() {
         return this.impl$isClient;
-    }
-
-    // TODO - Remove all of these once Mixin 0.8 is released to fix AccessorMixins in Mixins
-    @Override
-    public Map<IScoreCriteria, List<ScoreObjective>> accessor$getScoreObjectiveCriterias() {
-        return this.scoreObjectiveCriterias;
-    }
-
-    @Override
-    public Map<String, ScoreObjective> accessor$getScoreObjectives() {
-        return this.scoreObjectives;
-    }
-
-    @Override
-    public Map<String, Map<ScoreObjective, Score>> accessor$getEntitiesScoreObjectives() {
-        return this.entitiesScoreObjectives;
-    }
-
-    @Override
-    public Map<String, ScorePlayerTeam> accessor$getTeams() {
-        return this.teams;
-    }
-
-    @Override
-    public Map<String, ScorePlayerTeam> accessor$getTeamMemberships() {
-        return this.teamMemberships;
-    }
-
-    @Override
-    public ScoreObjective[] accessor$getObjectiveDisplaySlots() {
-        return this.objectiveDisplaySlots;
     }
 }

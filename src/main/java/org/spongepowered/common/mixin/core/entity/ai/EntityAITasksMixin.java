@@ -58,9 +58,9 @@ public abstract class EntityAITasksMixin implements EntityAITasksBridge {
     @Shadow @Final private Set<EntityAITasks.EntityAITaskEntry> taskEntries;
     @Shadow @Final private Set<EntityAITasks.EntityAITaskEntry> executingTaskEntries;
 
-    @Nullable private EntityLiving owner;
-    @Nullable private GoalType type;
-    private boolean initialized;
+    @Nullable private EntityLiving impl$owner;
+    @Nullable private GoalType impl$type;
+    private boolean impl$initialized;
 
     @Override
     public Set<EntityAITasks.EntityAITaskEntry> bridge$getTasksUnsafe() {
@@ -80,12 +80,12 @@ public abstract class EntityAITasksMixin implements EntityAITasksBridge {
     @Redirect(method = "addTask", at = @At(value = "INVOKE", target =  "Ljava/util/Set;add(Ljava/lang/Object;)Z", remap = false))
     private boolean onAddEntityTask(final Set<EntityAITasks.EntityAITaskEntry> set, final Object entry, final int priority, final EntityAIBase base) {
         ((EntityAIBasesBridge) base).bridge$setGoal((Goal<?>) this);
-        if (!ShouldFire.A_I_TASK_EVENT_ADD || this.owner == null || ((EntityBridge) this.owner).bridge$isConstructing()) {
+        if (!ShouldFire.A_I_TASK_EVENT_ADD || this.impl$owner == null || ((EntityBridge) this.impl$owner).bridge$isConstructing()) {
             // Event is fired in bridge$fireConstructors
             return set.add(((EntityAITasks) (Object) this).new EntityAITaskEntry(priority, base));
         }
         final AITaskEvent.Add event = SpongeEventFactory.createAITaskEventAdd(Sponge.getCauseStackManager().getCurrentCause(), priority, priority,
-                (Goal<?>) this, (Agent) this.owner, (AITask<?>) base);
+                (Goal<?>) this, (Agent) this.impl$owner, (AITask<?>) base);
         SpongeImpl.postEvent(event);
         if (event.isCancelled()) {
             ((EntityAIBasesBridge) base).bridge$setGoal(null);
@@ -96,22 +96,22 @@ public abstract class EntityAITasksMixin implements EntityAITasksBridge {
 
     @Override
     public EntityLiving bridge$getOwner() {
-        return this.owner;
+        return this.impl$owner;
     }
 
     @Override
     public void bridge$setOwner(final EntityLiving owner) {
-        this.owner = owner;
+        this.impl$owner = owner;
     }
 
     @Override
     public GoalType bridge$getType() {
-        return this.type;
+        return this.impl$type;
     }
 
     @Override
     public void bridge$setType(final GoalType type) {
-        this.type = type;
+        this.impl$type = type;
     }
 
 
@@ -133,9 +133,9 @@ public abstract class EntityAITasksMixin implements EntityAITasksBridge {
             // Sponge start
             if (otherAiBase.equals(aiBase)) {
                 AITaskEvent.Remove event = null;
-                if (ShouldFire.A_I_TASK_EVENT_REMOVE && this.owner != null && !((EntityBridge) this.owner).bridge$isConstructing()) {
+                if (ShouldFire.A_I_TASK_EVENT_REMOVE && this.impl$owner != null && !((EntityBridge) this.impl$owner).bridge$isConstructing()) {
                     event = SpongeEventFactory.createAITaskEventRemove(Sponge.getCauseStackManager().getCurrentCause(),
-                            (Goal) this, (Agent) this.owner, (AITask) otherAiBase, entityaitaskentry.priority);
+                            (Goal) this, (Agent) this.impl$owner, (AITask) otherAiBase, entityaitaskentry.priority);
                     SpongeImpl.postEvent(event);
                 }
                 if (event == null || !event.isCancelled()) {
@@ -170,12 +170,12 @@ public abstract class EntityAITasksMixin implements EntityAITasksBridge {
 
     @Override
     public boolean bridge$initialized() {
-        return this.initialized;
+        return this.impl$initialized;
     }
 
     @Override
     public void bridge$setInitialized(final boolean initialized) {
-        this.initialized = initialized;
+        this.impl$initialized = initialized;
     }
 
     @Override
