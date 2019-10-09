@@ -75,7 +75,7 @@ import net.minecraft.tileentity.DropperTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.HopperTileEntity;
 
-@RegistrationDependency(GuiIdRegistryModule.class)
+@RegistrationDependency(ContainerTypeRegistryModule.class)
 public class InventoryArchetypeRegistryModule implements AlternateCatalogRegistryModule<InventoryArchetype>,
     SpongeAdditionalCatalogRegistryModule<InventoryArchetype> {
 

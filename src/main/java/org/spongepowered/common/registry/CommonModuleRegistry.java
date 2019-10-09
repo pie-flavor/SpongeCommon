@@ -445,7 +445,7 @@ public final class CommonModuleRegistry {
                 .registerModule(CollisionRule.class, new CollisionRuleRegistryModule())
                 .registerModule(DismountType.class, new DismountTypeRegistryModule())
                 .registerModule((Class<Key<?>>) (Class<?>) Key.class, KeyRegistryModule.getInstance())
-                .registerModule(GuiId.class, GuiIdRegistryModule.getInstance())
+                .registerModule(GuiId.class, ContainerTypeRegistryModule.getInstance())
                 .registerModule(InventoryArchetype.class, InventoryArchetypeRegistryModule.getInstance())
                 .registerModule(TransformationRegistryModule.getInstance())
                 .registerModule(StructureMode.class, new StructureModeRegistryModule())
