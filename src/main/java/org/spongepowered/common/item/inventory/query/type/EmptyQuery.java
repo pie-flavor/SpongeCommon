@@ -22,11 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
-/**
- * Created by jbyoshi on 8/16/17.
- */
-public class IntersectionQueryOperation {
+import org.spongepowered.api.CatalogKey;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.query.SpongeQuery;
 
+public class EmptyQuery extends SpongeQuery implements QueryType.NoParam {
+
+    private CatalogKey key = CatalogKey.sponge("empty");
+
+    @Override
+    public CatalogKey getKey() {
+        return this.key;
+    }
+
+    public EmptyQuery() {
+    }
+
+    @Override
+    public Inventory execute(InventoryAdapter inventory) {
+        return new EmptyInventoryImpl((Inventory) inventory);
+    }
 }

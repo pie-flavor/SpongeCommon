@@ -24,18 +24,32 @@
  */
 package org.spongepowered.common.item.inventory.query;
 
-import com.google.common.collect.ImmutableSet;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.query.QueryOperationType;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.operation.LensQueryOperation;
-import org.spongepowered.common.item.inventory.query.operation.SlotLensQueryOperation;
+import org.spongepowered.api.item.inventory.query.Query;
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.query.type.OrQuery;
+import org.spongepowered.common.item.inventory.query.type.AppendQuery;
 
-public final class SpongeQueryOperationTypes {
+public abstract class SpongeQuery implements Query {
 
-    public static final QueryOperationType<Lens> LENS = new SpongeQueryOperationType<>("lens", LensQueryOperation::new);
+    @Override
+    public Query and(Query... queries) {
+        return AppendQuery.of(this, queries);
+    }
 
-    public static final QueryOperationType<ImmutableSet<Inventory>> SLOT_LENS = new SpongeQueryOperationType<>("slot_lens",
-            SlotLensQueryOperation::new);
+    @Override
+    public Query or(Query... queries) {
+        return OrQuery.of(this, queries);
+    }
 
+    @Override
+    public Inventory execute(Inventory inventory) {
+        if (!(inventory instanceof InventoryAdapter)) {
+            throw new IllegalArgumentException("Unsupported Inventory! " + inventory.getClass().getName());
+        }
+        return this.execute(((InventoryAdapter) inventory));
+    }
+
+    public abstract Inventory execute(InventoryAdapter inventory);
 }
+

@@ -33,6 +33,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.query.Query;
+import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult.Type;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
@@ -150,15 +151,26 @@ public class EmptyInventoryImpl implements EmptyInventory {
     }
 
     @Override
+    public Inventory query(Query query) {
+        return null;
+    }
+
+    @Override
     public Inventory query(PropertyMatcher<?> propertyMatcher) {
         return this;
     }
 
     @Override
-    public Inventory query(org.spongepowered.api.item.inventory.query.Query query) {
-        return query.execute(this);
+    public <P1, P2> Inventory query(QueryType.TwoParam<P1, P2> type, P1 param1, P2 param2) {
+        return this;
     }
 
+    @Override
+    public <P> Inventory query(QueryType.OneParam<P> type, P param) {
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Inventory> Optional<T> query(Class<T> inventoryType) {
         if (EmptyInventory.class == inventoryType) {

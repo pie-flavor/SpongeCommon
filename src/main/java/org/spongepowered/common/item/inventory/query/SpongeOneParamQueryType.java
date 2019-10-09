@@ -22,40 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query;
 
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.query.QueryOperationType;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class ItemStackQueryOperation<T> extends SpongeQueryOperation<T> {
+import org.spongepowered.api.CatalogKey;
+import org.spongepowered.api.item.inventory.query.Query;
+import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.common.SpongeCatalogType;
 
-    private final T arg;
+import java.util.function.Function;
 
-    protected ItemStackQueryOperation(QueryOperationType<T> type, T arg) {
-        super(type);
-        this.arg = arg;
+public final class SpongeOneParamQueryType<T> extends SpongeCatalogType implements QueryType.OneParam<T> {
+
+    private final Function<T, Query> newInstance;
+
+    public SpongeOneParamQueryType(String id, Function<T, Query> newInstance) {
+        super(CatalogKey.sponge(id), id);
+        this.newInstance = newInstance;
     }
 
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        if (lens instanceof SlotLens) {
-            @SuppressWarnings("unchecked")
-            ItemStack stack = ItemStackUtil.fromNative(((SlotLens) lens).getStack(inventory));
-            if (stack == null) {
-                return false;
-            }
-            if (this.matches(stack, this.arg)) {
-                return true;
-            }
-        }
-        return false;
+    public Query of(T arg) {
+        checkNotNull(arg);
+        return this.newInstance.apply(arg);
     }
-
-    protected abstract boolean matches(ItemStack itemStack, T arg);
 
 }

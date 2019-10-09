@@ -22,21 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
 import org.spongepowered.api.data.property.PropertyMatcher;
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 
-public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<PropertyMatcher<?>> {
+import java.util.Collection;
 
-    private final InventoryProperty<?, ?> property;
+@SuppressWarnings("unchecked")
+public final class InventoryPropertyMatcherQuery extends SpongeDepthQuery {
 
-    public InventoryPropertyQueryOperation(InventoryProperty<?, ?> property) {
-        super(QueryOperationTypes.INVENTORY_PROPERTY);
-        this.property = property;
+    private final PropertyMatcher propertyMatcher;
+
+    public InventoryPropertyMatcherQuery(PropertyMatcher propertyMatcher) {
+        this.propertyMatcher = propertyMatcher;
     }
 
     @Override
@@ -45,10 +47,9 @@ public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<
             return false;
         }
 
-
         // Check for custom inventory properties first
         // TODO check if this works
-        Collection<?> invs = inventory.allInventories();
+        Collection<?> invs = inventory.fabric$allInventories();
         if (invs.size() > 0) {
             Object inv = invs.iterator().next();
             if (inv instanceof CustomInventory) {
@@ -60,13 +61,8 @@ public final class InventoryPropertyQueryOperation extends SpongeQueryOperation<
         }
 
         // Check for lens properties
-//??
-//        for (InventoryProperty<?, ?> lensProperty : parent.getProperties(lens)) {
-//            if (this.property.matches(lensProperty)) {
-//                return true;
-//            }
-//        }
-        return false;
+        final Object value = parent.getProperties(lens).get(this.propertyMatcher.getProperty());
+        return this.propertyMatcher.matches(value);
     }
 
 }

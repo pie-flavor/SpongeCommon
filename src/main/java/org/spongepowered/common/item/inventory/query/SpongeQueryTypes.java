@@ -22,21 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query;
 
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.query.QueryTypes;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import com.google.common.collect.ImmutableSet;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.query.operation.LensQuery;
+import org.spongepowered.common.item.inventory.query.operation.SlotLensQuery;
 
-public final class ItemStackIgnoreQuantityOperation extends ItemStackQueryOperation<ItemStack> {
+public final class SpongeQueryTypes {
 
-    public ItemStackIgnoreQuantityOperation(ItemStack itemStack) {
-        super(QueryTypes.ITEM_STACK_IGNORE_QUANTITY, itemStack.copy());
-    }
 
-    @Override
-    protected boolean matches(ItemStack itemStack, ItemStack arg) {
-        return ItemStackUtil.compareIgnoreQuantity(itemStack, arg);
-    }
+    public static final QueryType.OneParam<Lens> LENS = new SpongeOneParamQueryType<>("lens", LensQueryOperation::new);
 
+    public static final QueryType.OneParam<ImmutableSet<Inventory>> SLOT_LENS = new SpongeOneParamQueryType<>("slot_lens", SlotLensQueryOperation::new);
 }

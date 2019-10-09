@@ -83,6 +83,8 @@ import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
+import org.spongepowered.api.item.inventory.property.GuiId;
+import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.item.merchant.TradeOffer;
 import org.spongepowered.api.item.merchant.TradeOfferGenerator;
@@ -160,7 +162,6 @@ import org.spongepowered.common.item.inventory.SpongeInventoryBuilder;
 import org.spongepowered.common.item.inventory.SpongeItemStackBuilder;
 import org.spongepowered.common.item.inventory.custom.SpongeViewableInventoryBuilder;
 import org.spongepowered.common.item.inventory.generation.SpongeItemStackGenerator;
-import org.spongepowered.common.item.inventory.query.SpongeTransformationBuilder;
 import org.spongepowered.common.item.merchant.SpongeTradeOfferBuilder;
 import org.spongepowered.common.item.merchant.SpongeTradeOfferGenerator;
 import org.spongepowered.common.item.recipe.crafting.SpongeCraftingRecipeRegistry;
@@ -399,7 +400,7 @@ public final class CommonModuleRegistry {
                 .registerModule(PrismarineType.class, new PrismarineRegistryModule())
                 .registerModule(Profession.class, ProfessionRegistryModule.getInstance())
                 .registerModule(QuartzType.class, new QuartzTypeRegistryModule())
-                .registerModule(QueryOperationType.class, new QueryOperationRegistryModule())
+                .registerModule(QueryType.class, new QueryTypeRegistryModule())
                 .registerModule(RabbitType.class, new RabbitTypeRegistryModule())
                 .registerModule(RailDirection.class, new RailDirectionRegistryModule())
                 .registerModule(Rotation.class, RotationRegistryModule.getInstance())
@@ -445,7 +446,6 @@ public final class CommonModuleRegistry {
                 .registerModule(DismountType.class, new DismountTypeRegistryModule())
                 .registerModule((Class<Key<?>>) (Class<?>) Key.class, KeyRegistryModule.getInstance())
                 .registerModule(ContainerType.class, ContainerTypeRegistryModule.getInstance())
-                .registerModule(TransformationRegistryModule.getInstance())
                 .registerModule(StructureMode.class, new StructureModeRegistryModule())
                 .registerModule(CraftingRecipe.class, SpongeCraftingRecipeRegistry.getInstance())
                 .registerModule(SmeltingRecipe.class, (CatalogRegistryModule<SmeltingRecipe>) FurnaceRecipes.instance())

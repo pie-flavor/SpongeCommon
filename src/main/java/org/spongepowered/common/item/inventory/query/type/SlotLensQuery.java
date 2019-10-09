@@ -22,25 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.api.item.inventory.query.QueryTypes;
+import com.google.common.collect.ImmutableSet;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.query.Query;
+import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
+import org.spongepowered.common.item.inventory.query.SpongeQueryTypes;
 
-public final class TypeQueryOperation extends SpongeQueryOperation<Class<?>> {
+public final class SlotLensQuery extends SpongeDepthQuery {
 
-    private final Class<?> targetType;
+    private final ImmutableSet<Inventory> inventories;
 
-    public TypeQueryOperation(Class<?> targetType) {
-        super(QueryTypes.TYPE);
-        this.targetType = targetType;
+    public SlotLensQuery(ImmutableSet<Inventory> inventories) {
+        this.inventories = inventories;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        return this.targetType.isAssignableFrom(lens.getAdapterType());
+        for (Inventory inv : this.inventories) {
+            for (Inventory slot : inv.slots()) {
+                if (((SlotAdapter) slot).impl$getLens().equals(lens)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

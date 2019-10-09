@@ -22,36 +22,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
-import com.google.common.collect.ImmutableSet;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperationTypes;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
 
-public final class SlotLensQueryOperation extends SpongeQueryOperation<ImmutableSet<Inventory>> {
+public final class ItemTypeQuery extends ItemStackQuery<ItemType> {
 
-    private final ImmutableSet<Inventory> inventories;
-
-    public SlotLensQueryOperation(ImmutableSet<Inventory> inventories) {
-        super(SpongeQueryOperationTypes.SLOT_LENS);
-        this.inventories = inventories;
+    public ItemTypeQuery(ItemType type) {
+        super(type);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        for (Inventory inv : this.inventories) {
-            for (Inventory slot : inv.slots()) {
-                if (((SlotAdapter) slot).bridge$getRootLens().equals(lens)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    protected boolean matches(ItemStack itemStack, ItemType arg) {
+        return itemStack.getType().equals(arg);
     }
 
 }

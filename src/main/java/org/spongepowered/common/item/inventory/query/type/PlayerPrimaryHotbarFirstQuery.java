@@ -22,26 +22,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.CatalogKey;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
+import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.api.item.inventory.query.QueryTypes;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
 
-public final class InventoryTypeQueryOperation extends SpongeQueryOperation<Class<? extends Inventory>> {
+import java.util.Arrays;
 
-    private final Class<? extends Inventory> targetType;
+public class PlayerPrimaryHotbarFirstQuery extends AppendQuery implements QueryType.NoParam {
 
-    public InventoryTypeQueryOperation(Class<? extends Inventory> targetType) {
-        super(QueryTypes.INVENTORY_TYPE);
-        this.targetType = targetType;
+    private CatalogKey key = CatalogKey.sponge("player_primary_hotbar_first");
+
+    public PlayerPrimaryHotbarFirstQuery() {
+        super(Arrays.asList(QueryTypes.INVENTORY_TYPE.of(Hotbar.class),
+                QueryTypes.INVENTORY_TYPE.of(PrimaryPlayerInventory.class)));
     }
 
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        return this.targetType.isAssignableFrom(lens.getAdapterType());
+    public CatalogKey getKey() {
+        return this.key;
     }
-
 }

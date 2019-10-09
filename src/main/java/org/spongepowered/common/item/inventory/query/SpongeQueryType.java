@@ -24,25 +24,27 @@
  */
 package org.spongepowered.common.item.inventory.query;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.api.item.inventory.query.QueryType;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.SpongeCatalogType;
 
-public abstract class SpongeQuery<T> implements Query<T> {
+import java.util.function.Function;
 
-    protected final QueryType<T> type;
+public final class SpongeQueryType<T> extends SpongeCatalogType implements QueryType<T> {
 
-    protected SpongeQuery(QueryType<T> type) {
-        this.type = type;
+    private final Function<T, SpongeQuery<T>> newInstance;
+
+    public SpongeQueryType(String id, Function<T, SpongeQuery<T>> newInstance) {
+        super(id);
+        this.newInstance = newInstance;
     }
 
     @Override
-    public final QueryType<T> getType() {
-        return this.type;
+    public Query<T> of(T arg) {
+        checkNotNull(arg);
+        return this.newInstance.apply(arg);
     }
-
-    public abstract boolean matches(Lens lens, Lens parent,
-            Fabric inventory);
 
 }

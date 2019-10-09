@@ -22,20 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.query.QueryTypes;
+import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
-public final class ItemStackExactQueryOperation extends ItemStackQueryOperation<ItemStack> {
+public abstract class ItemStackQuery<T> extends SpongeDepthQuery {
 
-    public ItemStackExactQueryOperation(ItemStack itemStack) {
-        super(QueryTypes.ITEM_STACK_EXACT, itemStack.copy());
+    private final T arg;
+
+    protected ItemStackQuery(T arg) {
+        this.arg = arg;
     }
 
     @Override
-    protected boolean matches(ItemStack itemStack, ItemStack arg) {
-        return itemStack.equalTo(arg);
+    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+        if (lens instanceof SlotLens) {
+            ItemStack stack = ItemStackUtil.fromNative(((SlotLens) lens).getStack(inventory));
+            if (stack == null) {
+                return false;
+            }
+            if (this.matches(stack, this.arg)) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    protected abstract boolean matches(ItemStack itemStack, T arg);
 
 }

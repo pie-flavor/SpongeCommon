@@ -24,25 +24,29 @@
  */
 package org.spongepowered.common.item.inventory.query;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.api.item.inventory.query.QueryType;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.SpongeCatalogType;
 
-public abstract class SpongeQuery<T> implements Query<T> {
+import java.util.function.BiFunction;
 
-    protected final QueryType<T> type;
+public final class SpongeTwoParamQueryType<T1, T2> extends SpongeCatalogType implements QueryType.TwoParam<T1, T2> {
 
-    protected SpongeQuery(QueryType<T> type) {
-        this.type = type;
+    private final BiFunction<T1, T2, Query> newInstance;
+
+    public SpongeTwoParamQueryType(String id, BiFunction<T1, T2, Query> newInstance) {
+        super(CatalogKey.sponge(id), id);
+        this.newInstance = newInstance;
     }
 
     @Override
-    public final QueryType<T> getType() {
-        return this.type;
+    public Query of(T1 arg1, T2 arg2) {
+        checkNotNull(arg1);
+        checkNotNull(arg2);
+        return this.newInstance.apply(arg1, arg2);
     }
-
-    public abstract boolean matches(Lens lens, Lens parent,
-            Fabric inventory);
 
 }

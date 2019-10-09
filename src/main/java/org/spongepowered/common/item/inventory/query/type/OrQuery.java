@@ -22,25 +22,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
+import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperation;
-import org.spongepowered.common.item.inventory.query.SpongeQueryOperationTypes;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 
-public final class LensQueryOperation extends SpongeQueryOperation<Lens> {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-    private final Lens lens;
+public class OrQuery extends SpongeDepthQuery {
 
-    public LensQueryOperation(Lens lens) {
-        super(SpongeQueryOperationTypes.LENS);
-        this.lens = lens;
+    private final List<Query> orQueries;
+
+    public OrQuery(List<Query> orQueries) {
+        this.orQueries = Collections.unmodifiableList(orQueries);
     }
 
-    @Override
+    public static Query of(Query query, Query[] queries) {
+        List<Query> newQueries = new ArrayList<>();
+        if (query instanceof OrQuery) {
+            newQueries.addAll(((OrQuery) query).orQueries);
+        } else {
+            newQueries.add(query);
+        }
+        newQueries.addAll(Arrays.asList(queries));
+        return new OrQuery(newQueries);
+
+    }
+
     public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        return this.lens.equals(lens);
+        for (Query orQuery : orQueries) {
+            if (orQuery instanceof SpongeDepthQuery) {
+                if (((SpongeDepthQuery) orQuery).matches(lens, parent, inventory)) {
+                    return true;
+                }
+            }
+            // else ?
+        }
+        return false;
     }
-
 }

@@ -22,27 +22,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query;
+package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.api.item.inventory.query.Query;
-import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.api.item.inventory.query.QueryTypes;
+import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 
-public abstract class SpongeQuery<T> implements Query<T> {
+import java.util.Objects;
 
-    protected final QueryType<T> type;
+public final class InventoryTranslationQuery extends SpongeDepthQuery {
 
-    protected SpongeQuery(QueryType<T> type) {
-        this.type = type;
+    private final Translation translation;
+
+    public InventoryTranslationQuery(Translation translation) {
+        this.translation = translation;
     }
 
     @Override
-    public final QueryType<T> getType() {
-        return this.type;
+    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+        return Objects.equals(lens.getName(inventory), translation);
     }
-
-    public abstract boolean matches(Lens lens, Lens parent,
-            Fabric inventory);
 
 }

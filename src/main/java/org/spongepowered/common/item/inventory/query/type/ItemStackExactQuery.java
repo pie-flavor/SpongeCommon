@@ -22,21 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.query.QueryTypes;
-import java.util.function.Predicate;
 
-public final class ItemStackCustomOperation extends ItemStackQueryOperation<Predicate<ItemStack>> {
+public final class ItemStackExactQuery extends ItemStackQuery<ItemStack> {
 
-    public ItemStackCustomOperation(Predicate<ItemStack> predicate) {
-        super(QueryTypes.ITEM_STACK_CUSTOM, predicate);
+    public ItemStackExactQuery(ItemStack itemStack) {
+        super(itemStack.copy());
     }
 
     @Override
-    protected boolean matches(ItemStack itemStack, Predicate<ItemStack> arg) {
-        return arg.test(itemStack);
+    protected boolean matches(ItemStack itemStack, ItemStack arg) {
+        return itemStack.equalTo(arg);
     }
 
 }

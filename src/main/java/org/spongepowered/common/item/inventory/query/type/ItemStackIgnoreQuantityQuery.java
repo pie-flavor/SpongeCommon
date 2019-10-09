@@ -22,21 +22,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query.operation;
+package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.query.QueryTypes;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
-public final class ItemTypeQueryOperation extends ItemStackQueryOperation<ItemType> {
+public final class ItemStackIgnoreQuantityQuery extends ItemStackQuery<ItemStack> {
 
-    public ItemTypeQueryOperation(ItemType type) {
-        super(QueryTypes.ITEM_TYPE, type);
+    public ItemStackIgnoreQuantityQuery(ItemStack itemStack) {
+        super(itemStack.copy());
     }
 
     @Override
-    protected boolean matches(ItemStack itemStack, ItemType arg) {
-        return itemStack.getType().equals(arg);
+    protected boolean matches(ItemStack itemStack, ItemStack arg) {
+        return ItemStackUtil.compareIgnoreQuantity(itemStack, arg);
     }
 
 }

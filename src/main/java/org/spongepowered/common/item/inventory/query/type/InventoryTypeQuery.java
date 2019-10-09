@@ -22,29 +22,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query;
+package org.spongepowered.common.item.inventory.query.type;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 
-import org.spongepowered.api.item.inventory.query.Query;
-import org.spongepowered.api.item.inventory.query.QueryOperationType;
-import org.spongepowered.common.SpongeCatalogType;
+public final class InventoryTypeQuery extends SpongeDepthQuery {
 
-import java.util.function.Function;
+    private final Class<? extends Inventory> targetType;
 
-public final class SpongeQueryOperationType<T> extends SpongeCatalogType implements QueryOperationType<T> {
-
-    private final Function<T, SpongeQueryOperation<T>> newInstance;
-
-    public SpongeQueryOperationType(String id, Function<T, SpongeQueryOperation<T>> newInstance) {
-        super(id);
-        this.newInstance = newInstance;
+    public InventoryTypeQuery(Class<? extends Inventory> targetType) {
+        this.targetType = targetType;
     }
 
     @Override
-    public Query<T> of(T arg) {
-        checkNotNull(arg);
-        return this.newInstance.apply(arg);
+    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+        return this.targetType.isAssignableFrom(lens.getAdapterType());
     }
 
 }
