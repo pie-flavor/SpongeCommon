@@ -29,15 +29,15 @@ import org.spongepowered.common.SpongeCatalogType;
 
 import javax.annotation.Nullable;
 
-public class SpongeGuiId extends SpongeCatalogType implements GuiId {
+public class SpongeContainerType extends SpongeCatalogType implements GuiId {
 
     @Nullable private String internalId;
 
-    public SpongeGuiId(String id) {
+    public SpongeContainerType(String id) {
         super(id);
     }
 
-    public SpongeGuiId(String id, String internalId) {
+    public SpongeContainerType(String id, String internalId) {
         this(id);
         this.internalId = internalId;
     }
