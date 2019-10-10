@@ -119,6 +119,10 @@ public abstract class AdapterLogic {
             }
         }
 
+        if (lens.slotCount() > 0) {
+            return Optional.of(ItemStack.empty());
+        }
+
         return Optional.of(ItemStack.empty());
     }
 
@@ -151,7 +155,7 @@ public abstract class AdapterLogic {
                 result.transaction(trans);
                 remaining -= push;
 
-                Slot slot = ((SlotAdapter) lens.getSlot(ord).getAdapter(inv, null));
+                Slot slot = ((SlotAdapter) lens.getSlotLens(ord).getAdapter(inv, null));
                 result.transaction(new SlotTransaction(slot, oldSnap, ItemStackUtil.snapshotOf(lens.getStack(inv, ord))));
             }
         }
@@ -160,7 +164,7 @@ public abstract class AdapterLogic {
             result.reject(ItemStackUtil.cloneDefensive(nativeStack, remaining));
         }
 
-        inv.markDirty();
+        inv.fabric$markDirty();
 
         return result.build();
     }
@@ -181,14 +185,14 @@ public abstract class AdapterLogic {
             int push = Math.min(remaining, maxStackSize);
             if (old.isEmpty() && lens.setStack(inv, ord, ItemStackUtil.cloneDefensiveNative(nativeStack, push))) {
                 remaining -= push;
-                Slot slot = ((SlotAdapter) lens.getSlot(ord).getAdapter(inv, null));
+                Slot slot = ((SlotAdapter) lens.getSlotLens(ord).getAdapter(inv, null));
                 result.transaction(new SlotTransaction(slot, ItemStackUtil.snapshotOf(old), ItemStackUtil.snapshotOf(lens.getStack(inv, ord))));
             } else if (!old.isEmpty() && ItemStackUtil.compareIgnoreQuantity(old, stack)) {
                 ItemStackSnapshot oldSnap = ItemStackUtil.snapshotOf(old);
                 push = Math.max(Math.min(maxStackSize - old.getCount(), remaining), 0); // max() accounts for oversized stacks
                 old.setCount(old.getCount() + push);
                 remaining -= push;
-                Slot slot = ((SlotAdapter) lens.getSlot(ord).getAdapter(inv, null));
+                Slot slot = ((SlotAdapter) lens.getSlotLens(ord).getAdapter(inv, null));
                 result.transaction(new SlotTransaction(slot, oldSnap, ItemStackUtil.snapshotOf(lens.getStack(inv, ord))));
             }
 
@@ -199,7 +203,7 @@ public abstract class AdapterLogic {
             result.type(Type.FAILURE).reject(ItemStackUtil.cloneDefensive(nativeStack));
         } else {
             stack.setQuantity(remaining);
-            inv.markDirty();
+            inv.fabric$markDirty();
         }
 
         return result.build();

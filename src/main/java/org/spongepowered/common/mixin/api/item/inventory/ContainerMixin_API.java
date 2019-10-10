@@ -25,8 +25,13 @@
 package org.spongepowered.common.mixin.api.item.inventory;
 
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.IInventory;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.item.inventory.adapter.impl.DefaultImplementedAdapterInventory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(Container.class)
 public abstract class ContainerMixin_API implements DefaultImplementedAdapterInventory.WithClear {

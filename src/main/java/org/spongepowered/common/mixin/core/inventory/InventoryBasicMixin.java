@@ -34,8 +34,8 @@ import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 
 @Mixin(value = {Inventory.class, CraftResultInventory.class})
 public abstract class InventoryBasicMixin implements IInventory, LensProviderBridge {
@@ -45,12 +45,12 @@ public abstract class InventoryBasicMixin implements IInventory, LensProviderBri
         if (this.getSizeInventory() == 0) {
             return new DefaultEmptyLens(adapter);
         }
-        return new OrderedInventoryLensImpl(0, this.getSizeInventory(), 1, adapter.bridge$getSlotProvider());
+        return new DefaultIndexedLens(0, this.getSizeInventory(), adapter.bridge$getSlotProvider());
     }
 
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
-        return new SlotCollection.Builder().add(this.getSizeInventory()).build();
+        return new SlotLensCollection.Builder().add(this.getSizeInventory()).build();
     }
 
 }

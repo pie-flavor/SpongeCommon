@@ -29,13 +29,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.ints.IntSets;
-import net.minecraft.item.ItemStack;
+import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.text.translation.Translation;
+import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.MutableLensCollection;
@@ -49,24 +46,26 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 public abstract class AbstractLens implements Lens {
 
     protected final Class<? extends Inventory> adapterType;
-    
+
     protected final int base;
-    
-    protected final IntSet availableSlots = new IntOpenHashSet();
-    
+
     protected Lens parent;
-    
+
     protected MutableLensCollection children;
-    
+
     protected List<LensHandle> spanningChildren;
-    
+
     protected int size;
-    
+
     private int maxOrdinal = 0;
 
     public AbstractLens(final int base, final int size, final Class<? extends Inventory> adapterType) {
@@ -82,90 +81,102 @@ public abstract class AbstractLens implements Lens {
         this.spanningChildren = new ArrayList<>();
     }
 
-    protected void addChild(final Lens lens, final InventoryProperty<?, ?>... properties) {
+    protected void addChild(final Lens lens, final PropertyEntry... properties) {
         checkNotNull(lens, "Attempted to register a null lens");
         this.children.add(lens, properties);
-        this.availableSlots.addAll(lens.getSlots());
     }
-    
-    protected void addSpanningChild(final Lens lens, final InventoryProperty<?, ?>... properties) {
+
+    protected void addSpanningChild(final Lens lens, final PropertyEntry... properties) {
         this.addChild(lens, properties);
+
+        for (LensHandle spanningChild : this.spanningChildren) {
+            if (spanningChild.lens == lens) { // Spanning Child already exists
+                for (PropertyEntry property : properties) {
+                    // Just add properties
+                    spanningChild.setProperty(property);
+                }
+                return;
+            }
+        }
+
         final LensHandle child = new LensHandle(lens, properties);
         this.spanningChildren.add(child);
         child.ordinal = this.maxOrdinal;
-        this.maxOrdinal += lens.getSlots().size();
+        this.maxOrdinal += lens.slotCount();
         if (lens instanceof AbstractLens) {
             ((AbstractLens) lens).setParent(this);
         }
     }
-    
+
     protected void setParent(final Lens parent) {
         this.parent = parent;
     }
-    
+
     @Override
     public Translation getName(final Fabric inv) {
         return inv.fabric$getDisplayName();
     }
-    
+
     @Override
     public Lens getParent() {
         return this.parent;
     }
-    
-    @Override
-    public IntSet getSlots() {
-        return IntSets.unmodifiable(this.availableSlots);
-    }
-    
-    @Override
-    public boolean hasSlot(final int index) {
-        return this.availableSlots.contains(index);
-    }
-    
+
     @Override
     public Class<? extends Inventory> getAdapterType() {
         return this.adapterType;
     }
-    
-    @Override
-    public ItemStack getStack(final Fabric inv, final int ordinal) {
-        final LensHandle lens = this.getLensForOrdinal(ordinal);
-        if (lens == null) {
-            return ItemStack.EMPTY;
-        }
-        return lens.lens.getStack(inv, ordinal - lens.ordinal);
-    }
-    
-    @Override
-    public boolean setStack(final Fabric inv, final int ordinal, final ItemStack stack) {
-        final LensHandle lens = this.getLensForOrdinal(ordinal);
-        return lens != null && lens.lens.setStack(inv, ordinal - lens.ordinal, stack);
-    }
-    
+
     protected LensHandle getLensForOrdinal(final int ordinal) {
         if (ordinal < 0 || ordinal > this.maxOrdinal) {
             return null;
         }
-        
+
         for (final LensHandle child : this.spanningChildren) {
             if (child.ordinal <= ordinal && (ordinal - child.ordinal) < child.lens.slotCount()) {
                 return child;
             }
         }
-        
+
         return null;
     }
 
+    @Nullable
     @Override
-    public SlotLens getSlotLens(final int ordinal) {
-        final LensHandle handle = this.getLensForOrdinal(ordinal);
+    public SlotLens getSlotLens(int ordinal) {
+        LensHandle handle = this.getLensForOrdinal(ordinal);
         if (handle == null) {
-                return null;
+            return null;
         }
         return handle.lens.getSlotLens(ordinal - handle.ordinal);
     }
-    
+
+    @Override
+    public List<SlotLens> getSlots() {
+        this.cacheSlots(this);
+        return this.slotCache.stream().map(lh -> lh.lens).map(SlotLens.class::cast).collect(Collectors.toList());
+    }
+
+    protected List<LensHandle> slotCache;
+
+    private void cacheSlots(Lens lens) {
+        if (this.slotCache != null) {
+            return;
+        }
+        this.slotCache = new ArrayList<>();
+        if (lens instanceof SlotLens) {
+            this.slotCache.add(new LensHandle(lens, lens.getProperties(0)));
+            return;
+        }
+        for (Lens child : lens.getSpanningChildren()) {
+            if (child instanceof SlotLens) {
+                this.slotCache.add(new LensHandle(child, lens.getProperties(child)));
+            } else {
+                this.cacheSlots(child);
+            }
+        }
+    }
+
     @Override
     public List<Lens> getChildren() {
         return Collections.unmodifiableList(this.children);
@@ -184,24 +195,38 @@ public abstract class AbstractLens implements Lens {
     public int slotCount() {
         return this.size;
     }
-    
+
     @Override
     public Lens getLens(final int index) {
         return this.children.getLens(index);
     }
 
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(final int index) {
+    public Map<Property<?>, Object> getProperties(final int index) {
         return this.children.getProperties(index);
     }
-    
+
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(final Lens child) {
+    public Map<Property<?>, Object> getProperties(final Lens child) {
         final int index = this.children.indexOf(child);
         if (index < 0) {
             throw new NoSuchElementException("Specified child lens is not a direct descendant this lens");
         }
         return this.children.getProperties(index);
+    }
+
+    /**
+     * Adds missing spanning slots for basic support
+     *
+     * @param base The last added slot
+     * @param slots The slot provider
+     */
+    protected void addMissingSpanningSlots(int base, SlotProvider slots) {
+
+        int additionalSlots = this.size - base;
+        if (additionalSlots > 0) {
+            this.addSpanningChild(new DefaultIndexedLens(base, additionalSlots, slots));
+        }
     }
 
     @Override
@@ -218,12 +243,6 @@ public abstract class AbstractLens implements Lens {
     public Iterator<Lens> iterator() {
         return this.children.iterator();
     }
-    
-    @Override
-    public int getRealIndex(final Fabric inv, final int ordinal) {
-        final LensHandle child = this.getLensForOrdinal(ordinal);
-        return child.lens.getRealIndex(inv, ordinal - child.ordinal);
-    }
 
     @Override
     public int getMaxStackSize(final Fabric inv) {
@@ -234,4 +253,36 @@ public abstract class AbstractLens implements Lens {
         return ordinal >= 0 && ordinal < this.size;
     }
 
+
+    // Helpers for Debugging
+    public static final int LIMIT = 2;
+
+    public String toString(int deep) {
+        String result = ident(deep) + this.getClass().getSimpleName() + ": (" + this.size + ") base:" + this.base + "\n";
+        if (!this.children.isEmpty() && deep < LIMIT) {
+            result += ident(deep) + "Children: ";
+            for (Lens child : this.children) {
+                for (LensHandle spanningChild : this.spanningChildren) {
+                    if (spanningChild.lens == child) {
+                        result += "\n" + ident(deep) + "(Spanning)";
+                    }
+                }
+                result += child.toString(deep + 1);
+            }
+        }
+        return result;
+    }
+
+    private String ident(int deep) {
+        String ident = "";
+        for (int i = 0; i < deep; i++) {
+            ident += "-";
+        }
+        return ident;
+    }
+
+    @Override
+    public String toString() {
+        return toString(0);
+    }
 }

@@ -24,7 +24,8 @@
  */
 package org.spongepowered.common.item.inventory.lens;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.api.data.property.Property;
+import org.spongepowered.common.item.inventory.PropertyEntry;
 
 /**
  * A type of Lens collection whose members are fixed but properties for member
@@ -32,12 +33,12 @@ import org.spongepowered.api.item.inventory.InventoryProperty;
  */
 public interface DynamicLensCollection extends LensCollection {
 
-    void setProperty(int index, InventoryProperty<?, ?> property);
+    void setProperty(int index, PropertyEntry property);
     
-    void setProperty(Lens lens, InventoryProperty<?, ?> property);
+    void setProperty(Lens lens, PropertyEntry property);
 
-    void removeProperty(int index, InventoryProperty<?, ?> property);
+    void removeProperty(int index, Property<?> property);
     
-    void removeProperty(Lens lens, InventoryProperty<?, ?> property);
+    void removeProperty(Lens lens, Property<?> property);
     
 }

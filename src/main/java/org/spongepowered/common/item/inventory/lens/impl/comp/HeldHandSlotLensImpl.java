@@ -22,53 +22,87 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.slots;
+package org.spongepowered.common.item.inventory.lens.impl.comp;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.InventoryPlayer;
 import org.spongepowered.api.data.property.Property;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
+import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidOrdinalException;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
+import org.spongepowered.common.item.inventory.lens.slots.EquipmentSlotLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
-import org.spongepowered.common.text.translation.SpongeTranslation;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
 
 /**
- * Base Lens for Slots
+ * Single Slot pointing to a players {@link EquipmentTypes#MAIN_HAND} slot.
  */
-public class SlotLensImpl extends AbstractLens implements SlotLens {
+public class HeldHandSlotLensImpl implements EquipmentSlotLens {
 
-    public static final Translation SLOT_NAME = new SpongeTranslation("slot.name");
-
-    protected int maxStackSize = -1;
-
-    public SlotLensImpl(int index) {
-        this(index, SlotAdapter.class);
-    }
-
-    public SlotLensImpl(int index, Class<? extends Inventory> adapterType) {
-        super(index, 1, adapterType);
+    private InventoryPlayer getInventoryPlayer(Fabric fabric) {
+        return (InventoryPlayer) fabric.fabric$get(0); // Only players have this lens
     }
 
     @Override
-    public Translation getName(Fabric inv) {
-        return SlotLensImpl.SLOT_NAME;
+    public net.minecraft.item.ItemStack getStack(Fabric fabric) {
+        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        return inv.getCurrentItem();
+    }
+
+    @Override
+    public boolean setStack(Fabric fabric, net.minecraft.item.ItemStack stack) {
+        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        inv.mainInventory.set(inv.currentItem, stack);
+        return true;
+    }
+
+    @Override
+    public int getOrdinal(Fabric fabric) {
+        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        return inv.currentItem;
+    }
+
+    @Override
+    public Lens getParent() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends Inventory> getAdapterType() {
+        return EquipmentSlotAdapter.class;
     }
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new SlotAdapter(inv, this, parent);
+        return new EquipmentSlotAdapter(inv, this, parent);
+    }
+
+    @Override
+    public Translation getName(Fabric inv) {
+        return inv.fabric$getDisplayName();
+    }
+
+    @Override public int slotCount() {
+        return 1;
+    }
+
+    @Override
+    public int getMaxStackSize(Fabric inv) {
+        return inv.fabric$getMaxStackSize();
     }
 
     @Override
@@ -81,36 +115,18 @@ public class SlotLensImpl extends AbstractLens implements SlotLens {
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
-    public int getOrdinal(Fabric inv) {
-        return this.base;
-    }
-
-    @Override
-    public ItemStack getStack(Fabric inv, int ordinal) {
+    public SlotLens getSlotLens(int ordinal) {
         if (ordinal != 0) {
             throw new InvalidOrdinalException("Non-zero slot ordinal");
         }
-        return this.getStack(inv);
+        return this;
     }
 
     @Override
-    public ItemStack getStack(Fabric inv) {
-        return checkNotNull(inv, "Target inventory").fabric$getStack(this.base);
-    }
-
-    @Override
-    public boolean setStack(Fabric inv, int ordinal, ItemStack stack) {
-        if (ordinal != 0) {
-            throw new InvalidOrdinalException("Non-zero slot ordinal");
-        }
-        return this.setStack(inv, stack);
-    }
-
-    @Override
-    public boolean setStack(Fabric inv, ItemStack stack) {
-        checkNotNull(inv, "Target inventory").fabric$setStack(this.base, stack);
-        return true;
+    public List<SlotLens> getSlots() {
+        return Collections.singletonList(this);
     }
 
     @Override
@@ -120,6 +136,11 @@ public class SlotLensImpl extends AbstractLens implements SlotLens {
 
     @Override
     public Map<Property<?>, Object> getProperties(int index) {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public Map<Property<?>, Object> getProperties(Lens lens) {
         return Collections.emptyMap();
     }
 
@@ -142,18 +163,17 @@ public class SlotLensImpl extends AbstractLens implements SlotLens {
     }
 
     @Override
-    public List<SlotLens> getSlots() {
-        return Collections.singletonList(this);
+    public Predicate<EquipmentType> getEquipmentTypeFilter() {
+        return (e) -> e == EquipmentTypes.MAIN_HAND;
     }
 
     @Override
-    public String toString(int deep) {
-        return "[" + this.base + "]";
+    public Predicate<ItemStack> getItemStackFilter() {
+        return (i) -> true;
     }
 
     @Override
-    public String toString() {
-        return this.toString(0);
+    public Predicate<ItemType> getItemTypeFilter() {
+        return (i) -> true;
     }
-
 }

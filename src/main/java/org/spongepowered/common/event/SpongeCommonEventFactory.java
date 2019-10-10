@@ -450,9 +450,9 @@ public class SpongeCommonEventFactory {
             return Collections.emptyList();
         }
         final List<SlotTransaction> trans = new ArrayList<>();
-        final Iterator<Inventory> it = inv.slots().iterator();
+        List<org.spongepowered.api.item.inventory.Slot> slots = inv.slots();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            final org.spongepowered.api.item.inventory.Slot slot = (org.spongepowered.api.item.inventory.Slot) it.next();
+            final org.spongepowered.api.item.inventory.Slot slot = slots.get(i);
             final ItemStack newStack = inventory.getStackInSlot(i);
             final ItemStack prevStack = previous[i];
             if (!ItemStack.areItemStacksEqual(newStack, prevStack)) {
@@ -1125,7 +1125,7 @@ public class SpongeCommonEventFactory {
                 && packetIn.getSlotId() < player.openContainer.inventorySlots.size()) {
                 slot = ((ContainerBridge)player.openContainer).bridge$getContainerSlot(packetIn.getSlotId());
                 if (slot != null) {
-                    final ItemStackSnapshot clickedItem = ItemStackUtil.snapshotOf(slot.peek().orElse(org.spongepowered.api.item.inventory.ItemStack.empty()));
+                    final ItemStackSnapshot clickedItem = ItemStackUtil.snapshotOf(slot.peek());
                     final ItemStackSnapshot replacement = ItemStackUtil.snapshotOf(packetIn.getStack());
                     final SlotTransaction slotTransaction = new SlotTransaction(slot, clickedItem, replacement);
                     ((TrackedInventoryBridge) player.openContainer).bridge$getCapturedSlotTransactions().add(slotTransaction);
@@ -1265,6 +1265,9 @@ public class SpongeCommonEventFactory {
                 }
             } else if (inventory instanceof IInventory) {
                 player.displayGUIChest(((IInventory) inventory));
+            } else if (inventory instanceof org.spongepowered.api.item.inventory.Container) {
+                // TODO maybe make it work later
+                return null;
             } else {
                 return null;
             }
@@ -1408,11 +1411,12 @@ public class SpongeCommonEventFactory {
         if (captureIn == null || inv == null) {
             return;
         }
-        final Optional<org.spongepowered.api.item.inventory.Slot> slot = ((InventoryAdapter) inv).bridge$getSlot(index);
+
+        Optional<org.spongepowered.api.item.inventory.Slot> slot = inv.getSlot(index);
         if (slot.isPresent()) {
-            final SlotTransaction trans = new SlotTransaction(slot.get(),
+            SlotTransaction trans = new SlotTransaction(slot.get(),
                     ItemStackUtil.snapshotOf(originalStack),
-                    ItemStackUtil.snapshotOf(slot.get().peek().orElse(org.spongepowered.api.item.inventory.ItemStack.empty())));
+                    ItemStackUtil.snapshotOf(slot.get().peek()));
             captureIn.bridge$getCapturedSlotTransactions().add(trans);
         } else {
             SpongeImpl.getLogger().warn("Unable to capture transaction from " + inv.getClass() + " at index " + index);
@@ -1434,15 +1438,15 @@ public class SpongeCommonEventFactory {
             return transaction.get();
         }
 
-        final Optional<org.spongepowered.api.item.inventory.Slot> slot = ((InventoryAdapter) inv).bridge$getSlot(index);
+        Optional<org.spongepowered.api.item.inventory.Slot> slot = inv.getSlot(index);
         if (!slot.isPresent()) {
             SpongeImpl.getLogger().warn("Unable to capture transaction from " + inv.getClass() + " at index " + index);
             return transaction.get();
         }
-        final ItemStackSnapshot original = slot.get().peek().map(ItemStackUtil::snapshotOf).orElse(ItemStackSnapshot.NONE);
-        final ItemStack remaining = transaction.get();
+        ItemStackSnapshot original = ItemStackUtil.snapshotOf(slot.get().peek());
+        ItemStack remaining = transaction.get();
         if (remaining.isEmpty()) {
-            final ItemStackSnapshot replacement = slot.get().peek().map(ItemStackUtil::snapshotOf).orElse(ItemStackSnapshot.NONE);
+            ItemStackSnapshot replacement = ItemStackUtil.snapshotOf(slot.get().peek());
             captureIn.bridge$getCapturedSlotTransactions().add(new SlotTransaction(slot.get(), original, replacement));
         }
         return remaining;

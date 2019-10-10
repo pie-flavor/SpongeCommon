@@ -45,10 +45,17 @@ import org.spongepowered.api.entity.ArmorEquipable;
 import org.spongepowered.api.entity.Tamer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.inventory.ArmorEquipable;
 import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.RespawnLocation;
 import org.spongepowered.common.SpongeImpl;
@@ -504,12 +511,12 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
 
     @Override
     public boolean canEquip(final EquipmentType type) {
-        return getForInventory(p -> p.canEquip(type), u -> true); // TODO Inventory API
+        return getForInventory(p -> p.canEquip(type), u -> true);
     }
 
     @Override
     public boolean canEquip(final EquipmentType type, @Nullable final ItemStack equipment) {
-        return getForInventory(p -> p.canEquip(type, equipment), u -> true); // TODO Inventory API
+        return this.getForInventory(p -> p.canEquip(type, equipment), u -> true);
     }
 
     @Override
@@ -533,13 +540,52 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
     }
 
     @Override
-    public Optional<ItemStack> getItemInHand(final HandType handType) {
+    public ItemStack getItemInHand(final HandType handType) {
         if (handType == HandTypes.MAIN_HAND) {
-            return this.getForInventory(p -> p.getItemInHand(handType), u -> u.getEquipped(EquipmentTypes.MAIN_HAND));
+            return this.getForInventory(p -> p.getItemInHand(handType), u -> u.getEquipped(EquipmentTypes.MAIN_HAND).orElseThrow(IllegalStateException::new));
         } else if (handType == HandTypes.OFF_HAND) {
-            return this.getForInventory(p -> p.getItemInHand(handType), u -> u.getEquipped(EquipmentTypes.OFF_HAND));
+            return this.getForInventory(p -> p.getItemInHand(handType), u -> u.getEquipped(EquipmentTypes.OFF_HAND).orElseThrow(IllegalStateException::new));
         }
         throw new IllegalArgumentException("Invalid hand " + handType);
+    }
+    @Override
+    public ItemStack getHelmet() {
+        return this.getEquipped(EquipmentTypes.HEADWEAR).orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
+    public void setHelmet(ItemStack helmet) {
+        this.equip(EquipmentTypes.HEADWEAR, helmet);
+    }
+
+    @Override
+    public ItemStack getChestplate() {
+        return this.getEquipped(EquipmentTypes.CHESTPLATE).orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
+    public void setChestplate(ItemStack chestplate) {
+        this.equip(EquipmentTypes.CHESTPLATE, chestplate);
+    }
+
+    @Override
+    public ItemStack getLeggings() {
+        return this.getEquipped(EquipmentTypes.LEGGINGS).orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
+    public void setLeggings(ItemStack leggings) {
+        this.equip(EquipmentTypes.LEGGINGS, leggings);
+    }
+
+    @Override
+    public ItemStack getBoots() {
+        return this.getEquipped(EquipmentTypes.BOOTS).orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
+    public void setBoots(ItemStack boots) {
+        this.equip(EquipmentTypes.BOOTS, boots);
     }
 
     @Override

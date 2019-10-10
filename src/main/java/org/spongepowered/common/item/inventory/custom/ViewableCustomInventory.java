@@ -31,14 +31,13 @@ import net.minecraft.world.IInteractionObject;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.custom.ContainerType;
 import org.spongepowered.common.data.type.SpongeContainerType;
-import org.spongepowered.common.interfaces.IMixinInteractable;
-import org.spongepowered.common.item.inventory.archetype.CompositeInventoryArchetype;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -48,11 +47,12 @@ public class ViewableCustomInventory extends CustomInventory implements IInterac
     private ContainerType type;
     private boolean vanilla = false;
 
+    private Set<EntityPlayer> viewers = new HashSet<>();
+
     public ViewableCustomInventory(ContainerType type, int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
         super(size, lens, provider, inventories, identity, carrier);
         this.type = type;
     }
-
 
     public ViewableCustomInventory vanilla() {
         this.vanilla = true;
@@ -61,10 +61,12 @@ public class ViewableCustomInventory extends CustomInventory implements IInterac
 
     @Override
     public void openInventory(EntityPlayer player) {
+        viewers.add(player); // TODO check if this is always called
     }
 
     @Override
     public void closeInventory(EntityPlayer player) {
+        viewers.remove(player);  // TODO check if this is always called
     }
 
     // TODO implement fields as properties?

@@ -25,8 +25,10 @@
 package org.spongepowered.common.mixin.api.entity;
 
 import org.spongepowered.api.item.inventory.Equipable;
+import org.spongepowered.api.item.inventory.Equipable;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.data.type.SpongeEquipmentType;
 import org.spongepowered.common.entity.living.human.EntityHuman;

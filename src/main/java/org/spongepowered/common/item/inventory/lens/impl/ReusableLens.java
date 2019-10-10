@@ -29,12 +29,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.ReusableLensInventoryAdapaterBridge;
-import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +92,7 @@ public class ReusableLens<T extends Lens> {
     }
 
     private static SlotProvider defaultSlots(InventoryAdapter adapter) {
-        return new SlotCollection.Builder().add(adapter.bridge$getFabric().fabric$getSize()).build();
+        return new SlotLensCollection.Builder().add(adapter.bridge$getFabric().fabric$getSize()).build();
     }
 
     private static Lens defaultLens(InventoryAdapter adapter, SlotProvider slots) {

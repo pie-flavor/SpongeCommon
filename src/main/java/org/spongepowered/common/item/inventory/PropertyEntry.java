@@ -24,50 +24,32 @@
  */
 package org.spongepowered.common.item.inventory;
 
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.api.data.property.Property;
+import org.spongepowered.api.item.inventory.InventoryProperties;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+public final class PropertyEntry {
 
-public class InventoryIterator implements Iterator<Inventory> {
-    
-    protected final List<Lens> children;
-    
-    protected final Fabric inventory;
-    
-    protected final Inventory parent;
-
-    protected int next = 0;
-
-    public InventoryIterator(Lens lens, Fabric inventory) {
-        this(lens, inventory, null);
-    }
-    
-    public InventoryIterator(Lens lens, Fabric inventory, Inventory parent) {
-        this.children = lens.getSpanningChildren();
-        this.inventory = inventory;
-        this.parent = parent;
+    public static PropertyEntry slotIndex(int index) {
+        return of(InventoryProperties.SLOT_INDEX, index);
     }
 
-    @Override
-    public boolean hasNext() {
-        return this.next < this.children.size();
+    public static <V> PropertyEntry of(Property<V> property, V value) {
+        return new PropertyEntry(property, value);
     }
 
-    @Override
-    public Inventory next() {
-        try {
-            return (Inventory) this.children.get(this.next++).getAdapter(this.inventory, this.parent);
-        } catch (IndexOutOfBoundsException e) {
-            throw new NoSuchElementException();
-        }
+    private final Property<?> property;
+    private final Object value;
+
+    private PropertyEntry(Property<?> property, Object value) {
+        this.property = property;
+        this.value = value;
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
+    public Property<?> getProperty() {
+        return property;
+    }
+
+    public Object getValue() {
+        return value;
     }
 }

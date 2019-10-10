@@ -47,13 +47,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.common.bridge.entity.player.InventoryPlayerBridge;
 import org.spongepowered.common.bridge.inventory.TrackedInventoryBridge;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
+import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLensImpl;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
@@ -100,7 +99,7 @@ public abstract class InventoryPlayerMixin implements InventoryPlayerBridge, Inv
     @Override
     public SlotProvider bridge$generateSlotProvider() {
         if ((Class<?>) this.getClass() == net.minecraft.entity.player.PlayerInventory.class) { // Build Player Lens
-            return new SlotCollection.Builder()
+            return new SlotLensCollection.Builder()
                 .add(this.mainInventory.size())
                 .add(this.offHandInventory.size())
                 // TODO predicates for ItemStack/ItemType?
@@ -113,9 +112,9 @@ public abstract class InventoryPlayerMixin implements InventoryPlayerBridge, Inv
                 .add(this.getSizeInventory() - this.mainInventory.size() - this.offHandInventory.size() - this.armorInventory.size())
                 .build();
         } else if (this.getSizeInventory() != 0) { // Fallback OrderedLens when not 0 sized inventory
-            return new SlotCollection.Builder().add(this.getSizeInventory()).build();
+            return new SlotLensCollection.Builder().add(this.getSizeInventory()).build();
         } else {
-            return new SlotCollection.Builder().build();
+            return new SlotLensCollection.Builder().build();
         }
     }
 

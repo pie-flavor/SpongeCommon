@@ -24,20 +24,34 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.PropertyEntry;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
 
 /**
- * Lenses for inventory concepts like {@link OrderedInventory} or {@link GridInventory}.
+ * Lenses for inventory based on slots.
  *
- * <p>This lenses will usually return a new matching adapter (usually extending {@link AbstractInventoryAdapter})</p>
+ * <p>This lenses will usually return a new matching adapter (usually extending {@link BasicInventoryAdapter})</p>
  */
 @SuppressWarnings("rawtypes")
-public abstract class ConceptualLens extends AbstractLens {
+public abstract class SlotBasedLens extends AbstractLens {
 
-    public ConceptualLens(int base, int size, Class<? extends Inventory> adapterType) {
+    protected final int stride;
+    public SlotBasedLens(int base, int size, int stride, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(base, size, adapterType);
+        checkArgument(stride > 0, "Invalid stride: %s", stride);
+        this.stride = stride;
+        this.init(slots);
+    }
+    private void init(SlotProvider slots) {
+        for (int ord = 0, slot = this.base; ord < this.size; ord++, slot += this.stride) {
+            this.addSpanningChild(slots.getSlotLens(slot), PropertyEntry.slotIndex(ord));
+        }
     }
 
 }

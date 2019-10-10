@@ -22,13 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.bridge.item.inventory;
+package org.spongepowered.common.mixin.api.item.inventory;
 
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.util.InventoryUtil;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.mixin.api.mcp.inventory.ContainerMixin_API;
 
-public interface InventoryBridge {
-    default InventoryAdapter bridge$getAdapter() {
-        return InventoryUtil.findAdapter(this);
-    }
+@Mixin(CustomContainer.class)
+public abstract class CustomContainerMixin_API extends ContainerMixin_API {
+
+    @Shadow(remap = false) public CustomInventory inv;
+
 }

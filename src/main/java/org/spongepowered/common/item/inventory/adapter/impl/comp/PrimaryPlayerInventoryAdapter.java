@@ -22,37 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.adapter.impl.slots;
+package org.spongepowered.common.item.inventory.adapter.impl.comp;
 
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.slot.SidedSlot;
-import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.slots.SidedSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
 
+public class PrimaryPlayerInventoryAdapter extends GridInventoryAdapter implements PrimaryPlayerInventory {
 
-public class SidedSlotAdapter extends FilteringSlotAdapter implements SidedSlot {
+    private final PrimaryPlayerInventoryLensImpl root;
 
-    public SidedSlotAdapter(Fabric inventory, SidedSlotLens lens, Inventory parent) {
-        super(inventory, lens, parent);
+    public PrimaryPlayerInventoryAdapter(Fabric inv, PrimaryPlayerInventoryLensImpl lens, Inventory parent) {
+        super(inv, lens, parent);
+        this.root = lens;
     }
 
     @Override
-    public boolean canAccept(org.spongepowered.api.item.inventory.ItemStack stack, Direction from) {
-        // TODO Auto-generated method stub
-        return false;
+    public Hotbar getHotbar() {
+        return ((Hotbar) this.root.getHotbar().getAdapter(this.bridge$getFabric(), this));
     }
 
     @Override
-    public boolean offer(org.spongepowered.api.item.inventory.ItemStack stack, Direction from) {
-        // TODO Auto-generated method stub
-        return false;
+    public GridInventory asGrid() {
+        return ((GridInventory) this.root.getFullGrid().getAdapter(this.bridge$getFabric(), this));
     }
 
     @Override
-    public boolean canGet(org.spongepowered.api.item.inventory.ItemStack stack, Direction from) {
-        // TODO Auto-generated method stub
-        return false;
+    public GridInventory getStorage() {
+        return ((GridInventory) this.root.getGrid().getAdapter(this.bridge$getFabric(), this));
     }
 
 }

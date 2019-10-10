@@ -22,18 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.comp;
+package org.spongepowered.common.mixin.api.item.inventory;
 
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
 
+import java.util.Optional;
 
-public interface OrderedInventoryLens extends Lens {
+@SuppressWarnings("rawtypes")
+@Mixin(CustomInventory.class)
+public abstract class CustomInventoryMixin_API implements Inventory, CarriedInventory<Carrier> {
 
-    int getStride();
+    @Shadow(remap = false) private Carrier carrier;
 
-    SlotLens getSlot(int ordinal);
-
-    boolean hasSlotRealIndex(int index);
+    @Override
+    public Optional<Carrier> getCarrier() {
+        return Optional.ofNullable(this.carrier);
+    }
 
 }

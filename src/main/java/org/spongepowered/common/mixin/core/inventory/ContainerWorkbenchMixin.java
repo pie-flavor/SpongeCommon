@@ -32,9 +32,9 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.MainPlayerInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
 
@@ -49,13 +49,13 @@ public abstract class ContainerWorkbenchMixin extends ContainerMixin implements 
     public Lens bridge$rootLens(final Fabric fabric, final InventoryAdapter adapter) {
         final List<Lens> lenses = new ArrayList<>();
         lenses.add(new CraftingInventoryLensImpl(0, 1, 3, 3, bridge$getSlotProvider()));
-        lenses.add(new MainPlayerInventoryLensImpl(3 * 3 + 1, bridge$getSlotProvider(), true));
+        lenses.add(new PrimaryPlayerInventoryLensImpl(3 * 3 + 1, bridge$getSlotProvider(), true));
         return new ContainerLens(adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass(), bridge$getSlotProvider(), lenses);
     }
 
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
-        final SlotCollection.Builder builder = new SlotCollection.Builder()
+        final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
                 .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i, (t) -> false, (t) -> false))
                 .add(9)
                 .add(36);

@@ -24,9 +24,8 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl;
 
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.ints.IntSets;
 import net.minecraft.item.ItemStack;
+import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.text.translation.Translation;
@@ -39,13 +38,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class DefaultEmptyLens implements Lens {
 
-    private static final IntSet EMPTY_SLOT_SET = IntSets.EMPTY_SET;
-    
     protected final InventoryAdapter adapter;
-    
+
     public DefaultEmptyLens(final InventoryAdapter adapter) {
         this.adapter = adapter;
     }
@@ -60,7 +60,7 @@ public class DefaultEmptyLens implements Lens {
     public InventoryAdapter getAdapter(final Fabric inv, final Inventory parent) {
         return this.adapter;
     }
-    
+
     @Override
     public Translation getName(final Fabric inv) {
         return inv.fabric$getDisplayName();
@@ -72,15 +72,10 @@ public class DefaultEmptyLens implements Lens {
     }
 
     @Override
-    public int getRealIndex(final Fabric inv, final int ordinal) {
-        return -1;
-    }
-
-    @Override
     public ItemStack getStack(final Fabric inv, final int ordinal) {
         return ItemStack.EMPTY;
     }
-    
+
     @Override
     public boolean setStack(final Fabric inv, final int index, final ItemStack stack) {
         return false;
@@ -107,13 +102,12 @@ public class DefaultEmptyLens implements Lens {
     }
 
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(final int index) {
-        return Collections.<InventoryProperty<?, ?>>emptyList();
+    public Map<Property<?>, Object> getProperties(int index) {
+        return Collections.emptyMap();
     }
-    
-    @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(final Lens child) {
-        return Collections.<InventoryProperty<?, ?>>emptyList();
+
+    @Override public Map<Property<?>, Object> getProperties(Lens lens) {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -125,17 +119,7 @@ public class DefaultEmptyLens implements Lens {
     public boolean isSubsetOf(final Collection<Lens> c) {
         return true;
     }
-    
-    @Override
-    public IntSet getSlots() {
-        return DefaultEmptyLens.EMPTY_SLOT_SET;
-    }
-    
-    @Override
-    public boolean hasSlot(final int index) {
-        return false;
-    }
-    
+
     @Override
     public Lens getParent() {
         return null;
@@ -151,4 +135,19 @@ public class DefaultEmptyLens implements Lens {
         return null;
     }
 
+    @Override
+    public List<SlotLens> getSlots() {
+        return Collections.emptyList();
+    }
+
+    @Nullable
+    @Override
+    public SlotLens getSlotLens(int ordinal) {
+        return null;
+    }
+
+    @Override
+    public String toString(int deep) {
+        return "EmptyLens";
+    }
 }

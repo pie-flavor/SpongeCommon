@@ -30,14 +30,14 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.slot.OutputSlot;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
 
 public class BrewingStandInventoryLens extends RealLens {
 
-    private OrderedInventoryLensImpl potions;
+    private DefaultIndexedLens potions;
     private InputSlotLensImpl ingredient;
     private InputSlotLensImpl fuel;
 
@@ -60,7 +60,7 @@ public class BrewingStandInventoryLens extends RealLens {
 
     protected void init(final SlotProvider slots) {
 
-        this.potions = new OrderedInventoryLensImpl(0, 3, 1, OutputSlot.class, slots);
+        this.potions = new DefaultIndexedLens(0, 3, slots); // TODO correct type
         this.ingredient = new InputSlotLensImpl(3, (i) -> true, (i) -> true); // TODO filter PotionIngredients
         this.fuel = new FuelSlotLensImpl(4, (i) -> BLAZE_POWDER.equals(i.getType()), BLAZE_POWDER::equals);
 

@@ -90,7 +90,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
     }
 
     @Override
-    public void registerClickHandler(InventoryCallbackHandler handler) {
+    public void registerHandler(InventoryCallbackHandler handler) {
         if (handler instanceof ClickHandler) {
             this.registerClick(((ClickHandler) handler));
         }
@@ -108,6 +108,10 @@ public class SpongeInventoryMenu implements InventoryMenu {
         }
     }
 
+    public boolean isReadOnly() {
+        return readonly;
+    }
+
     @Override
     public void registerClose(CloseHandler handler) {
         this.closeHandler = handler;
@@ -117,16 +121,16 @@ public class SpongeInventoryMenu implements InventoryMenu {
         this.clickHandler = handler;
     }
     @Override
-    public void registerSlotClick(SlotClickHandler handler, SlotIndex... slotIndices) {
+    public void registerSlotClick(SlotClickHandler handler) {
         this.slotClickHandler = handler;
     }
 
     @Override
-    public void registerKeySwap(KeySwapHandler handler, SlotIndex... slotIndices) {
+    public void registerKeySwap(KeySwapHandler handler) {
         this.keySwapHandler = handler;
     }
 
-    public void registerChange(SlotChangeHandler handler, SlotIndex... slotIndices) {
+    public void registerChange(SlotChangeHandler handler) {
         this.changeHandler = handler;
     }
 
@@ -170,34 +174,32 @@ public class SpongeInventoryMenu implements InventoryMenu {
             if (clickTypeIn == ClickType.QUICK_CRAFT) {
                 return this.onClickDrag(cause, slotId, dragType, container);
             }
-            SlotIndex idx = SlotIndex.of(slotId);
-            Optional<org.spongepowered.api.item.inventory.Slot> slot = container.getSlot(idx);
+            Optional<org.spongepowered.api.item.inventory.Slot> slot = container.getSlot(slotId);
 
             if (slot.isPresent()) {
                 switch (clickTypeIn) {
                     case SWAP:
                         if (dragType >= 0 && dragType < 9) {
-                            SlotIndex idx2 = SlotIndex.of(dragType);
-                            Optional<org.spongepowered.api.item.inventory.Slot> slot2 = container.getSlot(idx2);
+                            Optional<org.spongepowered.api.item.inventory.Slot> slot2 = container.getSlot(dragType);
                             if (slot2.isPresent() && this.keySwapHandler != null) {
-                                return this.keySwapHandler.handle(cause, container, slot.get(), idx, ClickTypes.KEY_SWAP, slot2.get());
+                                return this.keySwapHandler.handle(cause, container, slot.get(), slotId, ClickTypes.KEY_SWAP, slot2.get());
                             }
                         }
                         return true;
                     case CLONE:
                         if (this.slotClickHandler != null) {
-                            return this.slotClickHandler.handle(cause, container, slot.get(), idx, ClickTypes.CLICK_MIDDLE);
+                            return this.slotClickHandler.handle(cause, container, slot.get(), slotId, ClickTypes.CLICK_MIDDLE);
                         }
                     case PICKUP_ALL:
                         if (this.slotClickHandler != null) {
-                            return this.slotClickHandler.handle(cause, container, slot.get(), idx, ClickTypes.DOUBLE_CLICK);
+                            return this.slotClickHandler.handle(cause, container, slot.get(), slotId, ClickTypes.DOUBLE_CLICK);
                         }
                     default:
                         if (this.slotClickHandler != null) {
                             if (dragType == 0) {
-                                return this.onClickLeft(cause, this.slotClickHandler, clickTypeIn, container, idx, slot.get());
+                                return this.onClickLeft(cause, this.slotClickHandler, clickTypeIn, container, slotId, slot.get());
                             } else if (dragType == 1) {
-                                return this.onClickRight(cause, this.slotClickHandler, clickTypeIn, container, idx, slot.get());
+                                return this.onClickRight(cause, this.slotClickHandler, clickTypeIn, container, slotId, slot.get());
                             }
                             // else unknown drag-type
                         }
@@ -244,16 +246,15 @@ public class SpongeInventoryMenu implements InventoryMenu {
                     return this.clickHandler.handle(cause, container, ClickTypes.DRAG_START);
                 }
             case 1: // add drag
-                SlotIndex idx = SlotIndex.of(slotId);
-                Optional<org.spongepowered.api.item.inventory.Slot> slot = container.getSlot(idx);
+                Optional<org.spongepowered.api.item.inventory.Slot> slot = container.getSlot(slotId);
                 if (slot.isPresent() && this.slotClickHandler != null) {
                     switch (dragMode) {
                         case 0:
-                            return this.slotClickHandler.handle(cause, container, slot.get(), idx, ClickTypes.DRAG_LEFT_ADD);
+                            return this.slotClickHandler.handle(cause, container, slot.get(), slotId, ClickTypes.DRAG_LEFT_ADD);
                         case 1:
-                            return this.slotClickHandler.handle(cause, container, slot.get(), idx, ClickTypes.DRAG_RIGHT_ADD);
+                            return this.slotClickHandler.handle(cause, container, slot.get(), slotId, ClickTypes.DRAG_RIGHT_ADD);
                         case 2:
-                            return this.slotClickHandler.handle(cause, container, slot.get(), idx, ClickTypes.DRAG_MIDDLE_ADD);
+                            return this.slotClickHandler.handle(cause, container, slot.get(), slotId, ClickTypes.DRAG_MIDDLE_ADD);
                     }
                 }
                 break;
@@ -266,7 +267,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
     }
 
     private boolean onClickRight(Cause cause, SlotClickHandler handler, ClickType clickTypeIn, Container container,
-                                 SlotIndex idx, org.spongepowered.api.item.inventory.Slot slot) {
+                                 int idx, org.spongepowered.api.item.inventory.Slot slot) {
         switch (clickTypeIn) {
             case PICKUP:
                 return handler.handle(cause, container, slot, idx, ClickTypes.CLICK_RIGHT);
@@ -281,7 +282,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
     }
 
     private Boolean onClickLeft(Cause cause, SlotClickHandler handler, ClickType clickTypeIn, Container container,
-                                SlotIndex idx, org.spongepowered.api.item.inventory.Slot slot) {
+                                int idx, org.spongepowered.api.item.inventory.Slot slot) {
         switch (clickTypeIn) {
             case PICKUP:
                 return handler.handle(cause, container, slot, idx, ClickTypes.CLICK_LEFT);
@@ -303,7 +304,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
 
         if (this.changeHandler != null) {
             Cause cause = Sponge.getCauseStackManager().getCurrentCause();
-            return this.changeHandler.handle(cause, container, ((org.spongepowered.api.item.inventory.Slot) slot), SlotIndex.of(slotIndex),
+            return this.changeHandler.handle(cause, container, ((org.spongepowered.api.item.inventory.Slot) slot), slotIndex,
                     ItemStackUtil.snapshotOf(oldStack), ItemStackUtil.snapshotOf(newStack));
         }
         return true;

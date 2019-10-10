@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.item.inventory.query;
 
-import org.spongepowered.common.bridge.item.inventory.InventoryBridge;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.DefaultImplementedAdapterInventory;
 

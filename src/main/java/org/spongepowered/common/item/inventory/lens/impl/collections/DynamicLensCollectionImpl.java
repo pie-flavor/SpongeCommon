@@ -24,63 +24,55 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.collections;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.api.data.property.Property;
+import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.DynamicLensCollection;
 import org.spongepowered.common.item.inventory.lens.Lens;
 
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DynamicLensCollectionImpl extends AbstractList<Lens> implements DynamicLensCollection {
 
     protected final Lens[] lenses;
     
-    protected final Collection<InventoryProperty<?, ?>>[] properties;
+    protected final Map<Property<?>, Object>[] properties;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public DynamicLensCollectionImpl(int size) {
         this.lenses = new Lens[size];
-        this.properties = new Collection[size];
+        this.properties = new Map[size];
     }
 
     @Override
-    public void setProperty(Lens lens, InventoryProperty<?, ?> property) {
+    public void setProperty(Lens lens, PropertyEntry property) {
         this.setProperty(this.indexOf(lens), property);
     }
 
     @Override
-    public void setProperty(int index, InventoryProperty<?, ?> property) {
+    public void setProperty(int index, PropertyEntry property) {
         this.checkIndex(index);
         if (this.properties[index] == null) {
-            this.properties[index] = new ArrayList<>();
+            this.properties[index] = new HashMap<>();
         } else {
-            this.removeMatchingProperties(index, property);
+            this.properties[index].remove(property.getProperty());
         }
-        this.properties[index].add(property);
+        this.properties[index].put(property.getProperty(), property.getValue());
     }
     
     @Override
-    public void removeProperty(Lens lens, InventoryProperty<?, ?> property) {
+    public void removeProperty(Lens lens, Property<?> property) {
         this.removeProperty(this.indexOf(lens), property);
     }
     
     @Override
-    public void removeProperty(int index, InventoryProperty<?, ?> property) {
+    public void removeProperty(int index, Property<?> property) {
         this.checkIndex(index);
         if (this.properties[index] != null) {
-            this.removeMatchingProperties(index, property);
-        }
-    }
-
-    private void removeMatchingProperties(int index, InventoryProperty<?, ?> property) {
-        for (Iterator<InventoryProperty<?, ?>> iter = this.properties[index].iterator(); iter.hasNext();) {
-            InventoryProperty<?, ?> prop = iter.next();
-            if (prop.getClass() == property.getClass() && prop.getKey().equals(property.getKey())) {
-                iter.remove();
-            }
+            this.properties[index].remove(property);
         }
     }
 
@@ -124,19 +116,19 @@ public class DynamicLensCollectionImpl extends AbstractList<Lens> implements Dyn
     }
 
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(int index) {
+    public Map<Property<?>, Object> getProperties(int index) {
         this.checkIndex(index);
         if (this.properties[index] == null) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
-        return Collections.unmodifiableCollection(this.properties[index]);
+        return Collections.unmodifiableMap(this.properties[index]);
     }
     
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(Lens child) {
+    public Map<Property<?>, Object> getProperties(Lens child) {
         int index = this.indexOf(child);
         if (index < 0) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
         return this.getProperties(index);
     }

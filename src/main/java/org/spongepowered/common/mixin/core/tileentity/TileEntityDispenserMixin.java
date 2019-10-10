@@ -32,7 +32,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
 
 @Mixin(DispenserTileEntity.class)
@@ -44,12 +44,12 @@ public abstract class TileEntityDispenserMixin extends TileEntityLockableLootMix
     }
 
     private SlotProvider impl$generateSlotProvider() {
-        return new SlotCollection.Builder().add(9).build();
+        return new SlotLensCollection.Builder().add(9).build();
     }
 
     @SuppressWarnings("unchecked")
     private GridInventoryLens impl$generateRootLens(final SlotProvider slots) {
-        return new GridInventoryLensImpl(0, 3, 3, 3, (Class<? extends Inventory>) this.getClass(), slots);
+        return new GridInventoryLensImpl(0, 3, 3, (Class<? extends Inventory>) this.getClass(), slots);
     }
 
 }

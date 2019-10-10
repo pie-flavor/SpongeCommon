@@ -34,10 +34,8 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.translation.Translation;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
-import org.spongepowered.common.bridge.item.inventory.InventoryBridge;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.Fabric;
@@ -255,12 +253,14 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
         return Optional.empty();
     }
 
+
+
     @SuppressWarnings("unchecked")
     @Override
     default List<Slot> slots() {
         // TODO caching and not an iterator
-        SlotCollectionIterator iterator = SlotCollectionIterator.of(this, ((InventoryBridge) this).bridge$getAdapter());
-        return iterator;
+        SlotCollection iterator = SlotCollection.of(this, ((InventoryBridge) this).bridge$getAdapter());
+        return iterator.slots();
     }
 
 }

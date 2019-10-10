@@ -35,11 +35,7 @@ import org.spongepowered.common.item.inventory.lens.comp.HotbarLens;
 
 public class HotbarLensImpl extends InventoryRowLensImpl implements HotbarLens {
 
-    public HotbarLensImpl(int base, int width, SlotProvider slots) {
-        this(base, width, 0, 0, HotbarAdapter.class, slots);
-    }
-
-    private HotbarLensImpl(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public HotbarLensImpl(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(base, width, xBase, yBase, adapterType, slots);
     }
 
@@ -60,9 +56,10 @@ public class HotbarLensImpl extends InventoryRowLensImpl implements HotbarLens {
 
     @Override
     public void setSelectedSlotIndex(Fabric inv, int index) {
-        inv.fabric$allInventories().stream().filter(inner -> inner instanceof InventoryPlayerBridge).forEach(inner -> {
-            ((InventoryPlayerBridge) inner).bridge$setSelectedItem(index, true);
-        });
+        inv.fabric$allInventories().stream()
+                .filter(InventoryPlayerBridge.class::isInstance)
+                .map(InventoryPlayerBridge.class::cast)
+                .forEach(inner -> inner.bridge$setSelectedItem(index, true));
     }
 
 }

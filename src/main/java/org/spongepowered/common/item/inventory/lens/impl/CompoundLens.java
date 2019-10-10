@@ -25,9 +25,11 @@
 package org.spongepowered.common.item.inventory.lens.impl;
 
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryProperties;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
@@ -40,12 +42,12 @@ import java.util.List;
  * A compound-lens composed of multiple lenses.
  * Only contains slot-lenses.
  */
-public class CompoundLens extends ConceptualLens {
+public class CompoundLens extends SlotBasedLens {
 
     protected final List<Lens> inventories;
 
     private CompoundLens(int size, Class<? extends Inventory> adapterType, SlotProvider slots, List<Lens> lenses) {
-        super(0, size, adapterType);
+        super(0, size, 1, adapterType);
         this.inventories = lenses;
         this.init(slots);
     }
@@ -54,15 +56,15 @@ public class CompoundLens extends ConceptualLens {
 
         // Adding slots
         for (int ord = 0, slot = this.base; ord < this.size; ord++, slot++) {
-            if (!this.children.contains(slots.getSlot(slot))) {
-                this.addSpanningChild(slots.getSlot(slot), new SlotIndex(ord));
+            if (!this.children.contains(slots.getSlotLens(slot))) {
+                this.addSpanningChild(slots.getSlotLens(slot), PropertyEntry.slotIndex(ord));
             }
         }
     }
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new AbstractInventoryAdapter(inv, this, parent);
+        return new BasicInventoryAdapter(inv, this, parent);
     }
 
     public static Builder builder() {
@@ -81,7 +83,7 @@ public class CompoundLens extends ConceptualLens {
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         public CompoundLens build(CompoundSlotProvider provider) {
-            return new CompoundLens(provider.size(), AbstractInventoryAdapter.class, provider, this.lenses);
+            return new CompoundLens(provider.size(), BasicInventoryAdapter.class, provider, this.lenses);
         }
     }
 }

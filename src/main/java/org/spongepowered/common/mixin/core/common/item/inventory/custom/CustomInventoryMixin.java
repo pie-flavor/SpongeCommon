@@ -29,34 +29,30 @@ import org.spongepowered.api.item.inventory.InventoryArchetype;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.item.inventory.custom.CustomLens;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-
-import java.util.Map;
 
 @Mixin(CustomInventory.class)
-public abstract class CustomInventoryMixin implements InventoryAdapter, InventoryAdapterBridge {
+public abstract class CustomInventoryMixin implements InventoryAdapter {
 
-    @Shadow(remap = false) private PluginContainer plugin;
     @Shadow(remap = false) private SlotProvider slots;
     @Shadow(remap = false) private Lens lens;
 
-    @Shadow public abstract int getSizeInventory();
-
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
-        return new SlotCollection.Builder().add(this.inv.getSizeInventory()).build();
+    public SlotProvider bridge$getSlotProvider() {
+        return this.slots;
     }
 
-    @SuppressWarnings("Unchecked")
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
-        return new CustomLens(this.getSizeInventory(), (Class<? extends Inventory>) this.getClass(), slots, this.archetype, this.properties);
+    public Lens bridge$getRootLens() {
+        return this.lens;
     }
 
+    @Override
+    public Fabric bridge$getFabric() {
+        return (Fabric) this;
+    }
 }

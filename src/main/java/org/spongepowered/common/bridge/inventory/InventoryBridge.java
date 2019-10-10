@@ -22,11 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.comp;
+package org.spongepowered.common.bridge.inventory;
 
-public interface MainPlayerInventoryLens extends GridInventoryLens {
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.util.InventoryUtil;
 
-    HotbarLens getHotbar();
-
-    GridInventoryLens getGrid();
+public interface InventoryBridge {
+    default InventoryAdapter bridge$getAdapter() {
+        return InventoryUtil.findAdapter(this);
+    }
 }

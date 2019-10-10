@@ -24,7 +24,8 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.collections;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.api.data.property.Property;
+import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.MutableLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
@@ -54,21 +55,21 @@ public class MutableLensCollectionImpl extends AbstractList<Lens> implements Mut
     }
     
     @Override
-    public void add(Lens lens, InventoryProperty<?, ?>... properties) {
+    public void add(Lens lens, PropertyEntry... properties) {
         LensHandle handle = handleMap.get(lens);
         if (handle == null) {
             handle = new LensHandle(lens, properties);
             this.lenses.add(handle);
             handleMap.put(lens, handle);
         } else {
-            for (InventoryProperty<?, ?> property : properties) {
+            for (PropertyEntry property : properties) {
                 handle.setProperty(property);
             }
         }
     }
     
     @Override
-    public void add(int index, Lens lens, InventoryProperty<?, ?>... properties) {
+    public void add(int index, Lens lens, PropertyEntry... properties) {
         if (index >= this.size()) {
             this.resize(index - 1);
         }
@@ -77,7 +78,7 @@ public class MutableLensCollectionImpl extends AbstractList<Lens> implements Mut
     
     @Override
     public void add(int index, Lens lens) {
-        this.add(index, lens, (InventoryProperty<?, ?>) null);
+        this.add(index, lens, (PropertyEntry) null);
     }
     
     private void resize(int size) {
@@ -104,23 +105,23 @@ public class MutableLensCollectionImpl extends AbstractList<Lens> implements Mut
     }
 
     @Override
-    public void setProperty(Lens lens, InventoryProperty<?, ?> property) {
+    public void setProperty(Lens lens, PropertyEntry property) {
         this.setProperty(this.indexOf(lens), property);
     }
 
     @Override
-    public void setProperty(int index, InventoryProperty<?, ?> property) {
+    public void setProperty(int index, PropertyEntry property) {
         this.checkIndex(index);
         this.getHandle(index).setProperty(property);
     }
     
     @Override
-    public void removeProperty(Lens lens, InventoryProperty<?, ?> property) {
+    public void removeProperty(Lens lens, Property<?> property) {
         this.removeProperty(this.indexOf(lens), property);
     }
     
     @Override
-    public void removeProperty(int index, InventoryProperty<?, ?> property) {
+    public void removeProperty(int index, Property<?> property) {
         this.checkIndex(index);
         this.getHandle(index).removeProperty(property);
     }
@@ -184,16 +185,16 @@ public class MutableLensCollectionImpl extends AbstractList<Lens> implements Mut
     }
 
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(int index) {
+    public Map<Property<?>, Object> getProperties(int index) {
         this.checkIndex(index);
         return this.getHandle(index).getProperties();
     }
     
     @Override
-    public Collection<InventoryProperty<?, ?>> getProperties(Lens child) {
+    public Map<Property<?>, Object> getProperties(Lens child) {
         int index = this.indexOf(child);
         if (index < 0) {
-            return Collections.<InventoryProperty<?, ?>>emptyList();
+            return Collections.emptyMap();
         }
         return this.getProperties(index);
     }
