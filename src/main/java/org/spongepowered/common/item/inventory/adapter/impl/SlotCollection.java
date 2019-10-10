@@ -38,7 +38,7 @@ import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 import java.util.Iterator;
 import java.util.List;
 
-public class SlotCollectionIterator implements Iterable<Slot> {
+public class SlotCollection {
     
     private Inventory parent;
 
@@ -46,14 +46,14 @@ public class SlotCollectionIterator implements Iterable<Slot> {
     
     private final List<Slot> slots;
 
-    public SlotCollectionIterator(Inventory parent, Fabric inv, Lens lens, SlotProvider slots) {
+    public SlotCollection(Inventory parent, Fabric inv, Lens lens, SlotProvider slots) {
         this.parent = parent;
         this.inv = inv;
-        this.slots = this.traverseSpanningTree(inv, lens, slots, ImmutableList.<Slot>builder()).build();
+        this.slots = this.traverseSpanningTree(inv, lens, ImmutableList.<Slot>builder()).build();
     }
     
     @SuppressWarnings("rawtypes")
-    private Builder<Slot> traverseSpanningTree(Fabric inv, Lens lens, SlotProvider slots, Builder<Slot> list) {
+    private Builder<Slot> traverseSpanningTree(Fabric inv, Lens lens, Builder<Slot> list) {
         if (lens instanceof SlotLens) {
             list.add(((SlotAdapter) lens.getAdapter(inv, this.parent)));
             return list;
@@ -62,7 +62,7 @@ public class SlotCollectionIterator implements Iterable<Slot> {
             if (child instanceof SlotLens) {
                 list.add((SlotAdapter) child.getAdapter(inv, this.parent));
             } else if (child.getSpanningChildren().size() > 0) {
-                this.traverseSpanningTree(inv, child, slots, list);
+                this.traverseSpanningTree(inv, child, list);
             }
         }
         return list;
@@ -72,12 +72,11 @@ public class SlotCollectionIterator implements Iterable<Slot> {
         return this.inv;
     }
 
-    @Override
-    public Iterator<Slot> iterator() {
-        return this.slots.iterator();
+    public List<Slot> slots() {
+        return this.slots;
     }
 
-    public static SlotCollectionIterator of(Inventory parent, InventoryAdapter adapter) {
-        return new SlotCollectionIterator(parent, adapter.bridge$getFabric(), adapter.bridge$getRootLens(), adapter.bridge$getSlotProvider());
+    public static SlotCollection of(Inventory parent, InventoryAdapter adapter) {
+        return new SlotCollection(parent, adapter.bridge$getFabric(), adapter.bridge$getRootLens(), adapter.bridge$getSlotProvider());
     }
 }

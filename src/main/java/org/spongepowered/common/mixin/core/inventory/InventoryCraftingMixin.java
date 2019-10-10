@@ -31,14 +31,12 @@ import net.minecraft.util.NonNullList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
+import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLensImpl;
 
 @Mixin(CraftingInventory.class)
@@ -50,7 +48,7 @@ public abstract class InventoryCraftingMixin implements IInventory, InventoryAda
 
     @Override
     public SlotProvider bridge$generateSlotProvider() {
-        return new SlotCollection.Builder().add(this.stackList.size()).build();
+        return new SlotLensCollection.Builder().add(this.stackList.size()).build();
     }
 
     @Override
@@ -58,7 +56,7 @@ public abstract class InventoryCraftingMixin implements IInventory, InventoryAda
         if (this.stackList.size() == 0) {
             return new DefaultEmptyLens(this);
         }
-        return new CraftingGridInventoryLensImpl(0, this.inventoryWidth, this.inventoryHeight, this.inventoryWidth, slots);
+        return new CraftingGridInventoryLensImpl(0, this.inventoryWidth, this.inventoryHeight, slots);
     }
 
 }

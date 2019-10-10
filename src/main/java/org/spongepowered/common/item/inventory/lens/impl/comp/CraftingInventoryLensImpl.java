@@ -26,16 +26,17 @@ package org.spongepowered.common.item.inventory.lens.impl.comp;
 
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.CraftingGridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.comp.CraftingInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
+import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
 
-public class CraftingInventoryLensImpl extends OrderedInventoryLensImpl implements CraftingInventoryLens {
+public class CraftingInventoryLensImpl extends RealLens implements CraftingInventoryLens {
 
     private final int outputSlotIndex;
 
@@ -49,26 +50,19 @@ public class CraftingInventoryLensImpl extends OrderedInventoryLensImpl implemen
     }
 
     public CraftingInventoryLensImpl(int outputSlotIndex, int gridBase, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
-        super(gridBase, width * height, 1, adapterType, slots);
+        super(gridBase, width * height + 1, adapterType);
         this.outputSlotIndex = outputSlotIndex;
-        this.outputSlot = (CraftingOutputSlotLens)slots.getSlot(this.outputSlotIndex);
-        this.craftingGrid = new CraftingGridInventoryLensImpl(this.base, width, height, width, slots);
+        this.outputSlot = (CraftingOutputSlotLens)slots.getSlotLens(this.outputSlotIndex);
+        this.craftingGrid = new CraftingGridInventoryLensImpl(this.base, width, height, slots);
         this.size += 1; // output slot
         // Avoid the init() method in the superclass calling our init() too early
-        this.initOther();
+        this.init(slots);
     }
 
-    @Override
-    protected void init(SlotProvider slots) {
-        for (int ord = 0, slot = this.base; ord < this.size; ord++, slot += this.stride) {
-            this.addChild(slots.getSlot(slot), new SlotIndex(ord));
-        }
-    }
-
-    private void initOther() {
-        this.addSpanningChild(this.outputSlot, new SlotIndex(0));
+    private void init(SlotProvider slots) {
+        this.addSpanningChild(this.outputSlot);
         this.addSpanningChild(this.craftingGrid);
-        this.cache();
+        this.addChild(new DefaultIndexedLens(0, this.size, slots));
     }
 
     @Override
@@ -89,17 +83,6 @@ public class CraftingInventoryLensImpl extends OrderedInventoryLensImpl implemen
     @Override
     public boolean setOutputStack(Fabric inv, ItemStack stack) {
         return this.outputSlot.setStack(inv, stack);
-    }
-
-    @Override
-    public int getRealIndex(Fabric inv, int ordinal) {
-        if (!this.checkOrdinal(ordinal)) {
-            return -1;
-        }
-        if (ordinal < this.size - 1) {
-            return super.getRealIndex(inv, ordinal);
-        }
-        return this.outputSlotIndex;
     }
 
     @Override

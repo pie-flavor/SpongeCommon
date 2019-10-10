@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 
-public class VanillaContainerAdapter extends AbstractInventoryAdapter {
+public class VanillaContainerAdapter extends BasicInventoryAdapter {
 
     /**
      * Used to calculate {@link #getPlugin()}.

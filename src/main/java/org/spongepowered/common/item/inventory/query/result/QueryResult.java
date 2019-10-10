@@ -24,6 +24,7 @@
  */
 package org.spongepowered.common.item.inventory.query.result;
 
+import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.MutableLensSet;
@@ -31,6 +32,7 @@ import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
 import org.spongepowered.common.item.inventory.query.Result;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface QueryResult extends Result {
 
@@ -43,8 +45,8 @@ public interface QueryResult extends Result {
             this.resultSet = resultSet;
 
             for (Lens result : this.resultSet) {
-                Collection<InventoryProperty<?, ?>> properties = this.resultSet.getProperties(result);
-                this.addSpanningChild(result, properties.toArray(new InventoryProperty[0]));
+                Map<Property<?>, Object> properties = this.resultSet.getProperties(result);
+                this.addSpanningChild(result, properties);
             }
         }
     }

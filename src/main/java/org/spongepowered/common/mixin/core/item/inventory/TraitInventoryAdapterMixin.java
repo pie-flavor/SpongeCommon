@@ -37,11 +37,10 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.tileentity.LockableTileEntity;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
-import org.spongepowered.common.bridge.item.inventory.InventoryBridge;
+import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.entity.player.SpongeUserInventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
@@ -55,12 +54,11 @@ import javax.annotation.Nullable;
 @Mixin(value = {
         Slot.class,
         Container.class,
-        PlayerInventory.class,
-        VillagerEntity.class,
-        DoubleSidedInventory.class,
-        LockableTileEntity.class,
-        CustomInventory.class,
-        Inventory.class,
+        InventoryPlayer.class,
+        EntityVillager.class,
+        InventoryLargeChest.class,
+        TileEntityLockable.class,
+        InventoryBasic.class,
         SpongeUserInventory.class,
         CraftingInventory.class,
         CraftResultInventory.class,

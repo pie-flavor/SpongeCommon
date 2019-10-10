@@ -24,11 +24,13 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.minecraft;
 
+import net.minecraft.tileentity.TileEntityChest;
+import org.spongepowered.api.block.entity.carrier.chest.Chest;
+import org.spongepowered.api.item.inventory.Inventory;
 import net.minecraft.tileentity.ChestTileEntity;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.comp.OrderedInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
@@ -45,40 +47,32 @@ public class LargeChestInventoryLens extends RealLens {
     private int lowerChest;
 
     public LargeChestInventoryLens(final InventoryAdapter adapter, final SlotProvider slots) {
-        super(0, adapter.bridge$getFabric().fabric$getSize(), OrderedInventoryAdapter.class);
+        super(0, adapter.bridge$getFabric().fabric$getSize(), Inventory.class);
         final InventoryLargeChestAccessor inventory = (InventoryLargeChestAccessor) adapter;
         this.upperChest = inventory.accessor$getUpperChest().getSizeInventory();
         this.lowerChest = inventory.accessor$getLowerChest().getSizeInventory();
-        this.initLargeChest(slots);
+        this.init(slots);
     }
 
     public LargeChestInventoryLens(final int base, final InventoryAdapter adapter, final SlotProvider slots) {
-        super(base, adapter.bridge$getFabric().fabric$getSize(), OrderedInventoryAdapter.class);
+        super(base, adapter.bridge$getFabric().fabric$getSize(), Inventory.class);
         final InventoryLargeChestAccessor inventory = (InventoryLargeChestAccessor) adapter.bridge$getFabric().fabric$get(0);
         this.upperChest = inventory.accessor$getUpperChest().getSizeInventory();
         this.lowerChest = inventory.accessor$getLowerChest().getSizeInventory();
-        this.initLargeChest(slots);
+        this.init(slots);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void initLargeChest(final SlotProvider slots) {
+    private void init(final SlotProvider slots) {
         // add grids
         int base = 0;
-        this.addSpanningChild(new GridInventoryLensImpl(base, 9, this.upperChest / 9, 9, (Class) ChestTileEntity.class, slots));
+        this.addSpanningChild(new GridInventoryLensImpl(base, 9, this.upperChest / 9, (Class) ChestTileEntity.class, slots));
         base += this.upperChest;
-        this.addSpanningChild(new GridInventoryLensImpl(base, 9, this.lowerChest / 9, 9, (Class) ChestTileEntity.class, slots));
+        this.addSpanningChild(new GridInventoryLensImpl(base, 9, this.lowerChest / 9, (Class) ChestTileEntity.class, slots));
         base += this.lowerChest;
 
-        this.addChild(new GridInventoryLensImpl(0, 9, (this.upperChest + this.lowerChest) / 9, 9, slots));
+        this.addChild(new GridInventoryLensImpl(0, 9, (this.upperChest + this.lowerChest) / 9, slots));
 
-        // add slot childs for grids
-        for (int ord = 0, slot = this.base; ord < base; ord++, slot ++) {
-            this.addChild(slots.getSlot(slot), new SlotIndex(ord));
-        }
-
-        // handle possible extension by mods:
-        for (int i = base; i < this.slotCount(); i++) {
-            this.addSpanningChild(new SlotLensImpl(i), SlotIndex.of(i));
-        }
+        this.addMissingSpanningSlots(base, slots);
     }
 }

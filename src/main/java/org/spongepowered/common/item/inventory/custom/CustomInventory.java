@@ -24,82 +24,48 @@
  */
 package org.spongepowered.common.item.inventory.custom;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IInteractionObject;
-import org.spongepowered.api.Sponge;
+import net.minecraft.util.text.TextComponentString;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.ContainerType;
-import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.InventoryProperty;
-import org.spongepowered.api.item.inventory.gui.ContainerType;
-import org.spongepowered.api.item.inventory.gui.ContainerTypes;
-import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
-import org.spongepowered.api.item.inventory.property.GuiId;
-import org.spongepowered.api.item.inventory.property.GuiIdProperty;
-import org.spongepowered.api.item.inventory.property.GuiIds;
-import org.spongepowered.api.item.inventory.property.InventoryCapacity;
-import org.spongepowered.api.item.inventory.property.InventoryDimension;
-import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.item.inventory.InventoryProperties;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.TranslatableText;
-import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.common.SpongeImpl;
-import org.spongepowered.common.data.type.SpongeContainerType;
-import org.spongepowered.common.item.inventory.archetype.CompositeInventoryArchetype;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.SpongeImplHooks;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
-import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.UUID;
 
-public class CustomInventory implements IInventory, IInteractionObject {
+import javax.annotation.Nullable;
+
+public class CustomInventory implements IInventory {
 
     private final List<Inventory> inventories;
+    // shadow usage
     private SlotProvider slots;
     private Lens lens;
-    private Fabric fabric;
+
     private Map<Property<?>, Object> properties = new HashMap<>();
     private int size;
     private Carrier carrier;
     private final PluginContainer plugin;
 
-
-    public static final String INVENTORY_CAPACITY = InventoryCapacity.class.getSimpleName().toLowerCase(Locale.ENGLISH);
-    public static final String INVENTORY_DIMENSION = InventoryDimension.class.getSimpleName().toLowerCase(Locale.ENGLISH);
-    public static final String TITLE = InventoryTitle.class.getSimpleName().toLowerCase(Locale.ENGLISH);
-    private final Map<Class<? extends InteractInventoryEvent>, List<Consumer<? extends InteractInventoryEvent>>> listeners;
-
-    private net.minecraft.inventory.Inventory inv;
-    protected InventoryArchetype archetype;
-
-    private Set<PlayerEntity> viewers = new HashSet<>();
-    private boolean registered;
     private ITextComponent customInventory = new TextComponentString("Custom Inventory");
-
-    private void doRegistration() {
-        for (final Map.Entry<Class<? extends InteractInventoryEvent>, List<Consumer<? extends InteractInventoryEvent>>> entry: this.listeners.entrySet()) {
-            Sponge.getEventManager().registerListener(this.plugin, entry.getKey(), new CustomInventoryListener((Inventory) this, entry.getValue()));
-        }
-        this.registered = true;
-    }
-
 
     public CustomInventory(int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
         this.size = size;
@@ -113,16 +79,15 @@ public class CustomInventory implements IInventory, IInteractionObject {
 
     // IInventory delegation
 
-
     @Nullable
     @Override
     public ITextComponent getCustomName()
     {
-        return this.customInventory
+        return this.customInventory;
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return this.customInventory;
     }
 
@@ -149,7 +114,7 @@ public class CustomInventory implements IInventory, IInteractionObject {
                 offset += inv.capacity();
                 continue;
             }
-            return inv.peek(SlotIndex.of(index - offset)).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+            return inv.peekAt(index - offset).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
         }
         return ItemStack.EMPTY;
     }
@@ -162,7 +127,8 @@ public class CustomInventory implements IInventory, IInteractionObject {
                 offset += inv.capacity();
                 continue;
             }
-            return inv.poll(SlotIndex.of(index - offset), count).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+            InventoryTransactionResult.Poll result = inv.pollFrom(index - offset, count);
+            return ItemStackUtil.fromSnapshotToNative(result.getPolledItem());
         }
         return ItemStack.EMPTY;
     }
@@ -175,7 +141,8 @@ public class CustomInventory implements IInventory, IInteractionObject {
                 offset += inv.capacity();
                 continue;
             }
-            return inv.poll(SlotIndex.of(index - offset)).map(ItemStackUtil::toNative).orElse(ItemStack.EMPTY);
+            InventoryTransactionResult.Poll result = inv.pollFrom(index - offset);
+            return ItemStackUtil.fromSnapshotToNative(result.getPolledItem());
         }
         return ItemStack.EMPTY;
     }
@@ -188,7 +155,7 @@ public class CustomInventory implements IInventory, IInteractionObject {
                 offset += inv.capacity();
                 continue;
             }
-            inv.set(SlotIndex.of(index - offset), ItemStackUtil.fromNative(stack));
+            inv.set(index - offset, ItemStackUtil.fromNative(stack));
         }
     }
 
@@ -213,22 +180,10 @@ public class CustomInventory implements IInventory, IInteractionObject {
 
     @Override
     public void openInventory(final PlayerEntity player) {
-        // ? this.ensureListenersRegistered();
     }
 
     @Override
     public void closeInventory(final PlayerEntity player) {
-/* ?
-        if (this.viewers.isEmpty()) {
-            Task.builder().execute(() -> {
-                if (this.viewers.isEmpty()) {
-                    Sponge.getEventManager().unregisterListeners(this);
-                    this.registered = false;
-                }
-            }).delayTicks(1).submit(SpongeImpl.getPlugin());
-        }
-
- */
     }
 
     @Override
@@ -265,9 +220,4 @@ public class CustomInventory implements IInventory, IInteractionObject {
         return this.carrier;
     }
 
-    public void ensureListenersRegistered() {
-        if (!this.registered) {
-            this.doRegistration();
-        }
-    }
 }

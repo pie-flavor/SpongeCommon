@@ -53,7 +53,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
 import org.spongepowered.common.item.inventory.util.InventoryUtil;
 
@@ -89,12 +89,12 @@ public abstract class TileEntityHopperMixin extends TileEntityLockableLootMixin 
     }
 
     private SlotProvider impl$generateSlotProvider() {
-        return new SlotCollection.Builder().add(5).build();
+        return new SlotLensCollection.Builder().add(5).build();
     }
 
     @SuppressWarnings("unchecked")
     private GridInventoryLens impl$generateRootLens(final SlotProvider slots) {
-        return new GridInventoryLensImpl(0, 5, 1, 5, (Class<? extends Inventory>) this.getClass(), slots);
+        return new GridInventoryLensImpl(0, 5, 1, (Class<? extends Inventory>) this.getClass(), slots);
     }
 
     @Inject(method = "putDropInInventoryAllSlots",

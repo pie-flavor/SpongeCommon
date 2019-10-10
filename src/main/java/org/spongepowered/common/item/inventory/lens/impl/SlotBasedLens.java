@@ -22,31 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.adapter.impl.comp;
+package org.spongepowered.common.item.inventory.lens.impl;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.entity.MainPlayerInventory;
+import org.spongepowered.common.item.inventory.PropertyEntry;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.api.item.inventory.type.GridInventory;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.comp.MainPlayerInventoryLensImpl;
+import org.spongepowered.api.item.inventory.type.OrderedInventory;
+import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
 
-public class MainPlayerInventoryAdapter extends GridInventoryAdapter implements MainPlayerInventory {
+/**
+ * Lenses for inventory based on slots.
+ *
+ * <p>This lenses will usually return a new matching adapter (usually extending {@link BasicInventoryAdapter})</p>
+ */
+@SuppressWarnings("rawtypes")
+public abstract class SlotBasedLens extends AbstractLens {
 
-    private final MainPlayerInventoryLensImpl root;
-
-    public MainPlayerInventoryAdapter(Fabric inv, MainPlayerInventoryLensImpl lens, Inventory parent) {
-        super(inv, lens, parent);
-        this.root = lens;
+    protected final int stride;
+    public SlotBasedLens(int base, int size, int stride, Class<? extends Inventory> adapterType, SlotProvider slots) {
+        super(base, size, adapterType);
+        checkArgument(stride > 0, "Invalid stride: %s", stride);
+        this.stride = stride;
+        this.init(slots);
+    }
+    private void init(SlotProvider slots) {
+        for (int ord = 0, slot = this.base; ord < this.size; ord++, slot += this.stride) {
+            this.addSpanningChild(slots.getSlotLens(slot), PropertyEntry.slotIndex(ord));
+        }
     }
 
-    @Override
-    public Hotbar getHotbar() {
-        return ((Hotbar) this.root.getHotbar().getAdapter(this.bridge$getFabric(), this));
-    }
-
-    @Override
-    public GridInventory getGrid() {
-        return ((GridInventory) this.root.getGrid().getAdapter(this.bridge$getFabric(), this));
-    }
 }

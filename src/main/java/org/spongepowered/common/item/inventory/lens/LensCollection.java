@@ -24,9 +24,10 @@
  */
 package org.spongepowered.common.item.inventory.lens;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.api.data.property.Property;
 
 import java.util.Collection;
+import java.util.Map;
 
 
 public interface LensCollection extends Iterable<Lens> {
@@ -46,17 +47,17 @@ public interface LensCollection extends Iterable<Lens> {
      * @return collection of properties for the specified slot when viewed
      *      through this lens
      */
-    Collection<InventoryProperty<?, ?>> getProperties(int index);
+    Map<Property<?>, Object> getProperties(int index);
     
     /**
      * Get all the properties for the specified lens (if contained in this
      * collection).
      * 
-     * @param index the lens index to fetch
+     * @param lens the lens to fetch
      * @return collection of properties for the specified slot when viewed
      *      through this lens
      */
-    Collection<InventoryProperty<?, ?>> getProperties(Lens lens);
+    Map<Property<?>, Object> getProperties(Lens lens);
 
     /**
      * A strongly-typed {@link java.util.Collection#contains}.

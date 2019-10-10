@@ -72,7 +72,7 @@ public class CompoundSlotProvider implements SlotProvider {
     }
 
     @Override
-    public SlotLens getSlot(int index) {
+    public SlotLens getSlotLens(int index) {
         return this.slotList.get(index);
     }
 

@@ -22,11 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.comp;
+package org.spongepowered.common.item.inventory;
 
-public interface MainPlayerInventoryLens extends GridInventoryLens {
+import org.spongepowered.api.data.property.Property;
+import org.spongepowered.api.item.inventory.InventoryProperties;
 
-    HotbarLens getHotbar();
+public final class PropertyEntry {
 
-    GridInventoryLens getGrid();
+    public static PropertyEntry slotIndex(int index) {
+        return of(InventoryProperties.SLOT_INDEX, index);
+    }
+
+    public static <V> PropertyEntry of(Property<V> property, V value) {
+        return new PropertyEntry(property, value);
+    }
+
+    private final Property<?> property;
+    private final Object value;
+
+    private PropertyEntry(Property<?> property, Object value) {
+        this.property = property;
+        this.value = value;
+    }
+
+    public Property<?> getProperty() {
+        return property;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }

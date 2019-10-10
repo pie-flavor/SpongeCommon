@@ -22,24 +22,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.core.item.inventory;
+package org.spongepowered.common.mixin.api.item.inventory;
 
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ContainerType;
-import org.spongepowered.api.item.inventory.custom.ContainerType;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.item.inventory.custom.EmptyViewableCustomInventory;
-import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
-import org.spongepowered.common.mixin.core.inventory.MixinInventoryBasic;
 
 import java.util.Optional;
 
 @SuppressWarnings("rawtypes")
 @Mixin(EmptyViewableCustomInventory.class)
-public abstract class MixinEmptyViewableCustomInventory implements ViewableInventory, CarriedInventory<Carrier> {
+public abstract class EmptyViewableCustomInventoryMixin_API implements ViewableInventory, CarriedInventory<Carrier> {
 
     @Shadow(remap = false) private Carrier carrier;
     @Shadow(remap = false) private ContainerType type;

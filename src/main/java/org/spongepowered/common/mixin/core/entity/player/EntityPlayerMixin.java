@@ -943,7 +943,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBaseMixin implements
         if (((TrackedInventoryBridge) this.inventory).bridge$capturingInventory()) {
             if (slotIn == EquipmentSlotType.MAINHAND) {
                 final ItemStack orig = this.inventory.field_70462_a.get(this.inventory.field_70461_c);
-                final Slot slot = ((PlayerInventory) this.inventory).getMain().getHotbar().getSlot(SlotIndex.of(this.inventory.field_70461_c)).get();
+                final Slot slot = ((PlayerInventory) this.inventory).getPrimary().getHotbar().getSlot(this.inventory.field_70461_c).get();
                 ((TrackedInventoryBridge) this.inventory).bridge$getCapturedSlotTransactions().add(new SlotTransaction(slot, ItemStackUtil.snapshotOf(orig), ItemStackUtil.snapshotOf(stack)));
             } else if (slotIn == EquipmentSlotType.OFFHAND) {
                 final ItemStack orig = this.inventory.field_184439_c.get(0);
@@ -951,7 +951,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBaseMixin implements
                 ((TrackedInventoryBridge) this.inventory).bridge$getCapturedSlotTransactions().add(new SlotTransaction(slot, ItemStackUtil.snapshotOf(orig), ItemStackUtil.snapshotOf(stack)));
             } else if (slotIn.func_188453_a() == EquipmentSlotType.Group.ARMOR) {
                 final ItemStack orig = this.inventory.field_70460_b.get(slotIn.func_188454_b());
-                final Slot slot = ((PlayerInventory) this.inventory).getEquipment().getSlot(SlotIndex.of(slotIn.func_188454_b())).get();
+                final Slot slot = ((PlayerInventory) this.inventory).getEquipment().getSlot(slotIn.func_188454_b()).get();
                 ((TrackedInventoryBridge) this.inventory).bridge$getCapturedSlotTransactions().add(new SlotTransaction(slot, ItemStackUtil.snapshotOf(orig), ItemStackUtil.snapshotOf(stack)));
             }
         }

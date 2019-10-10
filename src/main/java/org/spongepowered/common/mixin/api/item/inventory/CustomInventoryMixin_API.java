@@ -22,24 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.api.common.item.inventory.custom;
+package org.spongepowered.common.mixin.api.item.inventory;
 
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.CustomContainer;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.mixin.api.mcp.inventory.ContainerMixin_API;
 
-@Mixin(CustomContainer.class)
-public abstract class CustomContainerMixin_API extends ContainerMixin_API {
+import java.util.Optional;
 
-    @Shadow(remap = false) public CustomInventory inv;
+@SuppressWarnings("rawtypes")
+@Mixin(CustomInventory.class)
+public abstract class CustomInventoryMixin_API implements Inventory, CarriedInventory<Carrier> {
+
+    @Shadow(remap = false) private Carrier carrier;
 
     @Override
-    public PluginContainer getPlugin() {
-        // Fail fast to the base inventory
-        return ((Inventory) this.inv).getPlugin();
+    public Optional<Carrier> getCarrier() {
+        return Optional.ofNullable(this.carrier);
     }
+
 }

@@ -46,14 +46,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.SpongeImplHooks;
 import org.spongepowered.common.bridge.entity.EntityVillagerBridge;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
+import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.entity.SpongeCareer;
 import org.spongepowered.common.entity.SpongeEntityMeta;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.mixin.core.entity.EntityAgeableMixin;
 import org.spongepowered.common.registry.SpongeVillagerRegistry;
 
@@ -84,7 +83,7 @@ public abstract class EntityVillagerMixin extends EntityAgeableMixin implements 
 
     @Override
     public SlotProvider bridge$generateSlotProvider() {
-        return new SlotCollection.Builder().add(8).build();
+        return new SlotLensCollection.Builder().add(8).build();
     }
 
     @Override

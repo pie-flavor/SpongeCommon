@@ -22,52 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory;
+package org.spongepowered.common.item.inventory.adapter.impl.comp;
 
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.entity.Hotbar;
+import org.spongepowered.api.item.inventory.entity.MainPlayerInventory;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+public class PrimaryPlayerInventoryAdapter extends GridInventoryAdapter implements MainPlayerInventory {
 
-public class InventoryIterator implements Iterator<Inventory> {
-    
-    protected final List<Lens> children;
-    
-    protected final Fabric inventory;
-    
-    protected final Inventory parent;
+    private final PrimaryPlayerInventoryLensImpl root;
 
-    protected int next = 0;
-
-    public InventoryIterator(Lens lens, Fabric inventory) {
-        this(lens, inventory, null);
-    }
-    
-    public InventoryIterator(Lens lens, Fabric inventory, Inventory parent) {
-        this.children = lens.getSpanningChildren();
-        this.inventory = inventory;
-        this.parent = parent;
+    public PrimaryPlayerInventoryAdapter(Fabric inv, PrimaryPlayerInventoryLensImpl lens, Inventory parent) {
+        super(inv, lens, parent);
+        this.root = lens;
     }
 
     @Override
-    public boolean hasNext() {
-        return this.next < this.children.size();
+    public Hotbar getHotbar() {
+        return ((Hotbar) this.root.getHotbar().getAdapter(this.bridge$getFabric(), this));
     }
 
     @Override
-    public Inventory next() {
-        try {
-            return (Inventory) this.children.get(this.next++).getAdapter(this.inventory, this.parent);
-        } catch (IndexOutOfBoundsException e) {
-            throw new NoSuchElementException();
-        }
+    public GridInventory asGrid() {
+        return ((GridInventory) this.root.getFullGrid().getAdapter(this.bridge$getFabric(), this));
     }
 
     @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
+    public GridInventory getStorage() {
+        return ((GridInventory) this.root.getGrid().getAdapter(this.bridge$getFabric(), this));
     }
+
 }

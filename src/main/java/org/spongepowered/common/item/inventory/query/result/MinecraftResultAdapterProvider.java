@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.MutableLensSet;
@@ -36,7 +36,7 @@ import org.spongepowered.common.item.inventory.query.Query.ResultAdapterProvider
 
 public class MinecraftResultAdapterProvider implements ResultAdapterProvider {
     
-    public class MinecraftQueryResultAdapter extends AbstractInventoryAdapter implements QueryResult {
+    public class MinecraftQueryResultAdapter extends BasicInventoryAdapter implements QueryResult {
         
         public class MinecraftQueryLens extends QueryLens {
 
@@ -73,13 +73,7 @@ public class MinecraftResultAdapterProvider implements ResultAdapterProvider {
     }
 
     protected int getResultSize() {
-        IntSet slots = new IntOpenHashSet();
-        
-        for (Lens lens : this.getResultSet()) {
-            slots.addAll(lens.getSlots());
-        }
-        
-        return slots.size();
+        return this.getResultSet().stream().map(Lens::slotCount).mapToInt(i -> i).sum();
     }
 
 }

@@ -80,13 +80,13 @@ import org.spongepowered.common.item.inventory.lens.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.comp.Inventory2DLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.DelegatingLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.comp.Inventory2DLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.MainPlayerInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.LargeChestInventoryLens;
@@ -234,7 +234,7 @@ public final class ContainerUtil {
                             itemType -> (slot.func_75214_a((ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(itemType, 1))));
                 } else if (subInventory instanceof CraftingInventory) { // InventoryCrafting has width and height and is Input
                     final CraftingInventory craftGrid = (CraftingInventory) subInventory;
-                    lens = new GridInventoryLensImpl(index, craftGrid.func_174922_i(), craftGrid.func_174923_h(), craftGrid.func_174922_i(), InputSlot.class, slots);
+                    lens = new GridInventoryLensImpl(index, craftGrid.getWidth(), craftGrid.getHeight(), InputSlot.class, slots);
                 } else if (slotCount == 1) { // Unknown - A single Slot
                     lens = new SlotLensImpl(index);
                 }
@@ -243,15 +243,15 @@ public final class ContainerUtil {
                     switch (subInventory.func_70005_c_()) {
                         case "Enchant": // Container InputSlots
                         case "Repair": // Container InputSlots
-                            lens = new OrderedInventoryLensImpl(index, slotCount, 1, InputSlot.class, slots);
+                            lens = new DefaultIndexedLens(index, slotCount, slots);
                             break;
                         default: // Unknown
-                            lens = new OrderedInventoryLensImpl(index, slotCount, 1, slots);
+                            lens = new DefaultIndexedLens(index, slotCount, slots);
                     }
                 }
                 else {
                     // Unknown - fallback to OrderedInventory
-                    lens = new OrderedInventoryLensImpl(index, slotCount, 1, slots);
+                    lens = new DefaultIndexedLens(index, slotCount, slots);
                 }
             }
             lenses.add(lens);
@@ -264,7 +264,7 @@ public final class ContainerUtil {
             if (crafting.out != null && crafting.base != null && crafting.grid != null) {
                 additional.add(new CraftingInventoryLensImpl(crafting.out, crafting.base, crafting.grid.func_174922_i(), crafting.grid.func_174923_h(), slots));
             } else if (crafting.base != null && crafting.grid != null) {
-                additional.add(new GridInventoryLensImpl(crafting.base, crafting.grid.func_174922_i(), crafting.grid.func_174923_h(), crafting.grid.func_174922_i(), slots));
+                additional.add(new GridInventoryLensImpl(crafting.base, crafting.grid.getWidth(), crafting.grid.getHeight(), slots));
             }
         } catch (Exception e) {
             SpongeImpl.getLogger().error("Error while creating CraftingInventoryLensImpl or GridInventoryLensImpl for " + container.getClass().getName(), e);
@@ -291,7 +291,7 @@ public final class ContainerUtil {
 
         if (adapterLens instanceof PlayerInventoryLens) {
             if (slotList.size() == 36) {
-                return new DelegatingLens(index, new MainPlayerInventoryLensImpl(index, slots, true), slots);
+                return new DelegatingLens(index, new PrimaryPlayerInventoryLensImpl(index, slots, true), slots);
             }
             return null;
         }
@@ -317,51 +317,18 @@ public final class ContainerUtil {
         return new DelegatingLens(index, slotList, adapterLens, slots);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private static Lens copyLens(final int base, final InventoryAdapter adapter, final Lens lens,
-            final SlotCollection slots) {
-        if (lens instanceof LargeChestInventoryLens) {
-            return new LargeChestInventoryLens(base, adapter, slots);
-        }
-        if (lens instanceof FurnaceInventoryLens) {
-            return new FurnaceInventoryLens(base, adapter, slots);
-        }
-        if (lens instanceof BrewingStandInventoryLens) {
-            return new BrewingStandInventoryLens(base, adapter, slots);
-        }
-        if (lens instanceof CraftingInventoryLens) {
-            return new CraftingInventoryLensImpl(0, base,
-                    ((GridInventoryLens) lens).getWidth(),
-                    ((GridInventoryLens) lens).getHeight(),
-                    slots);
-        }
-        if (lens instanceof GridInventoryLens) {
-            return new GridInventoryLensImpl(base,
-                    ((GridInventoryLens) lens).getWidth(),
-                    ((GridInventoryLens) lens).getHeight(),
-                    ((GridInventoryLens) lens).getStride(),
-                    slots);
-        }
-        if (lens instanceof Inventory2DLens) {
-            return new Inventory2DLensImpl(base,
-                    ((Inventory2DLens) lens).getWidth(),
-                    ((Inventory2DLens) lens).getHeight(),
-                    slots);
-        }
-        return null;
-    }
 
     /**
      * Calculates the slot count for the passed {@link Container}
      *
-     * @return The {@link SlotCollection} with the amount of slots for this container.
+     * @return The {@link SlotLensCollection} with the amount of slots for this container.
      */
     public static SlotProvider countSlots(final net.minecraft.inventory.container.Container container, final Fabric fabric) {
         if (container instanceof LensProviderBridge) {
             return ((LensProviderBridge) container).bridge$slotProvider(fabric, ((InventoryAdapter) container));
         }
 
-        final SlotCollection.Builder builder = new SlotCollection.Builder();
+        final SlotLensCollection.Builder builder = new SlotLensCollection.Builder();
         for (final Slot slot : container.field_75151_b) {
             if (slot instanceof CraftingResultSlot) {
                 builder.add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i,
@@ -372,46 +339,6 @@ public final class ContainerUtil {
             }
         }
         return builder.build();
-    }
-
-    public static InventoryArchetype getArchetype(final net.minecraft.inventory.container.Container container) {
-        if (container instanceof ChestContainer) {
-            final IInventory inventory = ((ChestContainer) container).func_85151_d();
-            if (inventory instanceof ChestTileEntity) {
-                return InventoryArchetypes.CHEST;
-            } else if (inventory instanceof DoubleSidedInventory) {
-                return InventoryArchetypes.DOUBLE_CHEST;
-            } else {
-                return InventoryArchetypes.UNKNOWN;
-            }
-        } else if (container instanceof HopperContainer) {
-            return InventoryArchetypes.HOPPER;
-        } else if (container instanceof DispenserContainer) {
-            return InventoryArchetypes.DISPENSER;
-        } else if (container instanceof WorkbenchContainer) {
-            return InventoryArchetypes.WORKBENCH;
-        } else if (container instanceof FurnaceContainer) {
-            return InventoryArchetypes.FURNACE;
-        } else if (container instanceof EnchantmentContainer) {
-            return InventoryArchetypes.ENCHANTING_TABLE;
-        } else if (container instanceof RepairContainer) {
-            return InventoryArchetypes.ANVIL;
-        } else if (container instanceof BrewingStandContainer) {
-            return InventoryArchetypes.BREWING_STAND;
-        } else if (container instanceof BeaconContainer) {
-            return InventoryArchetypes.BEACON;
-        } else if (container instanceof ContainerHorseInventoryAccessor) {
-            final AbstractHorseEntity horse = ((ContainerHorseInventoryAccessor) container).accessor$getHorseCarrier();
-            if (horse instanceof AbstractChestedHorseEntity && ((AbstractChestedHorseEntity) horse).func_190695_dh()) {
-                return InventoryArchetypes.HORSE_WITH_CHEST;
-            }
-            return InventoryArchetypes.HORSE;
-        } else if (container instanceof MerchantContainer) {
-            return InventoryArchetypes.VILLAGER;
-        } else if (container instanceof PlayerContainer) {
-            return InventoryArchetypes.PLAYER;
-        }
-        return InventoryArchetypes.UNKNOWN;
     }
 
     @Nullable

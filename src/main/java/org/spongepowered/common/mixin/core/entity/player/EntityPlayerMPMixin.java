@@ -40,6 +40,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -88,6 +89,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.ChangeGameModeEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
+import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -122,6 +124,7 @@ import org.spongepowered.common.bridge.entity.player.EntityPlayerBridge;
 import org.spongepowered.common.bridge.entity.player.EntityPlayerMPBridge;
 import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.TrackedInventoryBridge;
+import org.spongepowered.common.bridge.inventory.ViewableInventoryBridge;
 import org.spongepowered.common.bridge.network.NetHandlerPlayServerBridge;
 import org.spongepowered.common.bridge.permissions.SubjectBridge;
 import org.spongepowered.common.bridge.scoreboard.ScorePlayerTeamBridge;
@@ -665,7 +668,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
         // Add SlotTransaction to PlayerContainer
         final org.spongepowered.api.item.inventory.Slot slot = ((Inventory) this.inventoryContainer)
                 .query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class))
-                .query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(this.inventory.field_70461_c)));
+                .getSlot(this.inventory.field_70461_c).get();
         final ItemStackSnapshot originalItem = ItemStackUtil.snapshotOf(currentItem);
         final int count = dropAll && !currentItem.isEmpty() ? currentItem.getCount() : 1;
         final ItemStack itemToDrop = this.inventory.decrStackSize(this.inventory.field_70461_c, count);
@@ -707,6 +710,37 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
             SpongeImpl.getLogger().warn("Opening fallback ContainerChest for inventory '{}'. Most API inventory methods will not be supported", chestInventory);
             ((ContainerBridge) this.openContainer).bridge$setSpectatorChest(true);
         }
+    }
+
+    @Inject(method = "displayGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Container;addListener(Lnet/minecraft/inventory/IContainerListener;)V"))
+    private void onDisplayGuiAddListener(IInteractionObject guiOwner, CallbackInfo ci) {
+        this.trackInteractable(guiOwner);
+    }
+
+    @Inject(method = "displayGUIChest", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Container;addListener(Lnet/minecraft/inventory/IContainerListener;)V"))
+    private void onDisplayGuiChestAddListener(IInventory inventory, CallbackInfo ci) {
+        this.trackInteractable(inventory);
+    }
+
+    @Inject(method = "displayVillagerTradeGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Container;addListener(Lnet/minecraft/inventory/IContainerListener;)V"))
+    private void onDisplayVillagerTradeGuiAddListener(IMerchant villager, CallbackInfo ci) {
+        this.trackInteractable(villager);
+    }
+
+    @Inject(method = "openHorseInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Container;addListener(Lnet/minecraft/inventory/IContainerListener;)V"))
+    private void onOpenGuiHorseInventoryAddListener(AbstractHorse horse, IInventory inventoryIn, CallbackInfo ci) {
+        this.trackInteractable(inventoryIn);
+    }
+
+    private void trackInteractable(Object inventory) {
+        if (inventory instanceof Carrier) {
+            inventory = ((Carrier) inventory).getInventory();
+        }
+        if (inventory instanceof Inventory) {
+            ((Inventory) inventory).asViewable().ifPresent(i -> ((ViewableInventoryBridge) i).bridge$addContainer(this.openContainer));
+        }
+        ((ContainerBridge) this.openContainer).setViewed(inventory);
+        // TODO else unknown inventory - try to provide wrapper Interactable
     }
 
     @Override

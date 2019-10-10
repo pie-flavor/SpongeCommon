@@ -26,27 +26,21 @@ package org.spongepowered.common.mixin.api.mcp.entity.player;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.MainPlayerInventory;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.bridge.entity.player.InventoryPlayerBridge;
-import org.spongepowered.common.bridge.item.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.EquipmentInventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.comp.MainPlayerInventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerInventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -62,8 +56,9 @@ public abstract class InventoryPlayerMixin_API implements PlayerInventory {
     @Shadow public abstract ItemStack getStackInSlot(int index);
 
 
-    @Nullable private MainPlayerInventoryAdapter api$main;
+    @Nullable private PrimaryPlayerInventoryAdapter api$primary;
     @Nullable private EquipmentInventoryAdapter api$equipment;
+    @Nullable private EquipmentInventoryAdapter api$armor;
     @Nullable private SlotAdapter api$offhand;
 
     @SuppressWarnings("ConstantConditions")
@@ -74,13 +69,23 @@ public abstract class InventoryPlayerMixin_API implements PlayerInventory {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public MainPlayerInventory getMain() {
-        if (this.api$main == null && ((InventoryAdapter) this).bridge$getRootLens() instanceof PlayerInventoryLens) {
+    public PrimaryPlayerInventory getPrimary() {
+        if (this.api$primary == null && ((InventoryAdapter) this).bridge$getRootLens() instanceof PlayerInventoryLens) {
             final Lens lens = ((InventoryAdapter) this).bridge$getRootLens();
             final Fabric fabric = ((InventoryAdapter) this).bridge$getFabric();
-            this.api$main = (MainPlayerInventoryAdapter) ((PlayerInventoryLens) lens).getMainLens().getAdapter(fabric, this);
+            this.api$primary = (PrimaryPlayerInventoryAdapter) ((PlayerInventoryLens) lens).getMainLens().getAdapter(fabric, this);
         }
-        return this.api$main;
+        return this.api$primary;
+    }
+
+    @Override
+    public EquipmentInventory getArmor() {
+        if (this.api$armor == null && ((InventoryAdapter) this).bridge$getRootLens() instanceof PlayerInventoryLens) {
+            final Lens lens = ((InventoryAdapter) this).bridge$getRootLens();
+            final Fabric fabric = ((InventoryAdapter) this).bridge$getFabric();
+            this.api$armor = (EquipmentInventoryAdapter) ((PlayerInventoryLens) lens).getArmorLens().getAdapter(fabric, this);
+        }
+        return this.api$armor;
     }
 
     @Override

@@ -22,29 +22,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.mixin.api.item.inventory;
+package org.spongepowered.common.mixin.core.inventory;
 
 import net.minecraft.entity.item.EntityMinecartContainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.tileentity.TileEntityLockable;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.inventory.ContainerType;
-import org.spongepowered.api.item.inventory.menu.InventoryMenu;
-import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.ViewableInventoryBridge;
 import org.spongepowered.common.entity.player.SpongeUserInventory;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.custom.EmptyViewableCustomInventory;
-import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
 import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(value = {
         TileEntityLockable.class,
@@ -55,37 +48,23 @@ import java.util.stream.Collectors;
         EntityMinecartContainer.class,
         ViewableCustomInventory.class,
         EmptyViewableCustomInventory.class
-}, priority = 999)
-public abstract class ViewableInventoryMixin_API implements ViewableInventory {
+})
+public class ViewableInventoryMixin implements ViewableInventoryBridge {
+
+    private List<Container> impl$openContainers = new ArrayList<>();
 
     @Override
-    public Set<Player> getViewers() {
-        return ((ViewableInventoryBridge) this).bridge$getContainers().stream()
-                .flatMap(c -> ((ContainerBridge) c).listeners().stream())
-                .map(Player.class::cast)
-                .collect(Collectors.toSet());
-    }
-    @Override
-    public boolean hasViewers() {
-        return ((ViewableInventoryBridge) this).bridge$getContainers().stream()
-                .flatMap(c -> ((ContainerBridge) c).listeners().stream())
-                .findAny().isPresent();
-    }
-    @Override
-    public boolean canInteractWith(Player player) {
-        if (this instanceof IInventory) {
-            return this.canInteractWith(player);
-        }
-        return true;
+    public void bridge$addContainer(Container container) {
+        this.impl$openContainers.add(container);
     }
 
     @Override
-    public ContainerType getType() {
-        return null; // TODO implement for vanilla types
+    public void bridge$removeContainer(Container container) {
+        this.impl$openContainers.remove(container);
     }
 
-    @Override
-    public InventoryMenu asMenu() {
-        return new SpongeInventoryMenu(this);
+    @Override public List<Container> bridge$getContainers() {
+        return this.impl$openContainers;
     }
+
 }

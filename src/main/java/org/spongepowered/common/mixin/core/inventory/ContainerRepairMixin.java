@@ -46,9 +46,9 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.MainPlayerInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLensImpl;
@@ -69,14 +69,14 @@ public abstract class ContainerRepairMixin extends ContainerMixin implements Len
     @Override
     public Lens bridge$rootLens(final Fabric fabric, final InventoryAdapter adapter) {
         final List<Lens> lenses = new ArrayList<>();
-        lenses.add(new OrderedInventoryLensImpl(0, 3, 1, bridge$getSlotProvider()));
-        lenses.add(new MainPlayerInventoryLensImpl(3, bridge$getSlotProvider(), true));
+        lenses.add(new DefaultIndexedLens(0, 3, bridge$getSlotProvider()));
+        lenses.add(new PrimaryPlayerInventoryLensImpl(3, bridge$getSlotProvider(), true));
         return new ContainerLens(adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass(), bridge$getSlotProvider(), lenses);
     }
 
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
-        final SlotCollection.Builder builder = new SlotCollection.Builder()
+        final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
                 .add(2, InputSlotAdapter.class, i -> new InputSlotLensImpl(i, s -> true, t -> true))
                 .add(1, OutputSlotAdapter.class, i -> new OutputSlotLensImpl(i, s -> false, t -> false))
                 .add(36);

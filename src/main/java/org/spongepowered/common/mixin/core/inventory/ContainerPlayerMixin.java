@@ -40,7 +40,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotCollection;
+import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
 import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLensImpl;
@@ -64,7 +64,7 @@ public abstract class ContainerPlayerMixin extends ContainerMixin implements Con
 
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
-        final SlotCollection.Builder builder = new SlotCollection.Builder()
+        final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
                 .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i, (t) -> false, (t) -> false))
                 .add(4)
                 // TODO predicates for ItemStack/ItemType?

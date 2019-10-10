@@ -26,27 +26,29 @@ package org.spongepowered.common.item.inventory.lens.impl.minecraft;
 
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.OrderedInventoryLensImpl;
 
 public class HorseInventoryLens extends RealLens {
 
-    private OrderedInventoryLensImpl horseEquipment;
+    private DefaultIndexedLens horseEquipment;
     private GridInventoryLensImpl chest;
 
     public HorseInventoryLens(Class<? extends Inventory> adapter, SlotProvider slots) {
         super(0, 2
                 //+ 5*3  // TODO chested horse
                 ,adapter);
+        this.init(slots);
     }
 
     protected void init(SlotProvider slots) {
-        this.horseEquipment = new OrderedInventoryLensImpl(0, 2, 1, slots); // 0-1
+        this.horseEquipment = new DefaultIndexedLens(0, 2, slots); // 0-1
+        this.addSpanningChild(this.horseEquipment);
+        this.addMissingSpanningSlots(2, slots);
+
         // TODO only for "chested" horses. Will this cause problems?
         //this.chest = new GridInventoryLensImpl(2, 5, 3, 5, slots);             // 2-16
-
-        this.addSpanningChild(this.horseEquipment);
         //this.addSpanningChild(this.chest);
     }
 }

@@ -22,23 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl;
+package org.spongepowered.common.bridge.inventory;
 
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.type.GridInventory;
-import org.spongepowered.api.item.inventory.type.OrderedInventory;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
-/**
- * Lenses for inventory concepts like {@link OrderedInventory} or {@link GridInventory}.
- *
- * <p>This lenses will usually return a new matching adapter (usually extending {@link AbstractInventoryAdapter})</p>
- */
-@SuppressWarnings("rawtypes")
-public abstract class ConceptualLens extends AbstractLens {
+public interface InventoryAdapterBridge {
 
-    public ConceptualLens(int base, int size, Class<? extends Inventory> adapterType) {
-        super(base, size, adapterType);
-    }
+    SlotProvider bridge$generateSlotProvider();
 
+    void bridge$setSlotProvider(SlotProvider provider);
+
+    Lens bridge$generateLens(SlotProvider slotProvider);
+
+    void bridge$setLens(Lens lens);
+
+    PluginContainer bridge$getPlugin();
+
+    void bridge$setPlugin(PluginContainer container);
 }

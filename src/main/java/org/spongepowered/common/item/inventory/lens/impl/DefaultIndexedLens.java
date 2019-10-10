@@ -25,32 +25,19 @@
 package org.spongepowered.common.item.inventory.lens.impl;
 
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
-public class DefaultIndexedLens extends AbstractLens {
+public class DefaultIndexedLens extends SlotBasedLens {
 
-    public DefaultIndexedLens(int offset, int size, Class<? extends Inventory> adapterType, SlotProvider slots) {
-        super(offset, size, adapterType);
-        this.init(slots);
-    }
-
-    protected void init(SlotProvider slots) {
-        for (int slot = 0; slot < this.size; slot++) {
-            this.addSpanningChild(slots.getSlot(slot), new SlotIndex(slot));
-        }
-    }
-    
-    @Override
-    public int getRealIndex(Fabric inv, int ordinal) {
-        return ordinal >= this.base + this.size ? -1 : Math.max(-1, this.base + ordinal);
+    public DefaultIndexedLens(int base, int size, SlotProvider slots) {
+        super(base, size, 1, BasicInventoryAdapter.class, slots);
     }
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new AbstractInventoryAdapter(inv, this, parent);
+        return new BasicInventoryAdapter(inv, this, parent);
     }
 }

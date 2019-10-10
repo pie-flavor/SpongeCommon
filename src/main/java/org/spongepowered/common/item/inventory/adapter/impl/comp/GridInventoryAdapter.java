@@ -24,6 +24,7 @@
  */
 package org.spongepowered.common.item.inventory.adapter.impl.comp;
 
+import com.spongepowered.math.vector.Vector2i;
 import com.flowpowered.math.vector.Vector2i;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -32,7 +33,7 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.item.inventory.type.InventoryColumn;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.AdapterLogic;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
@@ -76,7 +77,7 @@ public class GridInventoryAdapter extends Inventory2DAdapter implements GridInve
 
     @Override
     public Optional<Slot> getSlot(int x, int y) {
-        return AbstractInventoryAdapter.forSlot(this.bridge$getFabric(), this.getSlotLens(x, y), this);
+        return BasicInventoryAdapter.forSlot(this.bridge$getFabric(), this.getSlotLens(x, y), this);
     }
 
     @Override
@@ -100,23 +101,18 @@ public class GridInventoryAdapter extends Inventory2DAdapter implements GridInve
     }
 
     @Override
-    public Optional<ItemStack> poll(int x, int y) {
-        return AdapterLogic.pollSequential(this.bridge$getFabric(), this.getSlotLens(x, y));
+    public InventoryTransactionResult.Poll poll(int x, int y) {
+        return AdapterLogic.pollSequential(this.bridge$getFabric(), this.getSlotLens(x, y), null);
     }
 
     @Override
-    public Optional<ItemStack> poll(int x, int y, int limit) {
+    public InventoryTransactionResult.Poll poll(int x, int y, int limit) {
         return AdapterLogic.pollSequential(this.bridge$getFabric(), this.getSlotLens(x, y), limit);
     }
 
     @Override
     public Optional<ItemStack> peek(int x, int y) {
         return AdapterLogic.peekSequential(this.bridge$getFabric(), this.getSlotLens(x, y));
-    }
-
-    @Override
-    public Optional<ItemStack> peek(int x, int y, int limit) {
-        return AdapterLogic.peekSequential(this.bridge$getFabric(), this.getSlotLens(x, y), limit);
     }
 
     @Override

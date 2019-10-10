@@ -39,6 +39,9 @@ import org.spongepowered.common.item.inventory.query.result.MinecraftResultAdapt
 import org.spongepowered.common.item.inventory.query.result.QueryResult;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Query {
 
@@ -88,10 +91,10 @@ public class Query {
         }
 
         if (resultProvider != null) {
-            return (Inventory) resultProvider.getResultAdapter(this.inventory, matches, (Inventory) this.adapter);
+            return resultProvider.getResultAdapter(this.inventory, matches, (Inventory) this.adapter);
         }
 
-        return (Inventory) Query.defaultResultProvider.getResultAdapter(this.inventory, matches, (Inventory) this.adapter);
+        return Query.defaultResultProvider.getResultAdapter(this.inventory, matches, (Inventory) this.adapter);
     }
 
     private MutableLensSet depthFirstSearch(final Lens lens) {
@@ -132,7 +135,10 @@ public class Query {
             return matches;
         }
 
-        if (lens.getSlots().equals(this.getSlots(matches)) && this.allLensesAreSlots(matches)) {
+        List<SlotLens> lensSlots = lens.getSlots();
+        Set<SlotLens> matchSlots = this.getSlots(matches);
+
+        if (lensSlots.size() == matchSlots.size() && this.allLensesAreSlots(matches) && matchSlots.containsAll(lensSlots) ) {
             matches.clear();
             matches.add(lens);
             return matches;
@@ -158,8 +164,8 @@ public class Query {
         return true;
     }
 
-    private IntSet getSlots(final Collection<Lens> lenses) {
-        final IntSet slots = new IntOpenHashSet();
+    private Set<SlotLens> getSlots(Collection<Lens> lenses) {
+        Set<SlotLens> slots = new HashSet<>();
         for (final Lens lens : lenses) {
             slots.addAll(lens.getSlots());
         }

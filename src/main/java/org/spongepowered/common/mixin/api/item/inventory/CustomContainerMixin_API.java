@@ -22,18 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.comp;
+package org.spongepowered.common.mixin.api.item.inventory;
 
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.item.inventory.custom.CustomContainer;
+import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.mixin.api.mcp.inventory.ContainerMixin_API;
 
+@Mixin(CustomContainer.class)
+public abstract class CustomContainerMixin_API extends ContainerMixin_API {
 
-public interface OrderedInventoryLens extends Lens {
-
-    int getStride();
-
-    SlotLens getSlot(int ordinal);
-
-    boolean hasSlotRealIndex(int index);
+    @Shadow(remap = false) public CustomInventory inv;
 
 }

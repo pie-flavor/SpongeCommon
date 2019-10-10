@@ -28,7 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.ArmorEquipable;
+import org.spongepowered.api.item.inventory.ArmorEquipable;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.entity.living.human.EntityHuman;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
@@ -49,15 +51,15 @@ import net.minecraft.util.Hand;
 public abstract class ArmorEquippableMixin_API extends EntityLivingBaseMixin_API implements ArmorEquipable {
 
     @Override
-    public Optional<ItemStack> getItemInHand(HandType handType) {
+    public ItemStack getItemInHand(HandType handType) {
         checkNotNull(handType, "HandType cannot be null!");
         final net.minecraft.item.ItemStack nmsItem = this.getHeldItem((Hand) (Object) handType);
-        return Optional.of(ItemStackUtil.fromNative(nmsItem));
+        return ItemStackUtil.fromNative(nmsItem);
     }
 
     @Override
     public void setItemInHand(HandType handType, @Nullable ItemStack itemInHand) {
         checkNotNull(handType, "HandType cannot be null!");
-        this.setHeldItem((Hand) (Object) handType, ItemStackUtil.toNative(itemInHand).copy());
+        return this.setHeldItem((Hand) (Object) handType, ItemStackUtil.toNative(itemInHand).copy());
     }
 }

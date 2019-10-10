@@ -46,6 +46,9 @@ public abstract class ItemStackQueryOperation<T> extends SpongeQueryOperation<T>
         if (lens instanceof SlotLens) {
             @SuppressWarnings("unchecked")
             ItemStack stack = ItemStackUtil.fromNative(((SlotLens) lens).getStack(inventory));
+            if (stack == null) {
+                return false;
+            }
             if (this.matches(stack, this.arg)) {
                 return true;
             }

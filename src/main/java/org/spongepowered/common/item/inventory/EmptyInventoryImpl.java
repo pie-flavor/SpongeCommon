@@ -36,6 +36,7 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.query.QueryOperation;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult.Type;
+import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.EmptyInventoryImpl.EmptyIterator;
 import org.spongepowered.common.text.translation.SpongeTranslation;
@@ -67,12 +68,12 @@ public class EmptyInventoryImpl implements EmptyInventory {
         return Collections.emptyList();
     }
 
-    public InventoryTransactionResult poll() {
-        return InventoryTransactionResult.failNoTransactions();
+    public InventoryTransactionResult.Poll poll() {
+        return InventoryTransactionResult.builder().type(Type.FAILURE).poll(ItemStackSnapshot.empty()).build();
     }
 
-    public InventoryTransactionResult poll(int limit) {
-        return InventoryTransactionResult.failNoTransactions();
+    public InventoryTransactionResult.Poll poll(int limit) {
+        return InventoryTransactionResult.builder().type(Type.FAILURE).poll(ItemStackSnapshot.empty()).build();
     }
 
     @Override
@@ -161,6 +162,9 @@ public class EmptyInventoryImpl implements EmptyInventory {
 
     @Override
     public <T extends Inventory> Optional<T> query(Class<T> inventoryType) {
+        if (EmptyInventory.class == inventoryType) {
+            return Optional.of((T) this);
+        }
         return Optional.empty();
     }
 
@@ -231,5 +235,15 @@ public class EmptyInventoryImpl implements EmptyInventory {
     @Override
     public Translation getName() {
         return EmptyInventoryImpl.EMPTY_NAME;
+    }
+
+    @Override
+    public boolean containsChild(Inventory child) {
+        return this == child;
+    }
+
+    @Override
+    public Optional<ViewableInventory> asViewable() {
+        return Optional.empty();
     }
 }

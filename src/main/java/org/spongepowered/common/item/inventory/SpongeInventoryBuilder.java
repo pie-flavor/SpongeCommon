@@ -24,17 +24,12 @@
  */
 package org.spongepowered.common.item.inventory;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.container.Container;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.item.inventory.InteractInventoryEvent;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.InventoryArchetypes;
-import org.spongepowered.api.item.inventory.InventoryProperty;
-import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
@@ -43,9 +38,11 @@ import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Consumer;
 
 public class SpongeInventoryBuilder implements Inventory.Builder, Inventory.Builder.BuildingStep, Inventory.Builder.EndStep {
 

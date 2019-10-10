@@ -27,35 +27,23 @@ package org.spongepowered.common.item.inventory.adapter.impl;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.SpongeImpl;
-import org.spongepowered.common.data.property.store.common.InventoryPropertyStore;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.data.property.store.common.InventoryPropertyProvider;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 public interface InventoryPropertyHolder extends Inventory {
 
-    @Override
-    default OptionalDouble getDoubleProperty(Property<Double> property) {
-        return getProperty(property).map(OptionalDouble::of).orElse(OptionalDouble.empty());
-    }
-
-    @Override
-    default OptionalInt getIntProperty(Property<Integer> property) {
-        return getProperty(property).map(OptionalInt::of).orElse(OptionalInt.empty());
-    }
 
     @Override
     default <V> Optional<V> getProperty(Inventory child, Property<V> property) {
-        return InventoryPropertyStore.getProperty(this, child, property);
+        return InventoryPropertyProvider.getProperty(this, child, property);
     }
 
     @Override
     default <V> Optional<V> getProperty(Property<V> property) {
         if (parent() == this) {
-            return InventoryPropertyStore.getRootProperty(this, property);
+            return InventoryPropertyProvider.getRootProperty(this, property);
         }
         return parent().getProperty(this, property);
     }
