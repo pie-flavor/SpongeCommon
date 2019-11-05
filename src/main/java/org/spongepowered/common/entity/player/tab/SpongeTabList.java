@@ -34,6 +34,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketPlayerListHeaderFooter;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
+import net.minecraft.network.play.server.SPacketPlayerListItem.AddPlayerData;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
@@ -116,7 +117,7 @@ public final class SpongeTabList implements TabList {
         // MC-98180 - Sending null as header or footer will cause an exception on the client
         ((SPacketPlayerListHeaderFooterAccessor) packet).accessor$setHeader(this.header == null ? EMPTY_COMPONENT : SpongeTexts.toComponent(this.header));
         ((SPacketPlayerListHeaderFooterAccessor) packet).accessor$setFooter(this.footer == null ? EMPTY_COMPONENT : SpongeTexts.toComponent(this.footer));
-        this.player.connection.sendPacket(packet);
+        this.player.field_71135_a.func_147359_a(packet);
     }
 
     @Override
@@ -145,9 +146,9 @@ public final class SpongeTabList implements TabList {
             this.addEntry(new SpongeTabListEntry(
                     this,
                     (org.spongepowered.api.profile.GameProfile) entry.getProfile(),
-                    entry.getDisplayName() == null ? null : SpongeTexts.toText(entry.getDisplayName()),
-                    entry.getPing(),
-                    (GameMode) (Object) entry.getGameMode()
+                    entry.func_179961_d() == null ? null : SpongeTexts.toText(entry.func_179961_d()),
+                    entry.func_179963_b(),
+                    (GameMode) (Object) entry.func_179960_c()
             ), false);
         }
     }
@@ -195,7 +196,7 @@ public final class SpongeTabList implements TabList {
             entry.getLatency(), (GameType) (Object) entry.getGameMode(),
             entry.getDisplayName().isPresent() ? SpongeTexts.toComponent(entry.getDisplayName().get()) : null);
         ((SPacketPlayerListItemAccessor) packet).accessor$getPlayerDatas().add(data);
-        this.player.connection.sendPacket(packet);
+        this.player.field_71135_a.func_147359_a(packet);
     }
 
     /**

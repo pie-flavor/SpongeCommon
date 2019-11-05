@@ -57,7 +57,7 @@ public class SpongeUserListWhitelist extends UserListWhitelist {
     }
 
     @Override
-    public String[] getKeys() {
+    public String[] func_152685_a() {
         final List<String> names = new ArrayList<>();
         for (final GameProfile profile : getService().getWhitelistedProfiles()) {
             profile.getName().ifPresent(names::add);
