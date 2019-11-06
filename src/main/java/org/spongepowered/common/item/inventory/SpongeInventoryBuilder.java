@@ -24,10 +24,6 @@
  */
 package org.spongepowered.common.item.inventory;
 
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.container.Container;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.item.inventory.container.InteractContainerEvent;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
@@ -57,24 +53,24 @@ public class SpongeInventoryBuilder implements Inventory.Builder, Inventory.Buil
 
     public BuildingStep slots(int amount) {
         this.size += amount;
-        InventoryAdapter adapter = (InventoryAdapter) new InventoryBasic(null, amount);
-        this.inventories.add(adapter);
-        this.lenses.add(new DefaultIndexedLens(0, amount, adapter.getSlotProvider()));
+        net.minecraft.inventory.Inventory adapter = new net.minecraft.inventory.Inventory(amount);
+        this.inventories.add((Inventory) adapter);
+        this.lenses.add(new DefaultIndexedLens(0, amount, ((InventoryAdapter) adapter).bridge$getSlotProvider()));
         return this;
     }
 
     public BuildingStep grid(int sizeX, int sizeY) {
         this.size += sizeX * sizeY;
-        InventoryAdapter adapter = (InventoryAdapter) new InventoryBasic(null, sizeX * sizeY);
-        this.lenses.add(new GridInventoryLensImpl(0, sizeX, sizeY, adapter.getSlotProvider()));
-        this.inventories.add(adapter);
+        net.minecraft.inventory.Inventory adapter = new net.minecraft.inventory.Inventory(sizeX * sizeY);
+        this.lenses.add(new GridInventoryLensImpl(0, sizeX, sizeY, ((InventoryAdapter) adapter).bridge$getSlotProvider()));
+        this.inventories.add((Inventory) adapter);
         return this;
     }
 
     public BuildingStep inventory(Inventory inventory) {
         InventoryAdapter adapter = (InventoryAdapter) inventory;
         this.size += inventory.capacity();
-        this.lenses.add(adapter.getRootLens());
+        this.lenses.add(adapter.bridge$getRootLens());
         this.inventories.add(inventory);
         return this;
     }

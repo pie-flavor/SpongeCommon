@@ -29,7 +29,6 @@ import org.spongepowered.api.data.property.PropertyMatcher;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.EmptyInventory;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryTransformation;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
@@ -38,7 +37,7 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult.Type;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.text.translation.Translation;
-import org.spongepowered.common.item.inventory.EmptyInventoryImpl.EmptyIterator;
+import org.spongepowered.common.profile.query.Query;
 import org.spongepowered.common.text.translation.SpongeTranslation;
 
 import java.util.Collections;
@@ -156,8 +155,8 @@ public class EmptyInventoryImpl implements EmptyInventory {
     }
 
     @Override
-    public Inventory query(QueryOperation<?>... operations) {
-        return null;
+    public Inventory query(org.spongepowered.api.item.inventory.query.Query query) {
+        return query.execute(this);
     }
 
     @Override
@@ -219,11 +218,6 @@ public class EmptyInventoryImpl implements EmptyInventory {
     }
 
     @Override
-    public Inventory transform(InventoryTransformation transformation) {
-        return this;
-    }
-
-    @Override
     public boolean canFit(ItemStack stack) {
         return false;
     }
@@ -233,7 +227,7 @@ public class EmptyInventoryImpl implements EmptyInventory {
     }
 
     @Override
-    public Translation getName() {
+    public Translation getNameTranslation() {
         return EmptyInventoryImpl.EMPTY_NAME;
     }
 
