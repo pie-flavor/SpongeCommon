@@ -25,9 +25,8 @@
 package org.spongepowered.common.entity.player;
 
 import com.google.common.util.concurrent.Futures;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.play.server.SPacketDisconnect;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SDisconnectPacket;
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -47,8 +46,8 @@ public class PlayerKickHelper {
      * @param ply The player to kick
      * @param component The kick message
      */
-    public static void kickPlayer(final EntityPlayerMP ply, final ITextComponent component) {
-        ply.field_71135_a.func_147362_b().sendPacket(new SPacketDisconnect(component),
+    public static void kickPlayer(final ServerPlayerEntity ply, final ITextComponent component) {
+        ply.field_71135_a.func_147362_b().sendPacket(new SDisconnectPacket(component),
                 future -> ply.connection.getNetworkManager().closeChannel(component));
         ply.field_71135_a.func_147362_b().func_150721_g();
         // fix this getServer.
