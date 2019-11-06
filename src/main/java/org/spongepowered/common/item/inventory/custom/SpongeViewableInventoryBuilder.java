@@ -1,38 +1,38 @@
 package org.spongepowered.common.item.inventory.custom;
 
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.inventory.IInventory;
 import org.apache.commons.lang3.Validate;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
-import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
-import org.spongepowered.api.item.inventory.property.ContainerType;
-import org.spongepowered.api.item.inventory.property.ContainerTypes;
-import org.spongepowered.api.item.inventory.slot.SlotIndex;
-import org.spongepowered.api.item.inventory.type.GridInventory;
-import org.spongepowered.api.item.inventory.menu.InventoryMenu;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.ContainerType;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryProperties;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEmpty;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.math.vector.Vector2i;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
-// TODO move to IMPL
 public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder,
+                                                       ViewableInventory.Builder.BuildingStep,
                                                        ViewableInventory.Builder.DummyStep,
-                                                       ViewableInventory.Builder.EndStep
-
-{
+                                                       ViewableInventory.Builder.EndStep {
 
     private ContainerType type;
     private int size;
@@ -62,6 +62,11 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
         return this;
     }
 
+    @Override
+    public BuildingStep typeFrom(ViewableInventory inventory) {
+        return this.type(inventory.getType());
+    }
+
     // Helpers
 
     private int posToIndex(Vector2i pos) {
@@ -82,8 +87,8 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
     }
 
     private Slot newDummySlot() {
-        InventoryBasic dummyInv = new InventoryBasic(new TextComponentString("Dummy Inventory"), 1);
-        return ((Inventory) dummyInv).getSlot(SlotIndex.of(0)).get();
+        IInventory dummyInv = new net.minecraft.inventory.Inventory(1);
+        return ((Inventory) dummyInv).getSlot(0).get();
     }
 
     // Slot definition Impl:
@@ -105,7 +110,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
     }
 
     public DummyStep fillDummy() {
-        Slot slot = newDummySlot();
+        Slot slot = this.newDummySlot();
         List<Integer> indizes = IntStream.range(0, this.size).boxed().filter(idx -> !this.slotDefinitions.containsKey(idx)).collect(Collectors.toList());
         List<Slot> source = Stream.generate(() -> slot).limit(indizes.size()).collect(Collectors.toList());
         this.slotsAtIndizes(source, indizes);
@@ -113,7 +118,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
     }
 
     public DummyStep dummySlots(int count, int offset) {
-        Slot slot = newDummySlot();
+        Slot slot = this.newDummySlot();
         List<Slot> source = Stream.generate(() -> slot).limit(count).collect(Collectors.toList());
         this.slots(source, offset);
         return this;
@@ -125,7 +130,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
     }
 
     public DummyStep dummyGrid(Vector2i size, Vector2i offset) {
-        Slot slot = newDummySlot();
+        Slot slot = this.newDummySlot();
         List<Slot> source = Stream.generate(() -> slot).limit(size.getX() * size.getY()).collect(Collectors.toList());
         this.grid(source, size, offset);
         return this;
@@ -187,9 +192,9 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
             if (this.type instanceof SpongeContainerTypeEmpty) {
                 return this;
             } else {
-                InventoryAdapter inventory = (InventoryAdapter) Inventory.builder().slots(this.size).completeStructure().build();
+                Inventory inventory = Inventory.builder().slots(this.size).completeStructure().build();
                 this.finalInventories = Arrays.asList(inventory);
-                this.finalProvider = inventory.getSlotProvider();
+                this.finalProvider = ((InventoryBridge) inventory).bridge$getAdapter().bridge$getSlotProvider();
             }
         } else {
             this.fillDummy();
@@ -197,7 +202,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
             CustomSlotProvider slotProvider = new CustomSlotProvider();
             for (Map.Entry<Integer, Slot> entry : this.slotDefinitions.entrySet()) {
                 Slot slot = entry.getValue();
-                int idx = slot.getProperty(InventoryProperties.SLOT_INDEX).get().getIndex();
+                int idx = slot.getProperty(InventoryProperties.SLOT_INDEX).get();
 
                 int offset = 0;
                 for (int i = 0; i < this.finalInventories.indexOf(slot.parent()); i++) {
