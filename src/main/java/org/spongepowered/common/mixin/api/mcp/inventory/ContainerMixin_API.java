@@ -24,9 +24,9 @@
  */
 package org.spongepowered.common.mixin.api.mcp.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -45,7 +45,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.item.inventory.util.InventoryUtil;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
-import org.spongepowered.common.mixin.api.item.inventory.CustomContainerMixin_API;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,20 +52,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
-@NonnullByDefault
 @Mixin(value = Container.class, priority = 998)
 public abstract class ContainerMixin_API implements org.spongepowered.api.item.inventory.Container, CarriedInventory<Carrier> {
 
     @Shadow public List<Slot> inventorySlots;
     @Shadow protected List<IContainerListener> listeners;
     @Shadow public abstract NonNullList<ItemStack> getInventory();
-
-    @Override
-    public InventoryArchetype getArchetype() {
-        return ((ContainerBridge) this).bridge$getArchetype();
-    }
 
     @Override
     public Optional<Carrier> getCarrier() {
@@ -121,8 +112,6 @@ public abstract class ContainerMixin_API implements org.spongepowered.api.item.i
                 .map(ItemStackUtil::fromNative);
     }
 
-
-
     @Override
     public Player getViewer() {
         return this.listeners().stream().filter(Player.class::isInstance).map(Player.class::cast).findFirst().orElseThrow(() -> new IllegalStateException("Container without viewer"));
@@ -134,17 +123,17 @@ public abstract class ContainerMixin_API implements org.spongepowered.api.item.i
         return this.getViewer().getOpenInventory().map(c -> c == thisContainer).orElse(false);
     }
 
-    public List<EntityPlayerMP> listeners() {
+    public List<ServerPlayerEntity> listeners() {
         return this.listeners.stream()
-                .filter(EntityPlayerMP.class::isInstance)
-                .map(EntityPlayerMP.class::cast)
+                .filter(ServerPlayerEntity.class::isInstance)
+                .map(ServerPlayerEntity.class::cast)
                 .collect(Collectors.toList());
     }
 
 
 
     @Inject(method = "onContainerClosed", at = @At(value = "HEAD"))
-    private void onOnContainerClosed(EntityPlayer player, CallbackInfo ci) {
+    private void onOnContainerClosed(PlayerEntity player, CallbackInfo ci) {
         ((ContainerBridge) this).setViewed(null);
     }
 

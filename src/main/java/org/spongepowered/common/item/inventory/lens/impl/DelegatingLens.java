@@ -31,7 +31,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
-import org.spongepowered.common.mixin.core.inventory.SlotAccessor;
+import org.spongepowered.common.mixin.core.inventory.accessor.SlotAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
