@@ -68,6 +68,6 @@ public class SpongeContainerType extends SpongeCatalogType implements ContainerT
     }
 
     public Container provideContainer(IInventory viewed, PlayerEntity viewing) {
-        return this.containerProvider.provide(viewed, viewing);
+        return this.containerProvider.provide(, viewed, viewing, );
     }
 }

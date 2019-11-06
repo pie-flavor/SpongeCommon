@@ -83,8 +83,6 @@ import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
-import org.spongepowered.api.item.inventory.property.GuiId;
-import org.spongepowered.api.item.inventory.query.QueryOperationType;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.item.merchant.TradeOffer;
 import org.spongepowered.api.item.merchant.TradeOfferGenerator;
@@ -160,7 +158,6 @@ import org.spongepowered.common.item.enchantment.SpongeEnchantmentBuilder;
 import org.spongepowered.common.item.enchantment.SpongeRandomEnchantmentListBuilder;
 import org.spongepowered.common.item.inventory.SpongeInventoryBuilder;
 import org.spongepowered.common.item.inventory.SpongeItemStackBuilder;
-import org.spongepowered.common.item.inventory.archetype.SpongeInventoryArchetypeBuilder;
 import org.spongepowered.common.item.inventory.custom.SpongeViewableInventoryBuilder;
 import org.spongepowered.common.item.inventory.generation.SpongeItemStackGenerator;
 import org.spongepowered.common.item.inventory.query.SpongeTransformationBuilder;
@@ -448,7 +445,6 @@ public final class CommonModuleRegistry {
                 .registerModule(DismountType.class, new DismountTypeRegistryModule())
                 .registerModule((Class<Key<?>>) (Class<?>) Key.class, KeyRegistryModule.getInstance())
                 .registerModule(ContainerType.class, ContainerTypeRegistryModule.getInstance())
-                .registerModule(InventoryArchetype.class, InventoryArchetypeRegistryModule.getInstance())
                 .registerModule(TransformationRegistryModule.getInstance())
                 .registerModule(StructureMode.class, new StructureModeRegistryModule())
                 .registerModule(CraftingRecipe.class, SpongeCraftingRecipeRegistry.getInstance())
