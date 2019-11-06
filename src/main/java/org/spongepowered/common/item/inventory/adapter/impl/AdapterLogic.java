@@ -56,6 +56,7 @@ public abstract class AdapterLogic {
         InventoryTransactionResult.Builder result = InventoryTransactionResult.builder().type(Type.SUCCESS);
 
         ItemStack removedType = null; // used when polling from multiple slots
+        int totalPolled = 0;
 
         for (SlotLens slot : lens.getSlots()) {
             net.minecraft.item.ItemStack stack = slot.getStack(inv);
@@ -81,9 +82,11 @@ public abstract class AdapterLogic {
                     removedType = ItemStackUtil.cloneDefensive(stack, 1); // set removed type when first removing
                 }
                 if (limit == null) {
+                    totalPolled = pollCount;
                     break; // no limit only polls the first non-empty slot
                 }
                 limit -= pollCount; // remove amount polled from slot
+                totalPolled += pollCount;
             }
             // else setting stack failed - do nothing
 
@@ -93,14 +96,20 @@ public abstract class AdapterLogic {
         }
 
         if (removedType != null) { // mark dirty if items were removed
-            inv.markDirty();
+            inv.fabric$markDirty();
         }
 
         if (limit != null && limit > 0) { // not all items requested could be polled
             result.type(Type.FAILURE);
         }
 
-        return result.build();
+        if (removedType == null) {
+            removedType = ItemStack.empty();
+        } else {
+            removedType.setQuantity(totalPolled);
+        }
+
+        return result.poll(removedType.createSnapshot()).build();
     }
 
     public static Optional<ItemStack> peekSequential(Fabric inv, @Nullable Lens lens) {
@@ -229,11 +238,11 @@ public abstract class AdapterLogic {
     }
 
     public static boolean contains(InventoryAdapter adapter, ItemStack stack) {
-        return AdapterLogic.contains(adapter.getFabric(), adapter.getRootLens(), stack, stack.getQuantity());
+        return AdapterLogic.contains(adapter.bridge$getFabric(), adapter.bridge$getRootLens(), stack, stack.getQuantity());
     }
 
     public static boolean contains(InventoryAdapter adapter, ItemStack stack, int quantity) {
-        return AdapterLogic.contains(adapter.getFabric(), adapter.getRootLens(), stack, quantity);
+        return AdapterLogic.contains(adapter.bridge$getFabric(), adapter.bridge$getRootLens(), stack, quantity);
     }
 
     /**
@@ -270,7 +279,7 @@ public abstract class AdapterLogic {
     }
 
     public static boolean contains(InventoryAdapter adapter, ItemType type) {
-        return AdapterLogic.contains(adapter.getFabric(), adapter.getRootLens(), type);
+        return AdapterLogic.contains(adapter.bridge$getFabric(), adapter.bridge$getRootLens(), type);
     }
 
     public static boolean contains(Fabric inv, Lens lens, ItemType type) {
@@ -292,11 +301,11 @@ public abstract class AdapterLogic {
     public static boolean canFit(Fabric fabric, Lens lens, ItemStack stack) {
         net.minecraft.item.ItemStack nativeStack = ItemStackUtil.toNative(stack);
 
-        int maxStackSize = Math.min(lens.getMaxStackSize(inv), nativeStack.getMaxStackSize());
+        int maxStackSize = Math.min(lens.getMaxStackSize(fabric), nativeStack.getMaxStackSize());
         int remaining = stack.getQuantity();
 
         for (int ord = 0; ord < lens.slotCount() && remaining > 0; ord++) {
-            net.minecraft.item.ItemStack old = lens.getStack(inv, ord);
+            net.minecraft.item.ItemStack old = lens.getStack(fabric, ord);
             int push = Math.min(remaining, maxStackSize);
             if (old.isEmpty()) {
                 remaining -= push;
