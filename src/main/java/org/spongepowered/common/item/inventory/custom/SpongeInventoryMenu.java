@@ -1,9 +1,8 @@
 package org.spongepowered.common.item.inventory.custom;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -11,25 +10,26 @@ import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerType;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.menu.ClickTypes;
-import org.spongepowered.api.item.inventory.menu.SlotChangeHandler;
-import org.spongepowered.api.item.inventory.menu.SlotClickHandler;
-import org.spongepowered.api.item.inventory.menu.handler.*;
-import org.spongepowered.api.item.inventory.property.ContainerType;
-import org.spongepowered.api.item.inventory.slot.SlotIndex;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
+import org.spongepowered.api.item.inventory.menu.handler.ClickHandler;
+import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
+import org.spongepowered.api.item.inventory.menu.handler.InventoryCallbackHandler;
+import org.spongepowered.api.item.inventory.menu.handler.KeySwapHandler;
+import org.spongepowered.api.item.inventory.menu.handler.SlotChangeHandler;
+import org.spongepowered.api.item.inventory.menu.handler.SlotClickHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
+
+import javax.annotation.Nullable;
 
 public class SpongeInventoryMenu implements InventoryMenu {
 
@@ -62,7 +62,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
 
     @Override
     public void setCurrentInventory(ViewableInventory inventory) {
-        if (this.getType().equals(inventory.getContainerType())) {
+        if (this.getType().equals(inventory.getType())) {
             // ideally we would just swap out the IInventory from existing slots
             // TODO handle container changes
             this.reopen(); // if not possible reopen
@@ -81,7 +81,6 @@ public class SpongeInventoryMenu implements InventoryMenu {
         this.title = title;
         this.reopen();
     }
-
 
     @Override
     public InventoryMenu setReadOnly(boolean readOnly) {
@@ -155,7 +154,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
         return container;
     }
 
-    public void onClose(EntityPlayer player, Container container) {
+    public void onClose(PlayerEntity player, Container container) {
 
         if (this.closeHandler != null) {
             try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
@@ -167,7 +166,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
         this.tracked.remove(container);
     }
 
-    public boolean onClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player, Container container) {
+    public boolean onClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player, Container container) {
         try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
             frame.pushCause(player);
             Cause cause = frame.getCurrentCause();
@@ -298,7 +297,7 @@ public class SpongeInventoryMenu implements InventoryMenu {
     public boolean onChange(ItemStack newStack, ItemStack oldStack, Container container, int slotIndex, Slot slot) {
 
         // readonly by default cancels top inventory changes . but can be overridden by change callbacks
-        if (this.readonly && !(slot.inventory instanceof InventoryPlayer)) {
+        if (this.readonly && !(slot.inventory instanceof PlayerInventory)) {
             return false;
         }
 
