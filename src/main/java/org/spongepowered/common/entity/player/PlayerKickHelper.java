@@ -47,11 +47,11 @@ public class PlayerKickHelper {
      * @param component The kick message
      */
     public static void kickPlayer(final ServerPlayerEntity ply, final ITextComponent component) {
-        ply.field_71135_a.func_147362_b().sendPacket(new SDisconnectPacket(component),
+        ply.connection.getNetworkManager().sendPacket(new SDisconnectPacket(component),
                 future -> ply.connection.getNetworkManager().closeChannel(component));
-        ply.field_71135_a.func_147362_b().func_150721_g();
+        ply.connection.getNetworkManager().disableAutoRead();
         // fix this getServer.
-        Futures.getUnchecked(ply.func_184102_h().func_152344_a(() -> ply.field_71135_a.func_147362_b().func_179293_l()));
+        Futures.getUnchecked(ply.getServer().func_152344_a(() -> ply.connection.getNetworkManager().handleDisconnection()));
 
     }
 
