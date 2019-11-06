@@ -96,9 +96,9 @@ public final class InventoryUtil {
                 DoubleSidedInventory inventory;
 
                 if (enumfacing != Direction.WEST && enumfacing != Direction.NORTH) {
-                    inventory = new DoubleSidedInventory("container.chestDouble", chest, (ChestTileEntity) tileentity1);
+                    inventory = new DoubleSidedInventory( chest, (ChestTileEntity) tileentity1);
                 } else {
-                    inventory = new DoubleSidedInventory("container.chestDouble", (ChestTileEntity) tileentity1, chest);
+                    inventory = new DoubleSidedInventory((ChestTileEntity) tileentity1, chest);
                 }
 
                 return Optional.of((Inventory) inventory);

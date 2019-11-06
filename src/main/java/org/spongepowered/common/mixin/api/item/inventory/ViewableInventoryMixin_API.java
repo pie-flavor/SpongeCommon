@@ -24,12 +24,11 @@
  */
 package org.spongepowered.common.mixin.api.item.inventory;
 
-import net.minecraft.entity.item.EntityMinecartContainer;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.item.minecart.ContainerMinecartEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.inventory.DoubleSidedInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryLargeChest;
-import net.minecraft.tileentity.TileEntityLockable;
+import net.minecraft.tileentity.LockableTileEntity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
@@ -46,14 +45,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mixin(value = {
-        TileEntityLockable.class,
-        InventoryLargeChest.class,
+        LockableTileEntity.class,
+        DoubleSidedInventory.class,
         CustomInventory.class,
-        EntityVillager.class,
+        VillagerEntity.class,
         SpongeUserInventory.class,
-        EntityMinecartContainer.class,
-        ViewableCustomInventory.class,
-        EmptyViewableCustomInventory.class
+        ContainerMinecartEntity.class,
+        ViewableCustomInventory.class
 }, priority = 999)
 public abstract class ViewableInventoryMixin_API implements ViewableInventory {
 

@@ -76,13 +76,7 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
         }
     }
 
-    @Override
-    default Translation getNameTranslation() {
-        if (this.impl$getLens() == null) {
-            return this.impl$getFabric().fabric$getDisplayName();
-        }
-        return this.impl$getLens().getName(this.impl$getFabric());
-    }
+    // TODO title property?
 
     @Override
     default Inventory root() {

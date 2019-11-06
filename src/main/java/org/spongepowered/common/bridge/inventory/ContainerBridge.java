@@ -25,7 +25,7 @@
 package org.spongepowered.common.bridge.inventory;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import org.spongepowered.api.event.item.inventory.CraftItemEvent;
 import org.spongepowered.api.item.inventory.Carrier;
@@ -80,7 +80,7 @@ public interface ContainerBridge {
 
     void bridge$setMenu(SpongeInventoryMenu menu);
 
-    List<EntityPlayerMP> listeners();
+    List<ServerPlayerEntity> listeners();
 
     void setViewed(Object viewed);
 }
