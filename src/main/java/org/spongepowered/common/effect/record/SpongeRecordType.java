@@ -26,7 +26,6 @@ package org.spongepowered.common.effect.record;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.flowpowered.math.vector.Vector3i;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.server.SPlaySoundEventPacket;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +34,7 @@ import org.spongepowered.api.effect.sound.record.RecordType;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.common.SpongeCatalogType;
 import org.spongepowered.common.text.translation.SpongeTranslation;
-
+import org.spongepowered.math.vector.Vector3i;
 import javax.annotation.Nullable;
 
 public class SpongeRecordType extends SpongeCatalogType.Translatable implements RecordType {

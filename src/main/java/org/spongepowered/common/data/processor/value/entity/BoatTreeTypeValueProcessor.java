@@ -30,9 +30,9 @@ import org.spongepowered.api.data.manipulator.immutable.block.ImmutableTreeData;
 import org.spongepowered.api.data.manipulator.mutable.block.TreeData;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.data.type.TreeTypes;
+import org.spongepowered.api.data.value.Value.Immutable;
+import org.spongepowered.api.data.value.Value.Mutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.manipulator.mutable.block.SpongeTreeData;
 import org.spongepowered.common.data.processor.common.AbstractEntitySingleDataProcessor;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeValue;
@@ -41,7 +41,7 @@ import org.spongepowered.common.data.value.mutable.SpongeValue;
 import java.util.Optional;
 import net.minecraft.entity.item.BoatEntity;
 
-public class BoatTreeTypeValueProcessor extends AbstractEntitySingleDataProcessor<BoatEntity, TreeType, Value<TreeType>, TreeData, ImmutableTreeData> {
+public class BoatTreeTypeValueProcessor extends AbstractEntitySingleDataProcessor<BoatEntity, TreeType, Mutable<TreeType>, TreeData, ImmutableTreeData> {
 
     public BoatTreeTypeValueProcessor() {
         super(BoatEntity.class, Keys.TREE_TYPE);
@@ -101,12 +101,12 @@ public class BoatTreeTypeValueProcessor extends AbstractEntitySingleDataProcesso
     }
 
     @Override
-    protected ImmutableValue<TreeType> constructImmutableValue(TreeType value) {
+    protected Immutable<TreeType> constructImmutableValue(TreeType value) {
         return new ImmutableSpongeValue<>(this.key, value);
     }
 
     @Override
-    protected Value<TreeType> constructValue(TreeType actualValue) {
+    protected Mutable<TreeType> constructValue(TreeType actualValue) {
         return new SpongeValue<>(this.key, actualValue);
     }
 }

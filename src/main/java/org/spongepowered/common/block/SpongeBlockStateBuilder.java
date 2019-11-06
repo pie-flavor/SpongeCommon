@@ -30,13 +30,12 @@ import static org.spongepowered.common.data.util.DataUtil.checkDataExists;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.common.util.Constants;
 
 import java.util.Optional;
@@ -56,7 +55,7 @@ public class SpongeBlockStateBuilder extends AbstractDataBuilder<BlockState> imp
     }
 
     @Override
-    public BlockState.Builder add(DataManipulator<?, ?> manipulator) {
+    public BlockState.Builder add(org.spongepowered.api.data.DataManipulator.Mutable<?, ?> manipulator) {
         return add(manipulator.asImmutable());
     }
 
@@ -70,7 +69,7 @@ public class SpongeBlockStateBuilder extends AbstractDataBuilder<BlockState> imp
     }
 
     @Override
-    public <V> SpongeBlockStateBuilder add(Key<? extends BaseValue<V>> key, V value) {
+    public <V> SpongeBlockStateBuilder add(Key<? extends Value<V>> key, V value) {
         checkNotNull(key, "key");
         this.blockState = this.blockState.with(key, value).orElse(this.blockState);
         return this;

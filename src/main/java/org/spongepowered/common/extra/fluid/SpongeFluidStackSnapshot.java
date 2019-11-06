@@ -24,18 +24,18 @@
  */
 package org.spongepowered.common.extra.fluid;
 
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.Property;
-import org.spongepowered.api.data.Queries;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.extra.fluid.FluidStack;
-import org.spongepowered.api.extra.fluid.FluidStackSnapshot;
-import org.spongepowered.api.extra.fluid.FluidType;
-import org.spongepowered.api.extra.fluid.FluidTypes;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.Queries;
+import org.spongepowered.api.data.value.MergeFunction;
+import org.spongepowered.api.data.value.Value;
+import org.spongepowered.api.data.value.Value.Immutable;
+import org.spongepowered.api.fluid.FluidStack;
+import org.spongepowered.api.fluid.FluidStackSnapshot;
+import org.spongepowered.api.fluid.FluidType;
+import org.spongepowered.api.fluid.FluidTypes;
 import org.spongepowered.common.util.Constants;
 
 import java.util.Collection;
@@ -116,17 +116,17 @@ public class SpongeFluidStackSnapshot implements FluidStackSnapshot {
     }
 
     @Override
-    public <E> Optional<FluidStackSnapshot> transform(Key<? extends BaseValue<E>> key, Function<E, E> function) {
+    public <E> Optional<FluidStackSnapshot> transform(Key<? extends Value<E>> key, Function<E, E> function) {
         return Optional.empty();
     }
 
     @Override
-    public <E> Optional<FluidStackSnapshot> with(Key<? extends BaseValue<E>> key, E value) {
+    public <E> Optional<FluidStackSnapshot> with(Key<? extends Value<E>> key, E value) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<FluidStackSnapshot> with(BaseValue<?> value) {
+    public Optional<FluidStackSnapshot> with(Value<?> value) {
         return Optional.empty();
     }
 
@@ -171,12 +171,12 @@ public class SpongeFluidStackSnapshot implements FluidStackSnapshot {
     }
 
     @Override
-    public <E> Optional<E> get(Key<? extends BaseValue<E>> key) {
+    public <E> Optional<E> get(Key<? extends Value<E>> key) {
         return Optional.empty();
     }
 
     @Override
-    public <E, V extends BaseValue<E>> Optional<V> getValue(Key<V> key) {
+    public <E, V extends Value<E>> Optional<V> getValue(Key<V> key) {
         return Optional.empty();
     }
 
@@ -196,7 +196,7 @@ public class SpongeFluidStackSnapshot implements FluidStackSnapshot {
     }
 
     @Override
-    public Set<ImmutableValue<?>> getValues() {
+    public Set<Immutable<?>> getValues() {
         return Collections.emptySet();
     }
 

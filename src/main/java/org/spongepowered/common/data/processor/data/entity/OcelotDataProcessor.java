@@ -30,9 +30,9 @@ import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableOcelotDa
 import org.spongepowered.api.data.manipulator.mutable.entity.OcelotData;
 import org.spongepowered.api.data.type.OcelotType;
 import org.spongepowered.api.data.type.OcelotTypes;
+import org.spongepowered.api.data.value.Value.Immutable;
+import org.spongepowered.api.data.value.Value.Mutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeOcelotData;
 import org.spongepowered.common.data.processor.common.AbstractEntitySingleDataProcessor;
 import org.spongepowered.common.util.Constants;
@@ -45,14 +45,14 @@ import java.util.Optional;
 import net.minecraft.entity.passive.OcelotEntity;
 
 public class OcelotDataProcessor extends
-        AbstractEntitySingleDataProcessor<OcelotEntity, OcelotType, Value<OcelotType>, OcelotData, ImmutableOcelotData> {
+        AbstractEntitySingleDataProcessor<OcelotEntity, OcelotType, Mutable<OcelotType>, OcelotData, ImmutableOcelotData> {
 
     public OcelotDataProcessor() {
         super(OcelotEntity.class, Keys.OCELOT_TYPE);
     }
 
     @Override
-    protected Value<OcelotType> constructValue(OcelotType actualValue) {
+    protected Mutable<OcelotType> constructValue(OcelotType actualValue) {
         return new SpongeValue<>(Keys.OCELOT_TYPE, Constants.Catalog.DEFAULT_OCELOT, actualValue);
     }
 
@@ -71,7 +71,7 @@ public class OcelotDataProcessor extends
     }
 
     @Override
-    protected ImmutableValue<OcelotType> constructImmutableValue(OcelotType value) {
+    protected Immutable<OcelotType> constructImmutableValue(OcelotType value) {
         return ImmutableSpongeValue.cachedOf(Keys.OCELOT_TYPE, OcelotTypes.WILD_OCELOT, value);
     }
 

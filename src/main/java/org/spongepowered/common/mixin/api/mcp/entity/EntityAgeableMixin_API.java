@@ -28,7 +28,6 @@ import net.minecraft.entity.AgeableEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.AgeableData;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.living.Ageable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -67,7 +66,7 @@ public abstract class EntityAgeableMixin_API extends EntityCreatureMixin_API imp
     }
 
     @Override
-    public Value<Boolean> adult() {
+    public org.spongepowered.api.data.value.Value.Mutable<Boolean> adult() {
         return new SpongeValue<>(Keys.IS_ADULT, true,  this.shadow$isChild());
     }
 }

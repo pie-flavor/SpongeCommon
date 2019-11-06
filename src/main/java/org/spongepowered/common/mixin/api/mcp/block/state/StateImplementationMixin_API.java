@@ -38,16 +38,14 @@ import net.minecraft.util.IStringSerializable;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.block.entity.BlockEntity;
 import org.spongepowered.api.data.Property;
-import org.spongepowered.api.data.Queries;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.Queries;
+import org.spongepowered.api.data.value.MergeFunction;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.util.Cycleable;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -84,7 +82,7 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
     // implementation can pose during start up, or whether game state
     // can affect the various systems in place (i.e. we sometimes can't load certain
     // systems before other registries have finished registering their stuff)
-    @Nullable private ImmutableSet<ImmutableValue<?>> api$values;
+    @Nullable private ImmutableSet<org.spongepowered.api.data.value.Value.Immutable<?>> api$values;
     @Nullable private ImmutableSet<Key<?>> api$keys;
     @Nullable private ImmutableList<ImmutableDataManipulator<?, ?>> api$manipulators;
     @Nullable private ImmutableMap<Key<?>, Object> api$keyMap;
@@ -93,7 +91,7 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public BlockState cycleValue(final Key<? extends BaseValue<? extends Cycleable<?>>> key) {
+    public BlockState cycleValue(final Key<? extends Value<? extends Cycleable<?>>> key) {
         final Optional<Cycleable<?>> optional = get((Key) key);
         return optional
             .map(Cycleable::cycleNext)
@@ -117,9 +115,9 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
             .position(location.getBlockPosition())
             .worldId(location.getExtent().getUniqueId());
         if (this.block.hasTileEntity() && location.getBlockType().equals(this.block)) {
-            final TileEntity tileEntity = location.getTileEntity()
+            final BlockEntity tileEntity = location.getTileEntity()
                 .orElseThrow(() -> new IllegalStateException("Unable to retrieve a TileEntity for location: " + location));
-            for (final DataManipulator<?, ?> manipulator : ((CustomDataHolderBridge) tileEntity).bridge$getCustomManipulators()) {
+            for (final org.spongepowered.api.data.DataManipulator.Mutable<?, ?> manipulator : ((CustomDataHolderBridge) tileEntity).bridge$getCustomManipulators()) {
                 builder.add(manipulator);
             }
             final CompoundNBT compound = new CompoundNBT();
@@ -149,9 +147,9 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
         if (this.api$keyMap == null) {
             final ImmutableMap.Builder<Key<?>, Object> builder = ImmutableMap.builder();
             final ImmutableSet.Builder<Key<?>> keyBuilder = ImmutableSet.builder();
-            final ImmutableSet.Builder<ImmutableValue<?>> valueBuilder = ImmutableSet.builder();
+            final ImmutableSet.Builder<org.spongepowered.api.data.value.Value.Immutable<?>> valueBuilder = ImmutableSet.builder();
             for (final ImmutableDataManipulator<?, ?> manipulator : this.api$manipulators) {
-                for (final ImmutableValue<?> value : manipulator.getValues()) {
+                for (final org.spongepowered.api.data.value.Value.Immutable<?> value : manipulator.getValues()) {
                     builder.put(value.getKey(), value.get());
                     valueBuilder.add(value);
                     keyBuilder.add(value.getKey());
@@ -192,14 +190,14 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
     }
 
     @Override
-    public <E> Optional<BlockState> transform(final Key<? extends BaseValue<E>> key, final Function<E, E> function) {
+    public <E> Optional<BlockState> transform(final Key<? extends Value<E>> key, final Function<E, E> function) {
         return this.get(checkNotNull(key, "Key cannot be null!")) // If we don't have a value for the key, we don't support it.
             .map(checkNotNull(function, "Function cannot be null!"))
             .map(newVal -> with(key, newVal).orElse(this)); // We can either return this value or the updated value, but not an empty
     }
 
     @Override
-    public <E> Optional<BlockState> with(final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> Optional<BlockState> with(final Key<? extends Value<E>> key, final E value) {
         if (!supports(key)) {
             return Optional.empty();
         }
@@ -208,8 +206,8 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<BlockState> with(final BaseValue<?> value) {
-        return with((Key<? extends BaseValue<Object>>) value.getKey(), value.get());
+    public Optional<BlockState> with(final Value<?> value) {
+        return with((Key<? extends Value<Object>>) value.getKey(), value.get());
     }
 
     @SuppressWarnings({"unchecked"})
@@ -300,15 +298,15 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
 
     @SuppressWarnings("unchecked")
     @Override
-    public <E> Optional<E> get(final Key<? extends BaseValue<E>> key) {
+    public <E> Optional<E> get(final Key<? extends Value<E>> key) {
         return Optional.ofNullable((E) this.getKeyMap().get(key));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <E, V extends BaseValue<E>> Optional<V> getValue(final Key<V> key) {
+    public <E, V extends Value<E>> Optional<V> getValue(final Key<V> key) {
         checkNotNull(key);
-        for (final ImmutableValue<?> value : this.getValues()) {
+        for (final org.spongepowered.api.data.value.Value.Immutable<?> value : this.getValues()) {
             if (value.getKey().equals(key)) {
                 return Optional.of((V) value.asMutable());
             }
@@ -335,7 +333,7 @@ public abstract class StateImplementationMixin_API extends BlockStateBase implem
     }
 
     @Override
-    public Set<ImmutableValue<?>> getValues() {
+    public Set<org.spongepowered.api.data.value.Value.Immutable<?>> getValues() {
         if (this.api$values == null) {
             lazyLoadManipulatorsAndKeys();
         }

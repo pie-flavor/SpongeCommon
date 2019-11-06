@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.mixin.api.mcp.entity.item;
 
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.type.TreeTypes;
 import org.spongepowered.api.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Implements;
@@ -51,7 +50,7 @@ public abstract class EntityBoatMixin_API extends EntityMixin_API implements Boa
     private double unoccupiedDecelerationSpeed = 0.8D;
 
     @Override
-    public void spongeApi$supplyVanillaManipulators(Collection<? super DataManipulator<?, ?>> manipulators) {
+    public void spongeApi$supplyVanillaManipulators(Collection<? super org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators) {
         super.spongeApi$supplyVanillaManipulators(manipulators);
         final BoatEntity.Type boatType = this.getBoatType();
         if (boatType == BoatEntity.Type.OAK) {

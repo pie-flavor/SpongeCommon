@@ -27,21 +27,19 @@ package org.spongepowered.common.extra.fluid;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataTransactionResult;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.Property;
-import org.spongepowered.api.data.Queries;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
-import org.spongepowered.api.data.merge.MergeFunction;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.extra.fluid.FluidStack;
-import org.spongepowered.api.extra.fluid.FluidStackSnapshot;
-import org.spongepowered.api.extra.fluid.FluidType;
+import org.spongepowered.api.data.persistence.Queries;
+import org.spongepowered.api.data.value.MergeFunction;
+import org.spongepowered.api.data.value.Value;
+import org.spongepowered.api.fluid.FluidStack;
+import org.spongepowered.api.fluid.FluidStackSnapshot;
+import org.spongepowered.api.fluid.FluidType;
 import org.spongepowered.common.util.Constants;
 
 import java.util.Collection;
@@ -114,32 +112,32 @@ public class SpongeFluidStack implements FluidStack {
     }
 
     @Override
-    public <T extends DataManipulator<?, ?>> Optional<T> get(Class<T> containerClass) {
+    public <T extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> Optional<T> get(Class<T> containerClass) {
         return Optional.empty();
     }
 
     @Override
-    public <T extends DataManipulator<?, ?>> Optional<T> getOrCreate(Class<T> containerClass) {
+    public <T extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> Optional<T> getOrCreate(Class<T> containerClass) {
         return Optional.empty();
     }
 
     @Override
-    public boolean supports(Class<? extends DataManipulator<?, ?>> holderClass) {
+    public boolean supports(Class<? extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> holderClass) {
         return false;
     }
 
     @Override
-    public <E> DataTransactionResult offer(Key<? extends BaseValue<E>> key, E value) {
+    public <E> DataTransactionResult offer(Key<? extends Value<E>> key, E value) {
         return DataTransactionResult.failNoData();
     }
 
     @Override
-    public DataTransactionResult offer(DataManipulator<?, ?> valueContainer, MergeFunction function) {
+    public DataTransactionResult offer(org.spongepowered.api.data.DataManipulator.Mutable<?, ?> valueContainer, MergeFunction function) {
         return DataTransactionResult.failNoData();
     }
 
     @Override
-    public DataTransactionResult remove(Class<? extends DataManipulator<?, ?>> containerClass) {
+    public DataTransactionResult remove(Class<? extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> containerClass) {
         return DataTransactionResult.failNoData();
     }
 
@@ -159,7 +157,7 @@ public class SpongeFluidStack implements FluidStack {
     }
 
     @Override
-    public Collection<DataManipulator<?, ?>> getContainers() {
+    public Collection<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> getContainers() {
         return Collections.emptyList();
     }
 
@@ -191,12 +189,12 @@ public class SpongeFluidStack implements FluidStack {
     }
 
     @Override
-    public <E> Optional<E> get(Key<? extends BaseValue<E>> key) {
+    public <E> Optional<E> get(Key<? extends Value<E>> key) {
         return Optional.empty();
     }
 
     @Override
-    public <E, V extends BaseValue<E>> Optional<V> getValue(Key<V> key) {
+    public <E, V extends Value<E>> Optional<V> getValue(Key<V> key) {
         return Optional.empty();
     }
 
@@ -216,7 +214,7 @@ public class SpongeFluidStack implements FluidStack {
     }
 
     @Override
-    public Set<ImmutableValue<?>> getValues() {
+    public Set<org.spongepowered.api.data.value.Value.Immutable<?>> getValues() {
         return Collections.emptySet();
     }
 }

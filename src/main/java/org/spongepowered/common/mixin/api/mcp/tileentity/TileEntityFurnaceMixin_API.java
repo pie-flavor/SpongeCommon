@@ -26,11 +26,10 @@ package org.spongepowered.common.mixin.api.mcp.tileentity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.FurnaceTileEntity;
-import org.spongepowered.api.block.tileentity.carrier.Furnace;
-import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.block.entity.carrier.furnace.FurnaceBlockEntity;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.FurnaceData;
+import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +42,7 @@ import java.util.List;
 
 @NonnullByDefault
 @Mixin(FurnaceTileEntity.class)
-public abstract class TileEntityFurnaceMixin_API extends TileEntityLockableMixin_API<Furnace> implements Furnace {
+public abstract class TileEntityFurnaceMixin_API extends TileEntityLockableMixin_API<FurnaceBlockEntity> implements FurnaceBlockEntity {
 
     @Shadow private String furnaceCustomName;
 
@@ -126,7 +125,7 @@ public abstract class TileEntityFurnaceMixin_API extends TileEntityLockableMixin
     }
 
     @Override
-    public void supplyVanillaManipulators(List<DataManipulator<?, ?>> manipulators) {
+    public void supplyVanillaManipulators(List<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators) {
         super.supplyVanillaManipulators(manipulators);
         manipulators.add(getFurnaceData());
 

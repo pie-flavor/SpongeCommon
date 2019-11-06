@@ -30,9 +30,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.AreaEffectCloudData;
-import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.effect.particle.ParticleType;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -86,7 +84,7 @@ public abstract class EntityAreaEffectCloudMixin_API extends EntityMixin_API imp
     }
 
     @Override
-    public Value<Color> color() {
+    public org.spongepowered.api.data.value.Value.Mutable<Color> color() {
         return new SpongeValue<>(Keys.AREA_EFFECT_CLOUD_COLOR, Color.WHITE, Color.ofRgb(getColor()));
     }
 
@@ -101,7 +99,7 @@ public abstract class EntityAreaEffectCloudMixin_API extends EntityMixin_API imp
     }
 
     @Override
-    public Value<ParticleType> particleType() {
+    public org.spongepowered.api.data.value.Value.Mutable<ParticleType> particleType() {
         return new SpongeValue<>(Keys.AREA_EFFECT_CLOUD_PARTICLE_TYPE, ParticleTypes.MOB_SPELL, ParticleTypes.MOB_SPELL);
     }
 
@@ -166,7 +164,7 @@ public abstract class EntityAreaEffectCloudMixin_API extends EntityMixin_API imp
     }
 
     @Override
-    public ListValue<PotionEffect> effects() {
+    public org.spongepowered.api.data.value.ListValue.Mutable<PotionEffect> effects() {
         return new SpongeListValue<>(Keys.POTION_EFFECTS, (List<PotionEffect>) (List<?>) this.effects);
     }
 

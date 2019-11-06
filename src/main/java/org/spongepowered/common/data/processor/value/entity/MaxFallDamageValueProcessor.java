@@ -26,8 +26,8 @@ package org.spongepowered.common.data.processor.value.entity;
 
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.processor.common.AbstractSpongeValueProcessor;
 import org.spongepowered.common.data.value.SpongeValueFactory;
@@ -64,7 +64,7 @@ public class MaxFallDamageValueProcessor extends AbstractSpongeValueProcessor<En
     }
 
     @Override
-    protected ImmutableValue<Double> constructImmutableValue(final Double value) {
+    protected Immutable<Double> constructImmutableValue(final Double value) {
         return constructValue(value).asImmutable();
     }
 

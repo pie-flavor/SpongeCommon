@@ -28,8 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.DispenserTileEntity;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
 import org.spongepowered.api.entity.projectile.Projectile;
-import org.spongepowered.api.entity.projectile.source.ProjectileSource;
-
+import org.spongepowered.api.projectile.source.ProjectileSource;
 import java.util.Optional;
 
 public class SimpleItemLaunchLogic<P extends Projectile> extends SimpleEntityLaunchLogic<P> {

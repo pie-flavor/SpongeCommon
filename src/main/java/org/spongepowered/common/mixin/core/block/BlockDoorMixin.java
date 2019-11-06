@@ -37,7 +37,7 @@ import org.spongepowered.api.data.manipulator.immutable.block.ImmutablePoweredDa
 import org.spongepowered.api.data.type.Hinge;
 import org.spongepowered.api.data.type.PortionType;
 import org.spongepowered.api.data.type.PortionTypes;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.data.ImmutableDataCachingUtil;
@@ -93,7 +93,7 @@ public abstract class BlockDoorMixin extends BlockMixin {
     }
 
     @Override
-    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends Value<E>> key, final E value) {
         if (key.equals(Keys.HINGE_POSITION)) {
             final DoorBlock.EnumHingePosition hinge = (DoorBlock.EnumHingePosition) value;
             return Optional.of((BlockState) blockState.withProperty(DoorBlock.HINGE, hinge));

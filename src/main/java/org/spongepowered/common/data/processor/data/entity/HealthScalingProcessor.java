@@ -28,8 +28,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableHealthScalingData;
 import org.spongepowered.api.data.manipulator.mutable.entity.HealthScalingData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeHealthScaleData;
 import org.spongepowered.common.data.processor.common.AbstractEntitySingleDataProcessor;
@@ -71,7 +71,7 @@ public class HealthScalingProcessor extends AbstractEntitySingleDataProcessor<Se
     }
 
     @Override
-    protected ImmutableValue<Double> constructImmutableValue(Double value) {
+    protected Immutable<Double> constructImmutableValue(Double value) {
         return SpongeValueFactory.boundedBuilder(Keys.HEALTH_SCALE)
                 .minimum(1D)
                 .maximum((double) Float.MAX_VALUE)
@@ -96,7 +96,7 @@ public class HealthScalingProcessor extends AbstractEntitySingleDataProcessor<Se
         if (!(container instanceof EntityPlayerMPBridge)) {
             return DataTransactionResult.failNoData();
         }
-        final ImmutableValue<Double> current = constructImmutableValue(((EntityPlayerMPBridge) container).bridge$getHealthScale());
+        final Immutable<Double> current = constructImmutableValue(((EntityPlayerMPBridge) container).bridge$getHealthScale());
         ((EntityPlayerMPBridge) container).bridge$setHealthScale(Constants.Entity.Player.DEFAULT_HEALTH_SCALE);
         return DataTransactionResult.successRemove(current);
     }

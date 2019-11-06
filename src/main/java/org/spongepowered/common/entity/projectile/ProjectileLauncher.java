@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.entity.projectile;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -60,13 +59,13 @@ import org.spongepowered.api.entity.ShulkerBullet;
 import org.spongepowered.api.entity.living.golem.Shulker;
 import org.spongepowered.api.entity.projectile.Egg;
 import org.spongepowered.api.entity.projectile.EnderPearl;
+import org.spongepowered.api.entity.projectile.ExperienceBottle;
 import org.spongepowered.api.entity.projectile.EyeOfEnder;
 import org.spongepowered.api.entity.projectile.Firework;
 import org.spongepowered.api.entity.projectile.FishHook;
 import org.spongepowered.api.entity.projectile.LlamaSpit;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.projectile.Snowball;
-import org.spongepowered.api.entity.projectile.ThrownExpBottle;
 import org.spongepowered.api.entity.projectile.ThrownPotion;
 import org.spongepowered.api.entity.projectile.arrow.Arrow;
 import org.spongepowered.api.entity.projectile.arrow.SpectralArrow;
@@ -75,14 +74,14 @@ import org.spongepowered.api.entity.projectile.explosive.DragonFireball;
 import org.spongepowered.api.entity.projectile.explosive.WitherSkull;
 import org.spongepowered.api.entity.projectile.explosive.fireball.LargeFireball;
 import org.spongepowered.api.entity.projectile.explosive.fireball.SmallFireball;
-import org.spongepowered.api.entity.projectile.source.ProjectileSource;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.entity.projectile.LaunchProjectileEvent;
+import org.spongepowered.api.projectile.source.ProjectileSource;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.registry.type.entity.EntityTypeRegistryModule;
-
+import org.spongepowered.math.vector.Vector3d;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -263,11 +262,11 @@ public class ProjectileLauncher {
                 return doLaunch(loc.getExtent(), snowball);
             }
         });
-        registerProjectileLogic(ThrownExpBottle.class, new SimpleItemLaunchLogic<ThrownExpBottle>(ThrownExpBottle.class, Items.EXPERIENCE_BOTTLE) {
+        registerProjectileLogic(ExperienceBottle.class, new SimpleItemLaunchLogic<ExperienceBottle>(ExperienceBottle.class, Items.EXPERIENCE_BOTTLE) {
 
             @Override
-            protected Optional<ThrownExpBottle> createProjectile(LivingEntity source, Location<?> loc) {
-                ThrownExpBottle expBottle = (ThrownExpBottle) new ExperienceBottleEntity(source.world, source);
+            protected Optional<ExperienceBottle> createProjectile(LivingEntity source, Location<?> loc) {
+                ExperienceBottle expBottle = (ExperienceBottle) new ExperienceBottleEntity(source.world, source);
                 ((ThrowableEntity) expBottle).shoot(source, source.rotationPitch, source.rotationYaw, -20.0F, 0.7F, 0);
                 return doLaunch(loc.getExtent(), expBottle);
             }

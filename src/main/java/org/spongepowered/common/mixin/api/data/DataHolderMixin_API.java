@@ -31,18 +31,16 @@ import org.spongepowered.api.entity.living.player.User;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.DataManipulator.Mutable.Factory;
 import org.spongepowered.api.data.DataTransactionResult;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.Property;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
-import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.merge.MergeFunction;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
+import org.spongepowered.api.data.value.MergeFunction;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.bridge.data.CustomDataHolderBridge;
 import org.spongepowered.common.data.DataProcessor;
@@ -64,7 +62,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends DataManipulator<?, ?>> Optional<T> get(final Class<T> containerClass) {
+    public <T extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> Optional<T> get(final Class<T> containerClass) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataGetManipulator.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -91,7 +89,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends DataManipulator<?, ?>> Optional<T> getOrCreate(final Class<T> containerClass) {
+    public <T extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> Optional<T> getOrCreate(final Class<T> containerClass) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataGetOrCreateManipulator.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -113,7 +111,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
                 return custom;
             }
             // Try to construct it from the DataManipulatorBuilder
-            final Optional<DataManipulatorBuilder<?, ?>> builder = SpongeDataManager.getInstance().getWildManipulatorBuilder(containerClass);
+            final Optional<Factory<?, ?>> builder = SpongeDataManager.getInstance().getWildManipulatorBuilder(containerClass);
             checkState(builder.isPresent(), "A DataManipulatorBuilder is not registered for the manipulator class: "
                     + containerClass.getName());
             final T manipulator = (T) builder.get().create();
@@ -132,7 +130,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public boolean supports(final Class<? extends DataManipulator<?, ?>> holderClass) {
+    public boolean supports(final Class<? extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> holderClass) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataSupportsManipulator.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -156,10 +154,10 @@ public abstract class DataHolderMixin_API implements DataHolder {
                 return true;
             }
             // Try to construct it from the DataManipulatorBuilder
-            final Optional<DataManipulatorBuilder<?, ?>> builder = SpongeDataManager.getInstance().getWildManipulatorBuilder(holderClass);
+            final Optional<Factory<?, ?>> builder = SpongeDataManager.getInstance().getWildManipulatorBuilder(holderClass);
             checkState(builder.isPresent(), "A DataManipulatorBuilder is not registered for the manipulator class: "
                     + holderClass.getName());
-            final DataManipulator<?, ?> manipulator = builder.get().create();
+            final org.spongepowered.api.data.DataManipulator.Mutable<?, ?> manipulator = builder.get().create();
             // Basically at this point, it's up to plugins to validate whether it's supported
             final boolean present = manipulator.fill(holder).isPresent();
             if (isUser) {
@@ -177,7 +175,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public <E> DataTransactionResult offer(final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> DataTransactionResult offer(final Key<? extends Value<E>> key, final E value) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataOfferKey.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -185,7 +183,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
         if (isUser) {
             holder = ((SpongeUser) holder).getDataHolder(true);
         }
-        final Optional<ValueProcessor<E, ? extends BaseValue<E>>> optional = DataUtil.getBaseValueProcessor(key);
+        final Optional<ValueProcessor<E, ? extends Value<E>>> optional = DataUtil.getBaseValueProcessor(key);
         if (optional.isPresent()) {
             final DataTransactionResult result = optional.get().offerToStore(holder, value);
             SpongeTimings.dataOfferKey.stopTimingIfSync();
@@ -204,7 +202,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
 
     @SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
     @Override
-    public DataTransactionResult offer(final DataManipulator<?, ?> valueContainer, final MergeFunction function) {
+    public DataTransactionResult offer(final org.spongepowered.api.data.DataManipulator.Mutable<?, ?> valueContainer, final MergeFunction function) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataOfferManipulator.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -230,11 +228,11 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public DataTransactionResult offer(final Iterable<DataManipulator<?, ?>> valueContainers) {
+    public DataTransactionResult offer(final Iterable<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> valueContainers) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataOfferMultiManipulators.startTimingIfSync();
         final DataTransactionResult.Builder builder = DataTransactionResult.builder();
-        for (final DataManipulator<?, ?> manipulator : valueContainers) {
+        for (final org.spongepowered.api.data.DataManipulator.Mutable<?, ?> manipulator : valueContainers) {
             final DataTransactionResult result = offer(manipulator);
             if (!result.getRejectedData().isEmpty()) {
                 builder.reject(result.getRejectedData());
@@ -266,7 +264,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public DataTransactionResult remove(final Class<? extends DataManipulator<?, ?>> containerClass) {
+    public DataTransactionResult remove(final Class<? extends org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> containerClass) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataRemoveManipulator.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -330,10 +328,10 @@ public abstract class DataHolderMixin_API implements DataHolder {
             return DataTransactionResult.successNoData();
         }
         final DataTransactionResult.Builder builder = DataTransactionResult.builder();
-        for (final ImmutableValue<?> replaced : result.getReplacedData()) {
+        for (final org.spongepowered.api.data.value.Value.Immutable<?> replaced : result.getReplacedData()) {
             builder.absorbResult(offer(replaced));
         }
-        for (final ImmutableValue<?> successful : result.getSuccessfulData()) {
+        for (final org.spongepowered.api.data.value.Value.Immutable<?> successful : result.getSuccessfulData()) {
             builder.absorbResult(remove(successful));
         }
         SpongeTimings.dataOfferManipulator.stopTimingIfSync();
@@ -347,7 +345,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public <E> Optional<E> get(final Key<? extends BaseValue<E>> key) {
+    public <E> Optional<E> get(final Key<? extends Value<E>> key) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataGetByKey.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -355,7 +353,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
         if (isUser) {
             holder = ((SpongeUser) holder).getDataHolder(false);
         }
-        final Optional<ValueProcessor<E, ? extends BaseValue<E>>> optional = DataUtil.getBaseValueProcessor(checkNotNull(key));
+        final Optional<ValueProcessor<E, ? extends Value<E>>> optional = DataUtil.getBaseValueProcessor(checkNotNull(key));
         if (optional.isPresent()) {
             final Optional<E> value = optional.get().getValueFromContainer(holder);
             SpongeTimings.dataGetByKey.stopTimingIfSync();
@@ -373,7 +371,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public <E, V extends BaseValue<E>> Optional<V> getValue(final Key<V> key) {
+    public <E, V extends Value<E>> Optional<V> getValue(final Key<V> key) {
         TimingsManager.DATA_GROUP_HANDLER.startTimingIfSync();
         SpongeTimings.dataGetValue.startTimingIfSync();
         boolean isUser = ((Object) this) instanceof SpongeUser;
@@ -431,7 +429,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public Set<ImmutableValue<?>> getValues() {
+    public Set<org.spongepowered.api.data.value.Value.Immutable<?>> getValues() {
         return getContainers().stream().flatMap(container -> container.getValues().stream()).collect(Collectors.toSet());
     }
 
@@ -448,7 +446,7 @@ public abstract class DataHolderMixin_API implements DataHolder {
     }
 
     @Override
-    public Collection<DataManipulator<?, ?>> getContainers() {
+    public Collection<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> getContainers() {
         return Collections.emptyList();
     }
 

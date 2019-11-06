@@ -26,7 +26,6 @@ package org.spongepowered.common.mixin.api.mcp.tileentity;
 
 import net.minecraft.tileentity.TileEntityFlowerPot;
 import org.spongepowered.api.block.tileentity.FlowerPot;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedItemData;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -37,7 +36,7 @@ import java.util.Optional;
 public abstract class TileEntityFlowerPotMixin_API extends TileEntityMixin_API implements FlowerPot {
 
     @Override
-    public void supplyVanillaManipulators(List<DataManipulator<?, ?>> manipulators) {
+    public void supplyVanillaManipulators(List<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators) {
         super.supplyVanillaManipulators(manipulators);
         Optional<RepresentedItemData> flowerItemData = get(RepresentedItemData.class);
         if (flowerItemData.isPresent()) {
