@@ -51,7 +51,7 @@ public class PlayerKickHelper {
                 future -> ply.connection.getNetworkManager().closeChannel(component));
         ply.connection.getNetworkManager().disableAutoRead();
         // fix this getServer.
-        Futures.getUnchecked(ply.getServer().func_152344_a(() -> ply.connection.getNetworkManager().handleDisconnection()));
+        Futures.getUnchecked(ply.getServer().addScheduledTask(() -> ply.connection.getNetworkManager().handleDisconnection()));
 
     }
 

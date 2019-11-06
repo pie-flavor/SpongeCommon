@@ -54,11 +54,11 @@ public abstract class AnvilSaveHandlerMixin extends SaveHandler_Old {
      */
     @Override
     @Overwrite
-    public ChunkLoader func_75763_a(final Dimension provider) {
+    public ChunkLoader getChunkLoader(final Dimension provider) {
         // To workaround the issue of every world having a separate save handler
         // we won't be generating a DIMXX folder for chunk loaders since this name is already generated
         // for the world container with provider.getSaveFolder().
         // This allows users to remove our mod and maintain world compatibility.
-        return new AnvilChunkLoader(((SaveHandlerBridge) this).bridge$getSpongeWorldDirectory(), this.field_186341_a);
+        return new AnvilChunkLoader(((SaveHandlerBridge) this).bridge$getSpongeWorldDirectory(), this.dataFixer);
     }
 }
