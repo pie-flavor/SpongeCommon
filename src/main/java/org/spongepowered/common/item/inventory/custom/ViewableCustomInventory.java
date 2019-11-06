@@ -73,6 +73,6 @@ public class ViewableCustomInventory extends CustomInventory implements IContain
         if (this.vanilla) {
             return ((SpongeContainerType) this.type).provideContainer(id, this, player);
         }
-        return new CustomContainer(player, this);
+        return new CustomContainer(id, player, this);
     }
 }
