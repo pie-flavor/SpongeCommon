@@ -34,8 +34,7 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
-import org.spongepowered.common.mixin.core.inventory.InventoryLargeChestAccessor;
+import org.spongepowered.common.mixin.core.inventory.accessor.InventoryLargeChestAccessor;
 
 /**
  * This class is only used as an adapter when explicitly requested from the API, trough
