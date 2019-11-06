@@ -30,7 +30,6 @@ import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.EmptyViewableCustomInventory;
 
 import java.util.Optional;
 

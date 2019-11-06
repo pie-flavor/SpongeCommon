@@ -56,7 +56,6 @@ import org.spongepowered.api.registry.AdditionalCatalogRegistryModule;
 import org.spongepowered.api.registry.CatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.common.data.type.SpongeContainerType;
-import org.spongepowered.common.data.type.SpongeContainerTypeEmpty;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.LensCreator;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
@@ -162,10 +161,6 @@ public class ContainerTypeRegistryModule implements CatalogRegistryModule<Contai
 
     private void registerEntity(CatalogKey key) {
         this.map.put(key, new SpongeContainerTypeEntity(key));
-    }
-
-    private void registerEmpty(final CatalogKey key, ContainerProvider provider) {
-        this.map.put(key, new SpongeContainerTypeEmpty(key, provider));
     }
 
     private void register(final CatalogKey key, ContainerProvider provider, LensCreator lensCreator, int size, int width, int height) {
