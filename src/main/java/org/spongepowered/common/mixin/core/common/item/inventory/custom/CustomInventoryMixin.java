@@ -24,9 +24,6 @@
  */
 package org.spongepowered.common.mixin.core.common.item.inventory.custom;
 
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;

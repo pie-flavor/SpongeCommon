@@ -47,6 +47,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
+import org.spongepowered.api.item.inventory.crafting.CraftingOutput;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.item.recipe.crafting.CraftingRecipe;
@@ -249,7 +250,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
                 changes.add(i);
                 if (this.impl$menu != null) {
                     if (this.impl$menu.isReadOnly()) { // readonly menu cancels if there is any change outside of the players inventory
-                        if (!(slot.inventory instanceof InventoryPlayer)) {
+                        if (!(slot.inventory instanceof PlayerInventory)) {
                             readOnlyCancel = true;
                         }
                     }
@@ -346,10 +347,9 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         if (this.impl$captureInventory) {
             final Slot slot = shadow$getSlot(slotId);
             if (slot != null) {
-                final ItemStackSnapshot originalItem = slot.func_75211_c().isEmpty() ? ItemStackSnapshot.empty()
-                                                                                 : ((org.spongepowered.api.item.inventory.ItemStack) slot.func_75211_c()).createSnapshot();
-                final ItemStackSnapshot newItem =
-                        itemstack.isEmpty() ? ItemStackSnapshot.empty() : ((org.spongepowered.api.item.inventory.ItemStack) itemstack).createSnapshot();
+
+                final ItemStackSnapshot originalItem = ItemStackUtil.snapshotOf(slot.getStack());
+                final ItemStackSnapshot newItem = ItemStackUtil.snapshotOf(itemstack);
 
                 final org.spongepowered.api.item.inventory.Slot adapter = this.bridge$getContainerSlot(slotId);
                 this.impl$capturedSlotTransactions.add(new SlotTransaction(adapter, originalItem, newItem));
@@ -358,7 +358,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
     }
 
     @Inject(method = "slotClick", at = @At(value = "HEAD"), cancellable = true)
-    private void impl$onClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir) {
+    private void impl$onClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player, CallbackInfoReturnable<ItemStack> cir) {
         if (this.impl$menu != null) {
             if (!this.impl$menu.onClick(slotId, dragType, clickTypeIn, player, (org.spongepowered.api.item.inventory.Container) this)) {
                 cir.setReturnValue(ItemStack.EMPTY);
@@ -368,7 +368,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
     }
 
     @Inject(method = "onContainerClosed", at = @At(value = "HEAD"))
-    private void onOnContainerClosed(EntityPlayer player, CallbackInfo ci) {
+    private void onOnContainerClosed(PlayerEntity player, CallbackInfo ci) {
         this.unTrackInteractable(this.impl$viewed);
         if (this.impl$menu != null) {
             this.impl$menu.onClose(player, (org.spongepowered.api.item.inventory.Container) this);

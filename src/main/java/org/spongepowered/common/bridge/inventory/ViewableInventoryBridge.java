@@ -1,6 +1,6 @@
 package org.spongepowered.common.bridge.inventory;
 
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 
 import java.util.List;
 
