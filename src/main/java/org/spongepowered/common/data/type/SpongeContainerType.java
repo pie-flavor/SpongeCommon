@@ -43,7 +43,7 @@ public class SpongeContainerType extends SpongeCatalogType implements ContainerT
     private LensCreator lensCreator;
 
     public SpongeContainerType(final CatalogKey key, int size, int width, int height, LensCreator lensCreator, ContainerTypeRegistryModule.ContainerProvider containerProvider) {
-        super(key, RegistryHelper.name(key));
+        super(key);
         this.containerProvider = containerProvider;
         this.lensCreator = lensCreator;
         this.size = size;
@@ -67,7 +67,7 @@ public class SpongeContainerType extends SpongeCatalogType implements ContainerT
         return height;
     }
 
-    public Container provideContainer(IInventory viewed, PlayerEntity viewing) {
-        return this.containerProvider.provide(, viewed, viewing, );
+    public Container provideContainer(int id, IInventory viewed, PlayerEntity viewing) {
+        return this.containerProvider.provide(id, viewed, viewing);
     }
 }
