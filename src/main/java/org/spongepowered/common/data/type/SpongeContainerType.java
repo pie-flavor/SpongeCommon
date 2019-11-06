@@ -24,18 +24,15 @@
  */
 package org.spongepowered.common.data.type;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.ContainerType;
-import org.spongepowered.api.item.inventory.property.GuiId;
 import org.spongepowered.common.SpongeCatalogType;
 import org.spongepowered.common.item.inventory.lens.LensCreator;
 import org.spongepowered.common.registry.RegistryHelper;
 import org.spongepowered.common.registry.type.item.ContainerTypeRegistryModule;
-
-import javax.annotation.Nullable;
 
 public class SpongeContainerType extends SpongeCatalogType implements ContainerType {
 
@@ -70,7 +67,7 @@ public class SpongeContainerType extends SpongeCatalogType implements ContainerT
         return height;
     }
 
-    public Container provideContainer(IInventory viewed, EntityPlayer viewing) {
+    public Container provideContainer(IInventory viewed, PlayerEntity viewing) {
         return this.containerProvider.provide(viewed, viewing);
     }
 }
