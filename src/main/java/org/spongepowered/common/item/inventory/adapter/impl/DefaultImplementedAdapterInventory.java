@@ -31,7 +31,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.query.QueryOperation;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.text.translation.Translation;
@@ -78,11 +77,11 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
     }
 
     @Override
-    default Translation getName() {
-        if (impl$getLens() == null) {
-            return impl$getFabric().fabric$getDisplayName();
+    default Translation getNameTranslation() {
+        if (this.impl$getLens() == null) {
+            return this.impl$getFabric().fabric$getDisplayName();
         }
-        return impl$getLens().getName(impl$getFabric());
+        return this.impl$getLens().getName(this.impl$getFabric());
     }
 
     @Override
@@ -141,7 +140,7 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
 
     @Override
     default boolean hasChildren() {
-        return impl$getLens().getChildren().size() != 0;
+        return this.impl$getLens().getChildren().size() != 0;
     }
 
     @Override

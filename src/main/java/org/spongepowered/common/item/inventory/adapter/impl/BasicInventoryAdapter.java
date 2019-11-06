@@ -29,7 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
@@ -74,7 +73,7 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
             this.lens = new DefaultEmptyLens(this);
         } else {
             final ReusableLens<T> lens = ReusableLens.getLens(lensType, this, () -> this.initSlots(inventory, this.parent),
-                    (slots) -> (T) new DefaultIndexedLens(0, inventory.fabric$getSize(), this.getClass(), slots));
+                    (slots) -> (T) new DefaultIndexedLens(0, inventory.fabric$getSize(), slots));
             this.slots = lens.getSlots();
             this.lens = lens.getLens();
         }
@@ -107,7 +106,7 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
         if (size == 0) {
             return new DefaultEmptyLens(this);
         }
-        return new DefaultIndexedLens(0, size, this.getClass(), this.slots);
+        return new DefaultIndexedLens(0, size, this.slots);
     }
 
     @Override
