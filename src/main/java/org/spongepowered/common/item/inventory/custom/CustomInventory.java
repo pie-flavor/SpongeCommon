@@ -27,8 +27,6 @@ package org.spongepowered.common.item.inventory.custom;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -49,17 +47,16 @@ import javax.annotation.Nullable;
 
 public class CustomInventory implements IInventory {
 
-    private final List<Inventory> inventories;
     // shadow usage
     private SlotProvider slots;
     private Lens lens;
 
+    private final List<Inventory> inventories;
+
     private Map<Property<?>, Object> properties = new HashMap<>();
     private int size;
     private Carrier carrier;
-    private final PluginContainer plugin;
-
-    private ITextComponent customInventory = new TextComponentString("Custom Inventory");
+    private final PluginContainer plugin; // TODO
 
     public CustomInventory(int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
         this.size = size;
@@ -71,24 +68,16 @@ public class CustomInventory implements IInventory {
         this.plugin = SpongeImplHooks.getActiveModContainer();
     }
 
-    // IInventory delegation
-
-    @Nullable
-    @Override
-    public ITextComponent getCustomName()
-    {
-        return this.customInventory;
+    public Map<Property<?>, ?> getProperties() {
+        return this.properties;
     }
 
-    @Override
-    public ITextComponent getName() {
-        return this.customInventory;
+    public Carrier getCarrier() {
+        return this.carrier;
     }
 
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
+
+    // IInventory implementation
 
     @Override
     public int getSizeInventory() {
@@ -97,7 +86,12 @@ public class CustomInventory implements IInventory {
 
     @Override
     public boolean isEmpty() {
-        return this.size != 0;
+        for (Inventory inv : this.inventories) {
+            if (inv.totalQuantity() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -154,11 +148,6 @@ public class CustomInventory implements IInventory {
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
     public void markDirty() {
         for (Inventory inventory : this.inventories) {
             if (inventory instanceof IInventory) {
@@ -173,45 +162,10 @@ public class CustomInventory implements IInventory {
     }
 
     @Override
-    public void openInventory(final PlayerEntity player) {
-    }
-
-    @Override
-    public void closeInventory(final PlayerEntity player) {
-    }
-
-    @Override
-    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getField(final int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(final int id, final int value) {
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
     public void clear() {
         for (Inventory inventory : this.inventories) {
             inventory.clear();
         }
-    }
-
-    public Map<Property<?>, ?> getProperties() {
-        return this.properties;
-    }
-
-    public Carrier getCarrier() {
-        return this.carrier;
     }
 
 }

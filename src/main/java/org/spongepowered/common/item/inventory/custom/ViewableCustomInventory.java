@@ -27,9 +27,7 @@ package org.spongepowered.common.item.inventory.custom;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.IContainerProvider;
-import net.minecraft.item.Item;
 import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.data.type.SpongeContainerType;
@@ -62,30 +60,13 @@ public class ViewableCustomInventory extends CustomInventory implements IContain
 
     @Override
     public void openInventory(PlayerEntity player) {
-        viewers.add(player); // TODO check if this is always called
+        this.viewers.add(player); // TODO check if this is always called
     }
 
     @Override
     public void closeInventory(PlayerEntity player) {
-        viewers.remove(player);  // TODO check if this is always called
+        this.viewers.remove(player);  // TODO check if this is always called
     }
-
-    // TODO implement fields as properties?
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
 
     @Nullable @Override
     public net.minecraft.inventory.container.Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
