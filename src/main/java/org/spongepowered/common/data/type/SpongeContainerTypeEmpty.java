@@ -24,31 +24,28 @@
  */
 package org.spongepowered.common.data.type;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.ContainerType;
-import org.spongepowered.api.item.inventory.custom.ContainerType;
 import org.spongepowered.common.SpongeCatalogType;
-import org.spongepowered.common.registry.RegistryHelper;
 import org.spongepowered.common.registry.type.item.ContainerTypeRegistryModule;
 
 /**
  * Container is backed by internal Inventory
  */
-public class SpongeContainerTypeEmpty extends SpongeCatalogType implements ContainerType
-{
+public class SpongeContainerTypeEmpty extends SpongeCatalogType implements ContainerType {
 
     private ContainerTypeRegistryModule.ContainerProvider containerProvider;
 
     public SpongeContainerTypeEmpty(final CatalogKey key, ContainerTypeRegistryModule.ContainerProvider containerProvider) {
-        super(key, RegistryHelper.name(key));
+        super(key);
         this.containerProvider = containerProvider;
     }
 
-    public Container provideContainer(IInventory viewed, EntityPlayer viewing) {
-        return this.containerProvider.provide(viewed, viewing);
+    public Container provideContainer(IInventory viewed, PlayerEntity viewing) {
+        return this.containerProvider.provide(, viewed, viewing, );
     }
 
 }
