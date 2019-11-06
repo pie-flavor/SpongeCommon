@@ -39,7 +39,6 @@ import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.ViewableInventoryBridge;
 import org.spongepowered.common.entity.player.SpongeUserInventory;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.item.inventory.custom.EmptyViewableCustomInventory;
 import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
 import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
 

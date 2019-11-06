@@ -11,7 +11,6 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.data.type.SpongeContainerType;
-import org.spongepowered.common.data.type.SpongeContainerTypeEmpty;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
@@ -93,7 +92,6 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
 
     // Slot definition Impl:
     public BuildingStep slotsAtIndizes(List<Slot> source, List<Integer> at) {
-        Validate.isTrue(!(this.type instanceof SpongeContainerTypeEmpty), "Inventory has no slots");
         Validate.isTrue(source.size() == at.size(), "Source and index list sizes differ");
         for (int i = 0; i < at.size(); i++) {
             Slot slot = source.get(i);
@@ -189,13 +187,9 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
     @Override
     public EndStep completeStructure() {
         if (this.slotDefinitions.isEmpty()) {
-            if (this.type instanceof SpongeContainerTypeEmpty) {
-                return this;
-            } else {
-                Inventory inventory = Inventory.builder().slots(this.size).completeStructure().build();
-                this.finalInventories = Arrays.asList(inventory);
-                this.finalProvider = ((InventoryBridge) inventory).bridge$getAdapter().bridge$getSlotProvider();
-            }
+            Inventory inventory = Inventory.builder().slots(this.size).completeStructure().build();
+            this.finalInventories = Arrays.asList(inventory);
+            this.finalProvider = ((InventoryBridge) inventory).bridge$getAdapter().bridge$getSlotProvider();
         } else {
             this.fillDummy();
             this.finalInventories = this.slotDefinitions.values().stream().map(Inventory::parent).distinct().collect(Collectors.toList());
@@ -218,9 +212,6 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
 
     @Override
     public ViewableInventory build() {
-        if (this.type instanceof SpongeContainerTypeEmpty) {
-            return (ViewableInventory) new EmptyViewableCustomInventory((SpongeContainerTypeEmpty) this.type, this.identity, this.carrier);
-        }
         ViewableCustomInventory inventory = new ViewableCustomInventory(this.type, this.size, this.finalLens, this.finalProvider, this.finalInventories, this.identity, this.carrier);
         if (this.slotDefinitions.isEmpty()) {
             inventory.vanilla();
