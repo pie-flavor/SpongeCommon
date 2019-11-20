@@ -32,8 +32,8 @@ import org.spongepowered.common.item.inventory.lens.impl.slot.OutputSlotLens;
 
 public class OutputSlotAdapter extends FilteringSlotAdapter implements OutputSlot {
 
-    public OutputSlotAdapter(Fabric inventory, OutputSlotLens lens, Inventory parent) {
-        super(inventory, lens, parent);
+    public OutputSlotAdapter(Fabric fabric, OutputSlotLens lens, Inventory parent) {
+        super(fabric, lens, parent);
     }
 
 }

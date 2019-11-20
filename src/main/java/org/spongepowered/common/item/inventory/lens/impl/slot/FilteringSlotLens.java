@@ -51,8 +51,8 @@ public class FilteringSlotLens extends BasicSlotLens {
     }
 
     @Override
-    public boolean setStack(Fabric inv, net.minecraft.item.ItemStack stack) {
-        return this.getItemStackFilter().test(ItemStackUtil.fromNative(stack)) && super.setStack(inv, stack);
+    public boolean setStack(Fabric fabric, net.minecraft.item.ItemStack stack) {
+        return this.getItemStackFilter().test(ItemStackUtil.fromNative(stack)) && super.setStack(fabric, stack);
     }
 
     public Predicate<ItemStack> getItemStackFilter() {
@@ -64,8 +64,8 @@ public class FilteringSlotLens extends BasicSlotLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new FilteringSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new FilteringSlotAdapter(fabric, this, parent);
     }
 
 }

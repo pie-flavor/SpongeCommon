@@ -89,8 +89,8 @@ public class Inventory2DLens extends SlotBasedLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new Inventory2DAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new Inventory2DAdapter(fabric, this, parent);
     }
 
 }

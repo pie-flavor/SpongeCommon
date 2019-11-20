@@ -66,12 +66,12 @@ public interface Lens extends LensCollection {
      * 
      * @return adapter for this lens
      */
-    InventoryAdapter getAdapter(Fabric inv, Inventory parent);
+    InventoryAdapter getAdapter(Fabric fabric, Inventory parent);
     
     /**
      * Returns the display name of this lens 
      */
-    Translation getName(Fabric inv);
+    Translation getName(Fabric fabric);
     
     /**
      * Get the number of slots referenced by this lens
@@ -83,10 +83,10 @@ public interface Lens extends LensCollection {
     /**
      * Get the maximum stack size from the target inventory
      * 
-     * @param inv
+     * @param fabric
      * @return
      */
-    int getMaxStackSize(Fabric inv);
+    int getMaxStackSize(Fabric fabric);
 
     /**
      * Get child lenses of this lens
@@ -105,15 +105,15 @@ public interface Lens extends LensCollection {
     /**
      * Set the stack at the specified offset 
      * 
-     * @param inv
+     * @param fabric
      * @param ordinal
      * @param stack
      * @return
      */
-    default boolean setStack(Fabric inv, int ordinal, ItemStack stack) {
+    default boolean setStack(Fabric fabric, int ordinal, ItemStack stack) {
         SlotLens slot = this.getSlotLens(ordinal);
         if (slot != null) {
-            return slot.setStack(inv, stack);
+            return slot.setStack(fabric, stack);
         }
         return false;
     }
@@ -122,14 +122,14 @@ public interface Lens extends LensCollection {
      * Gets the itemstack for the specified slot ordinal. Returns null if
      * the specified ordinal is outside the range of this lens.
      *
-     * @param inv inventory
+     * @param fabric inventory
      * @param ordinal slot ordinal
      * @return the item stack in the specified slot
      */
-    @Nullable default ItemStack getStack(Fabric inv, int ordinal) {
+    @Nullable default ItemStack getStack(Fabric fabric, int ordinal) {
         SlotLens slot = this.getSlotLens(ordinal);
         if (slot != null) {
-            return slot.getStack(inv);
+            return slot.getStack(fabric);
         }
         return null;
     }

@@ -44,7 +44,7 @@ public class OutputSlotLens extends FilteringSlotLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new OutputSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new OutputSlotAdapter(fabric, this, parent);
     }
 }

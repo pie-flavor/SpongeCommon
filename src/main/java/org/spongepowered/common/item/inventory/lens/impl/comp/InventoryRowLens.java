@@ -41,8 +41,8 @@ public class InventoryRowLens extends Inventory2DLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new InventoryRowAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new InventoryRowAdapter(fabric, this, parent);
     }
 
 }

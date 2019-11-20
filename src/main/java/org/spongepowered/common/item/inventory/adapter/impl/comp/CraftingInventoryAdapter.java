@@ -39,8 +39,8 @@ public class CraftingInventoryAdapter extends BasicInventoryAdapter implements C
     private CraftingGridInventory craftingGrid;
     private CraftingOutput result;
 
-    public CraftingInventoryAdapter(Fabric inventory, CraftingInventoryLens root, Inventory parent) {
-        super(inventory, root, parent);
+    public CraftingInventoryAdapter(Fabric fabric, CraftingInventoryLens root, Inventory parent) {
+        super(fabric, root, parent);
         this.craftingLens = root;
     }
 

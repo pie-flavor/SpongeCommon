@@ -71,7 +71,7 @@ public class InventoryPropertyProvider<V> implements PropertyProvider<V> {
         return getProperty(adapter.bridge$getFabric(), adapter.bridge$getRootLens(), child, property);
     }
 
-    public static <V> Optional<V> getProperty(Fabric inv, Lens lens, Inventory child, Property<V> property) {
+    public static <V> Optional<V> getProperty(Fabric fabric, Lens lens, Inventory child, Property<V> property) {
         if (child instanceof InventoryAdapter) {
             checkNotNull(property, "property");
             int index = lens.getChildren().indexOf(((InventoryAdapter) child).bridge$getRootLens());

@@ -43,12 +43,12 @@ public class HotbarLens extends InventoryRowLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new HotbarAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new HotbarAdapter(fabric, this, parent);
     }
 
-    public int getSelectedSlotIndex(Fabric inv) {
-        for (Object inner : inv.fabric$allInventories()) {
+    public int getSelectedSlotIndex(Fabric fabric) {
+        for (Object inner : fabric.fabric$allInventories()) {
             if (inner instanceof InventoryPlayerBridge) {
                 return ((InventoryPlayerBridge) inner).bridge$getHeldItemIndex(Hand.MAIN_HAND);
             }
@@ -56,8 +56,8 @@ public class HotbarLens extends InventoryRowLens {
         return 0;
     }
 
-    public void setSelectedSlotIndex(Fabric inv, int index) {
-        inv.fabric$allInventories().stream()
+    public void setSelectedSlotIndex(Fabric fabric, int index) {
+        fabric.fabric$allInventories().stream()
                 .filter(InventoryPlayerBridge.class::isInstance)
                 .map(InventoryPlayerBridge.class::cast)
                 .forEach(inner -> inner.bridge$setSelectedItem(index, true));

@@ -54,7 +54,7 @@ public class EquipmentInventoryLens extends RealLens {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
         Equipable carrier = null;
         if (parent instanceof CarriedInventory) {
             Optional opt = ((CarriedInventory) parent).getCarrier();
@@ -62,6 +62,6 @@ public class EquipmentInventoryLens extends RealLens {
                 carrier = ((Equipable) opt.get());
             }
         }
-        return new EquipmentInventoryAdapter(carrier, inv, this, parent);
+        return new EquipmentInventoryAdapter(carrier, fabric, this, parent);
     }
 }

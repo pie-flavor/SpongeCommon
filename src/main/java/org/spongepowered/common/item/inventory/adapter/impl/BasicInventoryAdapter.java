@@ -91,10 +91,10 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
 
     // Constructs inventory with given list of inventories
     // TODO check if this is correct
-    public BasicInventoryAdapter(Fabric inventory, List<Inventory> children, Inventory parent) {
-        this.fabric = inventory;
+    public BasicInventoryAdapter(Fabric fabric, List<Inventory> children, Inventory parent) {
+        this.fabric = fabric;
         this.parent = parent == null ? this : parent;
-        this.slotLenses = this.initSlots(inventory, parent);
+        this.slotLenses = this.initSlots(fabric, parent);
 
         this.lens = new QueryLens(
                 children.stream()
@@ -160,8 +160,8 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
         return this.children;
     }
 
-    public static Optional<Slot> forSlot(final Fabric inv, final SlotLens slotLens, final Inventory parent) {
-        return slotLens == null ? Optional.empty() : Optional.ofNullable((Slot) slotLens.getAdapter(inv, parent));
+    public static Optional<Slot> forSlot(final Fabric fabric, final SlotLens slotLens, final Inventory parent) {
+        return slotLens == null ? Optional.empty() : Optional.ofNullable((Slot) slotLens.getAdapter(fabric, parent));
     }
 
     @Override

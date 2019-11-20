@@ -84,13 +84,13 @@ public class HeldHandSlotLens implements SlotLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new HeldSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new HeldSlotAdapter(fabric, this, parent);
     }
 
     @Override
-    public Translation getName(Fabric inv) {
-        return inv.fabric$getDisplayName();
+    public Translation getName(Fabric fabric) {
+        return fabric.fabric$getDisplayName();
     }
 
     @Override public int slotCount() {
@@ -98,8 +98,8 @@ public class HeldHandSlotLens implements SlotLens {
     }
 
     @Override
-    public int getMaxStackSize(Fabric inv) {
-        return inv.fabric$getMaxStackSize();
+    public int getMaxStackSize(Fabric fabric) {
+        return fabric.fabric$getMaxStackSize();
     }
 
     @Override

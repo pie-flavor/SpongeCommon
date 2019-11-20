@@ -52,10 +52,10 @@ public class SlotAdapter extends BasicInventoryAdapter implements Slot {
     private final ImmutableList<Slot> slots;
     private final SlotLens slot;
 
-    public SlotAdapter(Fabric inventory, SlotLens lens, Inventory parent) {
-        super(inventory, lens, parent);
+    public SlotAdapter(Fabric fabric, SlotLens lens, Inventory parent) {
+        super(fabric, lens, parent);
         this.slot = lens;
-        this.ordinal = lens.getOrdinal(inventory);
+        this.ordinal = lens.getOrdinal(fabric);
         this.slots = ImmutableList.of(this);
     }
 

@@ -40,8 +40,8 @@ public class HeldSlotAdapter extends SlotAdapter implements EquipmentSlot {
 
     protected final HeldHandSlotLens equipmentSlot;
 
-    public HeldSlotAdapter(Fabric inventory, HeldHandSlotLens lens, Inventory parent) {
-        super(inventory, lens, parent);
+    public HeldSlotAdapter(Fabric fabric, HeldHandSlotLens lens, Inventory parent) {
+        super(fabric, lens, parent);
         this.equipmentSlot = lens;
     }
 

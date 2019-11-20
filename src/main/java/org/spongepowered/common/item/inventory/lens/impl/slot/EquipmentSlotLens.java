@@ -52,8 +52,8 @@ public class EquipmentSlotLens extends FilteringSlotLens {
     }
     
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new EquipmentSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new EquipmentSlotAdapter(fabric, this, parent);
     }
 
 }

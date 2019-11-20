@@ -71,17 +71,17 @@ public class CraftingInventoryLens extends RealLens {
         return this.outputSlot;
     }
 
-    public ItemStack getOutputStack(Fabric inv) {
-        return this.outputSlot.getStack(inv);
+    public ItemStack getOutputStack(Fabric fabric) {
+        return this.outputSlot.getStack(fabric);
     }
 
-    public boolean setOutputStack(Fabric inv, ItemStack stack) {
-        return this.outputSlot.setStack(inv, stack);
+    public boolean setOutputStack(Fabric fabric, ItemStack stack) {
+        return this.outputSlot.setStack(fabric, stack);
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new CraftingInventoryAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new CraftingInventoryAdapter(fabric, this, parent);
     }
 
 }

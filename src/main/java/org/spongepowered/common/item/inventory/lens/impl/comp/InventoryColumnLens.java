@@ -41,8 +41,8 @@ public class InventoryColumnLens extends Inventory2DLens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new InventoryColumnAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new InventoryColumnAdapter(fabric, this, parent);
     }
     
 }

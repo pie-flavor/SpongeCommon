@@ -41,8 +41,8 @@ public class Inventory2DAdapter extends BasicInventoryAdapter {
 
     protected Inventory2DLens lens2d;
 
-    public Inventory2DAdapter(Fabric inventory, Inventory2DLens root, Inventory parent) {
-        super(inventory, root, parent);
+    public Inventory2DAdapter(Fabric fabric, Inventory2DLens root, Inventory parent) {
+        super(fabric, root, parent);
         this.lens2d = root;
     }
     

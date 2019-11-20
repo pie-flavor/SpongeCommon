@@ -32,8 +32,8 @@ import org.spongepowered.common.item.inventory.lens.impl.slot.CraftingOutputSlot
 
 public class CraftingOutputAdapter extends OutputSlotAdapter implements CraftingOutput {
 
-    public CraftingOutputAdapter(Fabric inventory, CraftingOutputSlotLens lens, Inventory parent) {
-        super(inventory, lens, parent);
+    public CraftingOutputAdapter(Fabric fabric, CraftingOutputSlotLens lens, Inventory parent) {
+        super(fabric, lens, parent);
     }
 
 }

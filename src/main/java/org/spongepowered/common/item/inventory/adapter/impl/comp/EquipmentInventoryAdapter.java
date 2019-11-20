@@ -44,13 +44,13 @@ public class EquipmentInventoryAdapter extends BasicInventoryAdapter implements 
 
     private final Equipable carrier;
 
-    public EquipmentInventoryAdapter(Equipable carrier, Fabric inventory, EquipmentInventoryLens root, Inventory parent) {
-        super(inventory, root, parent);
+    public EquipmentInventoryAdapter(Equipable carrier, Fabric fabric, EquipmentInventoryLens root, Inventory parent) {
+        super(fabric, root, parent);
         this.carrier = carrier;
     }
 
-    public EquipmentInventoryAdapter(Equipable carrier, Fabric inventory, ArmorInventoryLens root, Inventory parent) {
-        super(inventory, root, parent);
+    public EquipmentInventoryAdapter(Equipable carrier, Fabric fabric, ArmorInventoryLens root, Inventory parent) {
+        super(fabric, root, parent);
         this.carrier = carrier;
     }
 

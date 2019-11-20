@@ -110,8 +110,8 @@ public abstract class AbstractLens implements Lens {
     }
 
     @Override
-    public Translation getName(final Fabric inv) {
-        return inv.fabric$getDisplayName();
+    public Translation getName(final Fabric fabric) {
+        return fabric.fabric$getDisplayName();
     }
 
     @Override
@@ -241,8 +241,8 @@ public abstract class AbstractLens implements Lens {
     }
 
     @Override
-    public int getMaxStackSize(final Fabric inv) {
-        return inv.fabric$getMaxStackSize();
+    public int getMaxStackSize(final Fabric fabric) {
+        return fabric.fabric$getMaxStackSize();
     }
 
     protected boolean checkOrdinal(final int ordinal) {

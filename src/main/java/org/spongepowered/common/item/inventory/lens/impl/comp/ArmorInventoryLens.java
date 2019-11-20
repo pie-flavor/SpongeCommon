@@ -74,7 +74,7 @@ public class ArmorInventoryLens extends SlotBasedLens {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
         Equipable carrier = null;
         if (parent instanceof CarriedInventory) {
             Optional opt = ((CarriedInventory) parent).getCarrier();
@@ -83,6 +83,6 @@ public class ArmorInventoryLens extends SlotBasedLens {
             }
         }
         // TODO
-        return new EquipmentInventoryAdapter(carrier, inv, this, parent);
+        return new EquipmentInventoryAdapter(carrier, fabric, this, parent);
     }
 }

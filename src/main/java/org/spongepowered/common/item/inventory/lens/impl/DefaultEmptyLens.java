@@ -55,13 +55,13 @@ public class DefaultEmptyLens implements Lens {
     }
 
     @Override
-    public InventoryAdapter getAdapter(final Fabric inv, final Inventory parent) {
+    public InventoryAdapter getAdapter(final Fabric fabric, final Inventory parent) {
         return this.adapter;
     }
 
     @Override
-    public Translation getName(final Fabric inv) {
-        return inv.fabric$getDisplayName();
+    public Translation getName(final Fabric fabric) {
+        return fabric.fabric$getDisplayName();
     }
 
     @Override
@@ -70,17 +70,17 @@ public class DefaultEmptyLens implements Lens {
     }
 
     @Override
-    public ItemStack getStack(final Fabric inv, final int ordinal) {
+    public ItemStack getStack(final Fabric fabric, final int ordinal) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean setStack(final Fabric inv, final int index, final ItemStack stack) {
+    public boolean setStack(final Fabric fabric, final int index, final ItemStack stack) {
         return false;
     }
 
     @Override
-    public int getMaxStackSize(final Fabric inv) {
+    public int getMaxStackSize(final Fabric fabric) {
         return 0;
     }
 
