@@ -28,12 +28,12 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 
 public class HorseInventoryLens extends RealLens {
 
     private DefaultIndexedLens horseEquipment;
-    private GridInventoryLensImpl chest;
+    private GridInventoryLens chest;
 
     public HorseInventoryLens(Class<? extends Inventory> adapter, SlotProvider slots) {
         super(0, 2

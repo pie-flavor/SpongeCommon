@@ -29,13 +29,13 @@ import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 
 public class PrimaryPlayerInventoryAdapter extends GridInventoryAdapter implements PrimaryPlayerInventory {
 
-    private final PrimaryPlayerInventoryLensImpl root;
+    private final PrimaryPlayerInventoryLens root;
 
-    public PrimaryPlayerInventoryAdapter(Fabric inv, PrimaryPlayerInventoryLensImpl lens, Inventory parent) {
+    public PrimaryPlayerInventoryAdapter(Fabric inv, PrimaryPlayerInventoryLens lens, Inventory parent) {
         super(inv, lens, parent);
         this.root = lens;
     }

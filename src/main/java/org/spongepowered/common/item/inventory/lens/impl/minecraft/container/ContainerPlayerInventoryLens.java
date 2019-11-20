@@ -30,10 +30,9 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class ContainerPlayerInventoryLens extends ContainerLens {
 
     private static List<Lens> lenses(int size, SlotProvider slots) {
         int base = CRAFTING_OUTPUT; // 1
-        final CraftingInventoryLensImpl crafting = new CraftingInventoryLensImpl(0, base, CRAFTING_GRID, CRAFTING_GRID, slots);
+        final CraftingInventoryLens crafting = new CraftingInventoryLens(0, base, CRAFTING_GRID, CRAFTING_GRID, slots);
         base += CRAFTING_GRID * CRAFTING_GRID; // 4
         final PlayerInventoryLens player = new PlayerInventoryLens(base, size - base, slots);
         return Arrays.asList(crafting, player);

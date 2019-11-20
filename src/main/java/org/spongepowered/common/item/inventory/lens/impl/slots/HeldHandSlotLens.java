@@ -22,9 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.comp;
+package org.spongepowered.common.item.inventory.lens.impl.slots;
 
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -46,33 +46,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
 /**
  * Single Slot pointing to a players {@link EquipmentTypes#MAIN_HAND} slot.
  */
-public class HeldHandSlotLensImpl implements EquipmentSlotLens {
+public class HeldHandSlotLens implements EquipmentSlotLens {
 
-    private InventoryPlayer getInventoryPlayer(Fabric fabric) {
-        return (InventoryPlayer) fabric.fabric$get(0); // Only players have this lens
+    private PlayerInventory getInventoryPlayer(Fabric fabric) {
+        return (PlayerInventory) fabric.fabric$get(0); // Only players have this lens
     }
 
     @Override
     public net.minecraft.item.ItemStack getStack(Fabric fabric) {
-        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        PlayerInventory inv = this.getInventoryPlayer(fabric);
         return inv.getCurrentItem();
     }
 
     @Override
     public boolean setStack(Fabric fabric, net.minecraft.item.ItemStack stack) {
-        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        PlayerInventory inv = this.getInventoryPlayer(fabric);
         inv.mainInventory.set(inv.currentItem, stack);
         return true;
     }
 
     @Override
     public int getOrdinal(Fabric fabric) {
-        InventoryPlayer inv = this.getInventoryPlayer(fabric);
+        PlayerInventory inv = this.getInventoryPlayer(fabric);
         return inv.currentItem;
     }
 
@@ -113,15 +111,6 @@ public class HeldHandSlotLensImpl implements EquipmentSlotLens {
     @Override
     public List<Lens> getSpanningChildren() {
         return Collections.emptyList();
-    }
-
-    @Nullable
-    @Override
-    public SlotLens getSlotLens(int ordinal) {
-        if (ordinal != 0) {
-            throw new InvalidOrdinalException("Non-zero slot ordinal");
-        }
-        return this;
     }
 
     @Override

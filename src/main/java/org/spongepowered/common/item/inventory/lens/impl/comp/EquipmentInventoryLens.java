@@ -33,16 +33,15 @@ import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.EquipmentInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.comp.EquipmentInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 
 import java.util.Map;
 import java.util.Optional;
 
-public class EquipmentInventoryLensImpl extends RealLens implements EquipmentInventoryLens {
+public class EquipmentInventoryLens extends RealLens {
 
-    public EquipmentInventoryLensImpl(Map<EquipmentType, SlotLens> lenses) {
+    public EquipmentInventoryLens(Map<EquipmentType, SlotLens> lenses) {
         super(0, lenses.size(), EquipmentInventoryAdapter.class);
         this.init(lenses);
     }

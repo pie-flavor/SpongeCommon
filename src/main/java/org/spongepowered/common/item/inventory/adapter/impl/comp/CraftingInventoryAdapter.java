@@ -30,7 +30,7 @@ import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
 import org.spongepowered.api.item.inventory.crafting.CraftingOutput;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.comp.CraftingInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 
 public class CraftingInventoryAdapter extends BasicInventoryAdapter implements CraftingInventory {
 

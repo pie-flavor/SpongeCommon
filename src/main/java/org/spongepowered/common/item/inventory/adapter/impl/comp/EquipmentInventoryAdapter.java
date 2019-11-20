@@ -32,13 +32,11 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
-import org.spongepowered.api.item.inventory.query.QueryTypes;
-import org.spongepowered.api.item.inventory.property.EquipmentSlotType;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
-import org.spongepowered.common.item.inventory.adapter.impl.AdapterLogic;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.comp.EquipmentInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLens;
 
 import java.util.Optional;
 
@@ -51,6 +49,11 @@ public class EquipmentInventoryAdapter extends BasicInventoryAdapter implements 
         this.carrier = carrier;
     }
 
+    public EquipmentInventoryAdapter(Equipable carrier, Fabric inventory, ArmorInventoryLens root, Inventory parent) {
+        super(inventory, root, parent);
+        this.carrier = carrier;
+    }
+
     @Override
     public Optional<Equipable> getCarrier() {
         return Optional.ofNullable(this.carrier);
@@ -58,17 +61,17 @@ public class EquipmentInventoryAdapter extends BasicInventoryAdapter implements 
 
     @Override
     public InventoryTransactionResult.Poll poll(EquipmentType equipmentType) {
-        return queryForType(equipmentType).poll();
+        return this.queryForType(equipmentType).poll();
     }
 
     @Override
     public InventoryTransactionResult.Poll poll(EquipmentType equipmentType, int limit) {
-        return queryForType(equipmentType).poll(limit);
+        return this.queryForType(equipmentType).poll(limit);
     }
 
     @Override
     public Optional<ItemStack> peek(EquipmentType equipmentType) {
-        Inventory query = queryForType(equipmentType);
+        Inventory query = this.queryForType(equipmentType);
         if (query.capacity() == 0) {
             return Optional.empty();
         }
@@ -77,7 +80,7 @@ public class EquipmentInventoryAdapter extends BasicInventoryAdapter implements 
 
     @Override
     public InventoryTransactionResult set(EquipmentType equipmentType, ItemStack stack) {
-        Inventory query = queryForType(equipmentType);
+        Inventory query = this.queryForType(equipmentType);
         if (query.capacity() == 0) {
             return InventoryTransactionResult.builder().type(InventoryTransactionResult.Type.NO_SLOT).build();
         }
@@ -86,7 +89,7 @@ public class EquipmentInventoryAdapter extends BasicInventoryAdapter implements 
 
     @Override
     public Optional<Slot> getSlot(EquipmentType equipmentType) {
-        Inventory slot = queryForType(equipmentType);
+        Inventory slot = this.queryForType(equipmentType);
         if (slot instanceof Slot) {
             return Optional.of((Slot) slot);
         }

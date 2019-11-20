@@ -34,14 +34,13 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.EquipmentInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.EquipmentInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.SlotBasedLens;
 
 import java.util.Optional;
 
-public class ArmorInventoryLensImpl extends SlotBasedLens implements EquipmentInventoryLens {
+public class ArmorInventoryLens extends SlotBasedLens {
 
-    public ArmorInventoryLensImpl(int base, SlotProvider slots, boolean isContainer) {
+    public ArmorInventoryLens(int base, SlotProvider slots, boolean isContainer) {
         super(base, 4, 1, EquipmentInventoryAdapter.class, slots);
         if (isContainer) {
             this.initContainer(slots);
@@ -83,6 +82,7 @@ public class ArmorInventoryLensImpl extends SlotBasedLens implements EquipmentIn
                 carrier = ((Equipable) opt.get());
             }
         }
+        // TODO
         return new EquipmentInventoryAdapter(carrier, inv, this, parent);
     }
 }

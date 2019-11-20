@@ -37,7 +37,7 @@ import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLens;
 
 @Mixin(CraftingInventory.class)
 public abstract class InventoryCraftingMixin implements IInventory, InventoryAdapter, InventoryAdapterBridge {
@@ -56,7 +56,7 @@ public abstract class InventoryCraftingMixin implements IInventory, InventoryAda
         if (this.stackList.size() == 0) {
             return new DefaultEmptyLens(this);
         }
-        return new CraftingGridInventoryLensImpl(0, this.width, this.height, slots);
+        return new CraftingGridInventoryLens(0, this.width, this.height, slots);
     }
 
 }

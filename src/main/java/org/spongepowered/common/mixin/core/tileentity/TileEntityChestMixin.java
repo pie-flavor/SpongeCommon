@@ -37,10 +37,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.plugin.meta.util.NonnullByDefault;
 
 @SuppressWarnings("rawtypes")
@@ -70,7 +69,7 @@ public abstract class TileEntityChestMixin extends TileEntityLockableLootMixin {
     @SuppressWarnings("unchecked")
     private GridInventoryLens impl$generateRootLens(final SlotProvider slots) {
         final int size = this.getSizeInventory();
-        return new GridInventoryLensImpl(0, 9, size / 9, (Class<? extends Inventory>) this.getClass(), slots);
+        return new GridInventoryLens(0, 9, size / 9, (Class<? extends Inventory>) this.getClass(), slots);
     }
 
     /**

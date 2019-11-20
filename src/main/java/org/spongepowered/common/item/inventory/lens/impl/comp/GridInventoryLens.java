@@ -29,24 +29,21 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.comp.InventoryColumnLens;
-import org.spongepowered.common.item.inventory.lens.comp.InventoryRowLens;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridInventoryLensImpl extends Inventory2DLensImpl implements GridInventoryLens {
+public class GridInventoryLens extends Inventory2DLens {
 
     protected List<LensHandle> rows;
     protected List<LensHandle> cols;
 
-    public GridInventoryLensImpl(int base, int width, int height, SlotProvider slots) {
+    public GridInventoryLens(int base, int width, int height, SlotProvider slots) {
         this(base, width, height, GridInventoryAdapter.class, slots);
     }
 
-    public GridInventoryLensImpl(int base, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public GridInventoryLens(int base, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(base, width, height, 1, 0, 0, adapterType, slots);
         this.init(slots);
     }
@@ -56,24 +53,22 @@ public class GridInventoryLensImpl extends Inventory2DLensImpl implements GridIn
         this.cols = new ArrayList<>();
 
         for (int y = 0, base = this.base; y < this.height; y++, base += this.width) {
-            InventoryRowLensImpl row = new InventoryRowLensImpl(base, this.width, this.xBase, this.yBase + y, slots);
+            InventoryRowLens row = new InventoryRowLens(base, this.width, this.xBase, this.yBase + y, slots);
             this.rows.add(new LensHandle(row));
             this.addChild(row);
         }
 
         for (int x = 0, base = this.base; x < this.width; x++, base++) {
-            InventoryColumnLensImpl column = new InventoryColumnLensImpl(base, this.height, this.width, this.xBase + x, this.yBase, slots);
+            InventoryColumnLens column = new InventoryColumnLens(base, this.height, this.width, this.xBase + x, this.yBase, slots);
             this.cols.add(new LensHandle(column));
             this.addChild(column);
         }
     }
 
-    @Override
     public InventoryRowLens getRow(int row) {
         return (InventoryRowLens) this.rows.get(row).lens;
     }
 
-    @Override
     public InventoryColumnLens getColumn(int column) {
         return (InventoryColumnLens) this.cols.get(column).lens;
     }

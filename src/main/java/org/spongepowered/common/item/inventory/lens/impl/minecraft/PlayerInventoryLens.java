@@ -24,6 +24,7 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.minecraft;
 
+import net.minecraft.inventory.container.Container;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperties;
@@ -35,28 +36,25 @@ import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.EquipmentInventoryLens;
-import org.spongepowered.common.item.inventory.lens.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
-import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.HeldHandSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.HeldHandSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.inventory.container.Container;
 
 public class PlayerInventoryLens extends AbstractLens {
 
     private static final int ARMOR = 4;
     private static final int OFFHAND = 1;
 
-    private PrimaryPlayerInventoryLensImpl primary;
-    private EquipmentInventoryLensImpl equipment;
-    private ArmorInventoryLensImpl armor;
+    private PrimaryPlayerInventoryLens primary;
+    private EquipmentInventoryLens equipment;
+    private ArmorInventoryLens armor;
     private SlotLens offhand;
     private final boolean isContainer;
 
@@ -88,22 +86,22 @@ public class PlayerInventoryLens extends AbstractLens {
         int base = this.base;
         Map<EquipmentType, SlotLens> equipmentLenses = new LinkedHashMap<>();
         if (this.isContainer) {
-            this.armor = new ArmorInventoryLensImpl(base, slots, true);
+            this.armor = new ArmorInventoryLens(base, slots, true);
             equipmentLenses.put(EquipmentTypes.HEADWEAR, slots.getSlotLens(base + 0));
             equipmentLenses.put(EquipmentTypes.CHESTPLATE, slots.getSlotLens(base + 1));
             equipmentLenses.put(EquipmentTypes.LEGGINGS, slots.getSlotLens(base + 2));
             equipmentLenses.put(EquipmentTypes.BOOTS, slots.getSlotLens(base + 3));
             base += ARMOR; // 4
-            this.primary = new PrimaryPlayerInventoryLensImpl(base, slots, true);
+            this.primary = new PrimaryPlayerInventoryLens(base, slots, true);
             base += this.primary.slotCount();
             this.offhand = slots.getSlotLens(base);
 
             base += OFFHAND;
             equipmentLenses.put(EquipmentTypes.OFF_HAND, this.offhand);
         } else {
-            this.primary = new PrimaryPlayerInventoryLensImpl(base, slots, false);
+            this.primary = new PrimaryPlayerInventoryLens(base, slots, false);
             base += this.primary.slotCount();
-            this.armor = new ArmorInventoryLensImpl(base, slots, false);
+            this.armor = new ArmorInventoryLens(base, slots, false);
 
             equipmentLenses.put(EquipmentTypes.BOOTS, slots.getSlotLens(base + 0));
             equipmentLenses.put(EquipmentTypes.LEGGINGS, slots.getSlotLens(base + 1));
@@ -117,8 +115,8 @@ public class PlayerInventoryLens extends AbstractLens {
             equipmentLenses.put(EquipmentTypes.OFF_HAND, this.offhand);
         }
 
-        equipmentLenses.put(EquipmentTypes.MAIN_HAND, new HeldHandSlotLensImpl());
-        this.equipment = new EquipmentInventoryLensImpl(equipmentLenses);
+        equipmentLenses.put(EquipmentTypes.MAIN_HAND, new HeldHandSlotLens());
+        this.equipment = new EquipmentInventoryLens(equipmentLenses);
 
         this.addSpanningChild(this.primary);
         this.addSpanningChild(this.armor);
@@ -157,7 +155,7 @@ public class PlayerInventoryLens extends AbstractLens {
         return this.offhand;
     }
 
-    public EquipmentInventoryLens getArmorLens() {
+    public ArmorInventoryLens getArmorLens() {
         return this.armor;
     }
 }

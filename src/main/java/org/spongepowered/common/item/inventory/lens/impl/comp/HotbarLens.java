@@ -24,26 +24,43 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.comp;
 
+import net.minecraft.util.Hand;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.bridge.entity.player.InventoryPlayerBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.comp.InventoryRowAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.comp.HotbarAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.InventoryRowLens;
 
-public class InventoryRowLensImpl extends Inventory2DLensImpl implements InventoryRowLens {
+public class HotbarLens extends InventoryRowLens {
 
-    public InventoryRowLensImpl(int base, int width, int xBase, int yBase, SlotProvider slots) {
-        this(base, width, xBase, yBase, InventoryRowAdapter.class, slots);
+    public HotbarLens(int base, int width, SlotProvider slots) {
+        this(base, width, 0, 0, HotbarAdapter.class, slots);
     }
-    
-    public InventoryRowLensImpl(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
-        super(base, width, 1, 1, xBase, yBase, adapterType, slots);
+
+    private HotbarLens(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+        super(base, width, xBase, yBase, adapterType, slots);
     }
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new InventoryRowAdapter(inv, this, parent);
+        return new HotbarAdapter(inv, this, parent);
+    }
+
+    public int getSelectedSlotIndex(Fabric inv) {
+        for (Object inner : inv.fabric$allInventories()) {
+            if (inner instanceof InventoryPlayerBridge) {
+                return ((InventoryPlayerBridge) inner).bridge$getHeldItemIndex(Hand.MAIN_HAND);
+            }
+        }
+        return 0;
+    }
+
+    public void setSelectedSlotIndex(Fabric inv, int index) {
+        inv.fabric$allInventories().stream()
+                .filter(InventoryPlayerBridge.class::isInstance)
+                .map(InventoryPlayerBridge.class::cast)
+                .forEach(inner -> inner.bridge$setSelectedItem(index, true));
     }
 
 }

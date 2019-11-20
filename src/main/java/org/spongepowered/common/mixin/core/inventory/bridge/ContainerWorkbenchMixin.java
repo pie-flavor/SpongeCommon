@@ -33,8 +33,8 @@ import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
 
@@ -49,8 +49,8 @@ public abstract class ContainerWorkbenchMixin extends ContainerMixin implements 
     @Override
     public Lens bridge$rootLens(final Fabric fabric, final InventoryAdapter adapter) {
         final List<Lens> lenses = new ArrayList<>();
-        lenses.add(new CraftingInventoryLensImpl(0, 1, 3, 3, adapter.bridge$getSlotProvider()));
-        lenses.add(new PrimaryPlayerInventoryLensImpl(3 * 3 + 1, adapter.bridge$getSlotProvider(), true));
+        lenses.add(new CraftingInventoryLens(0, 1, 3, 3, adapter.bridge$getSlotProvider()));
+        lenses.add(new PrimaryPlayerInventoryLens(3 * 3 + 1, adapter.bridge$getSlotProvider(), true));
         return new ContainerLens(adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass(), adapter.bridge$getSlotProvider(), lenses);
     }
 

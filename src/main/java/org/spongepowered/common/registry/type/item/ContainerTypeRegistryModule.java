@@ -58,7 +58,7 @@ import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.LensCreator;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
 
@@ -169,7 +169,7 @@ public class ContainerTypeRegistryModule implements CatalogRegistryModule<Contai
 
 
     private void register(final String key, ContainerProvider provider, int width, int height) {
-        this.register(CatalogKey.minecraft(key), provider, sp -> new GridInventoryLensImpl(0, width, height, sp), width * height, width, height);
+        this.register(CatalogKey.minecraft(key), provider, sp -> new GridInventoryLens(0, width, height, sp), width * height, width, height);
     }
 
     private void register(final String key, ContainerProvider provider, LensCreator lensCreator, int size) {

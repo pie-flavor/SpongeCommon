@@ -32,7 +32,7 @@ import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class SpongeInventoryBuilder implements Inventory.Builder, Inventory.Buil
     public BuildingStep grid(int sizeX, int sizeY) {
         this.size += sizeX * sizeY;
         net.minecraft.inventory.Inventory adapter = new net.minecraft.inventory.Inventory(sizeX * sizeY);
-        this.lenses.add(new GridInventoryLensImpl(0, sizeX, sizeY, ((InventoryAdapter) adapter).bridge$getSlotProvider()));
+        this.lenses.add(new GridInventoryLens(0, sizeX, sizeY, ((InventoryAdapter) adapter).bridge$getSlotProvider()));
         this.inventories.add((Inventory) adapter);
         return this;
     }

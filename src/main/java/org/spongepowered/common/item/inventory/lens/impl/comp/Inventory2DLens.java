@@ -33,12 +33,11 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.Inventory2DAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.Inventory2DLens;
 import org.spongepowered.common.item.inventory.lens.impl.SlotBasedLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
-public class Inventory2DLensImpl extends SlotBasedLens implements Inventory2DLens {
+public class Inventory2DLens extends SlotBasedLens {
 
     protected final int width;
     protected final int height;
@@ -46,15 +45,15 @@ public class Inventory2DLensImpl extends SlotBasedLens implements Inventory2DLen
     protected final int xBase;
     protected final int yBase;
 
-    public Inventory2DLensImpl(int base, int width, int height, SlotProvider slots) {
+    public Inventory2DLens(int base, int width, int height, SlotProvider slots) {
         this(base, width, height, width, Inventory2DAdapter.class, slots);
     }
 
-    public Inventory2DLensImpl(int base, int width, int height, int rowStride, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public Inventory2DLens(int base, int width, int height, int rowStride, Class<? extends Inventory> adapterType, SlotProvider slots) {
         this(base, width, height, rowStride, 0, 0, adapterType, slots);
     }
 
-    protected Inventory2DLensImpl(int base, int width, int height, int rowStride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    protected Inventory2DLens(int base, int width, int height, int rowStride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(base, width * height, rowStride, adapterType, slots);
 
         checkArgument(width > 0, "Invalid width: %s", width);
@@ -77,17 +76,14 @@ public class Inventory2DLensImpl extends SlotBasedLens implements Inventory2DLen
         }
     }
 
-    @Override
     public int getWidth() {
         return this.width;
     }
 
-    @Override
     public int getHeight() {
         return this.height;
     }
 
-    @Override
     public SlotLens getSlot(Vector2i pos) {
         return (SlotLens) this.spanningChildren.get(pos.getY()).lens.getLens(pos.getX());
     }

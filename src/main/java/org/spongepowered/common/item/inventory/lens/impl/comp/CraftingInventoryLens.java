@@ -30,13 +30,11 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.CraftingGridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
 
-public class CraftingInventoryLensImpl extends RealLens implements CraftingInventoryLens {
+public class CraftingInventoryLens extends RealLens {
 
     private final int outputSlotIndex;
 
@@ -45,15 +43,15 @@ public class CraftingInventoryLensImpl extends RealLens implements CraftingInven
     private final CraftingGridInventoryLens craftingGrid;
 
 
-    public CraftingInventoryLensImpl(int outputSlotIndex, int gridBase, int width, int height, SlotProvider slots) {
+    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, SlotProvider slots) {
         this(outputSlotIndex, gridBase, width, height, CraftingInventoryAdapter.class, slots);
     }
 
-    public CraftingInventoryLensImpl(int outputSlotIndex, int gridBase, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(gridBase, width * height + 1, adapterType);
         this.outputSlotIndex = outputSlotIndex;
         this.outputSlot = (CraftingOutputSlotLens)slots.getSlotLens(this.outputSlotIndex);
-        this.craftingGrid = new CraftingGridInventoryLensImpl(this.base, width, height, slots);
+        this.craftingGrid = new CraftingGridInventoryLens(this.base, width, height, slots);
         this.size += 1; // output slot
         // Avoid the init() method in the superclass calling our init() too early
         this.init(slots);
@@ -65,22 +63,18 @@ public class CraftingInventoryLensImpl extends RealLens implements CraftingInven
         this.addChild(new DefaultIndexedLens(0, this.size, slots));
     }
 
-    @Override
     public CraftingGridInventoryLens getCraftingGrid() {
         return this.craftingGrid;
     }
 
-    @Override
     public CraftingOutputSlotLens getOutputSlot() {
         return this.outputSlot;
     }
 
-    @Override
     public ItemStack getOutputStack(Fabric inv) {
         return this.outputSlot.getStack(inv);
     }
 
-    @Override
     public boolean setOutputStack(Fabric inv, ItemStack stack) {
         return this.outputSlot.setStack(inv, stack);
     }

@@ -29,26 +29,23 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.comp.HotbarLens;
-import org.spongepowered.common.item.inventory.lens.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 
-public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implements PrimaryPlayerInventoryLens {
+public class PrimaryPlayerInventoryLens extends GridInventoryLens {
 
     private static final int MAIN_INVENTORY_HEIGHT = 3;
     private static final int INVENTORY_WIDTH = 9;
 
-    private HotbarLensImpl hotbar;
-    private GridInventoryLensImpl mainGrid;
-    private GridInventoryLensImpl fullGrid;
+    private HotbarLens hotbar;
+    private GridInventoryLens mainGrid;
+    private GridInventoryLens fullGrid;
     private boolean isContainer;
 
-    public PrimaryPlayerInventoryLensImpl(int base, SlotProvider slots, boolean isContainer) {
+    public PrimaryPlayerInventoryLens(int base, SlotProvider slots, boolean isContainer) {
         this(base, PrimaryPlayerInventoryAdapter.class, slots, isContainer);
     }
 
-    public PrimaryPlayerInventoryLensImpl(int base, Class<? extends Inventory> adapterType, SlotProvider slots, boolean isContainer) {
+    public PrimaryPlayerInventoryLens(int base, Class<? extends Inventory> adapterType, SlotProvider slots, boolean isContainer) {
         super(base, 9, 4, adapterType, slots);
         this.isContainer = isContainer;
 
@@ -60,9 +57,9 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
         int base = this.base;
 
         if (this.isContainer) {
-            this.mainGrid = new GridInventoryLensImpl(base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT, slots);
+            this.mainGrid = new GridInventoryLens(base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT, slots);
             base += INVENTORY_WIDTH * 3;
-            this.hotbar = new HotbarLensImpl(base, INVENTORY_WIDTH, slots);
+            this.hotbar = new HotbarLens(base, INVENTORY_WIDTH, slots);
             /*
             1 |G|G|G|G|G|G|G|G|G|
             2 |G|G|G|G|G|G|G|G|G|
@@ -73,13 +70,13 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
             this.addSpanningChild(this.mainGrid);
             this.addSpanningChild(this.hotbar);
 
-            this.fullGrid = new GridInventoryLensImpl(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, slots);
+            this.fullGrid = new GridInventoryLens(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, slots);
             this.addChild(this.fullGrid);
 
         } else {
-            this.hotbar = new HotbarLensImpl(base, INVENTORY_WIDTH, slots);
+            this.hotbar = new HotbarLens(base, INVENTORY_WIDTH, slots);
             base += INVENTORY_WIDTH;
-            this.mainGrid = new GridInventoryLensImpl(base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT, slots);
+            this.mainGrid = new GridInventoryLens(base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT, slots);
 
             /*
             2 |G|G|G|G|G|G|G|G|G|
@@ -93,7 +90,7 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
 
             // Shift slots so that Hotbar is always after the MainGrid
             ShiftedSlotProvider shiftedSlots = new ShiftedSlotProvider(slots, INVENTORY_WIDTH, INVENTORY_WIDTH * 4);
-            fullGrid = new GridInventoryLensImpl(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, shiftedSlots);
+            fullGrid = new GridInventoryLens(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, shiftedSlots);
             this.addChild(fullGrid);
         }
     }
@@ -125,12 +122,10 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
         return new PrimaryPlayerInventoryAdapter(fabric, this, parent);
     }
 
-    @Override
     public HotbarLens getHotbar() {
         return this.hotbar;
     }
 
-    @Override
     public GridInventoryLens getGrid() {
         return this.mainGrid;
     }

@@ -22,12 +22,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.comp;
+package org.spongepowered.common.item.inventory.lens.impl.comp;
 
-public interface GridInventoryLens extends Inventory2DLens {
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingGridInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
-    InventoryRowLens getRow(int row);
+public class CraftingGridInventoryLens extends GridInventoryLens {
 
-    InventoryColumnLens getColumn(int column);
+    public CraftingGridInventoryLens(int base, int width, int height, SlotProvider slots) {
+        super(base, width, height, slots);
+    }
 
+    @Override
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new CraftingGridInventoryAdapter(fabric, this, parent);
+    }
 }

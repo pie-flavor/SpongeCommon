@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.item.inventory.adapter.impl.comp;
 
-import com.spongepowered.math.vector.Vector2i;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
@@ -32,13 +31,14 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.item.inventory.type.InventoryColumn;
 import org.spongepowered.api.item.inventory.type.InventoryRow;
-import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.AdapterLogic;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.comp.InventoryColumnLens;
-import org.spongepowered.common.item.inventory.lens.comp.InventoryRowLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.InventoryColumnLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.InventoryRowLens;
 import org.spongepowered.math.vector.Vector2i;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

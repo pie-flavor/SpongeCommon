@@ -28,17 +28,16 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
-import org.spongepowered.api.item.inventory.type.Inventory2D;
-import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.AdapterLogic;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.comp.Inventory2DLens;
+import org.spongepowered.common.item.inventory.lens.impl.comp.Inventory2DLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 import java.util.Optional;
 
-public class Inventory2DAdapter extends BasicInventoryAdapter implements Inventory2D {
+public class Inventory2DAdapter extends BasicInventoryAdapter {
 
     protected Inventory2DLens lens2d;
 
@@ -59,27 +58,22 @@ public class Inventory2DAdapter extends BasicInventoryAdapter implements Invento
         }
     }
 
-    @Override
     public Optional<Slot> getSlot(Vector2i pos) {
         return BasicInventoryAdapter.forSlot(this.bridge$getFabric(), this.getSlotLens(pos), this);
     }
 
-    @Override
     public InventoryTransactionResult.Poll poll(Vector2i pos) {
         return AdapterLogic.pollSequential(this.bridge$getFabric(), this.getSlotLens(pos), null);
     }
 
-    @Override
     public InventoryTransactionResult.Poll poll(Vector2i pos, int limit) {
         return AdapterLogic.pollSequential(this.bridge$getFabric(), this.getSlotLens(pos), limit);
     }
 
-    @Override
     public Optional<ItemStack> peek(Vector2i pos) {
         return AdapterLogic.peekSequential(this.bridge$getFabric(), this.getSlotLens(pos));
     }
 
-    @Override
     public InventoryTransactionResult set(Vector2i pos, ItemStack stack) {
         return AdapterLogic.insertSequential(this.bridge$getFabric(), this.getSlotLens(pos), stack);
     }
