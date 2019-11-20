@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.slots;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

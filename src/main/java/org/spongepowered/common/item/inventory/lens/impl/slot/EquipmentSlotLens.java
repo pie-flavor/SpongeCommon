@@ -22,35 +22,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.slots;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 
 import java.util.function.Predicate;
 
-public class InputSlotLens extends FilteringSlotLens {
+public class EquipmentSlotLens extends FilteringSlotLens {
+    
+    private final Predicate<EquipmentType> equipmentTypeFilter;
 
-    public InputSlotLens(int index) {
-        this(index, (s) -> true, (s) -> true);
+    public EquipmentSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter, Predicate<EquipmentType> equipmentTypeFilter) {
+        this(index, EquipmentSlotAdapter.class, stackFilter, typeFilter, equipmentTypeFilter);
     }
 
-    public InputSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, InputSlotAdapter.class, stackFilter, typeFilter);
-    }
-
-    public InputSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+    public EquipmentSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter, Predicate<EquipmentType> equipmentTypeFilter) {
         super(index, adapterType, stackFilter, typeFilter);
+        this.equipmentTypeFilter = equipmentTypeFilter;
+    }
+
+    public Predicate<EquipmentType> getEquipmentTypeFilter() {
+        return this.equipmentTypeFilter;
     }
     
-    @SuppressWarnings("unchecked")
     @Override
-    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
-        return new InputSlotAdapter(fabric, this, parent);
+    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
+        return new EquipmentSlotAdapter(inv, this, parent);
     }
 
 }

@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 
 import java.util.ArrayList;

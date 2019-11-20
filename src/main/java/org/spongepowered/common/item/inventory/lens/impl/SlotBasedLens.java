@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 
 /**
  * Lenses for inventory based on slots.

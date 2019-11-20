@@ -22,18 +22,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
-public class InvalidLensDefinitionException extends RuntimeException {
+import net.minecraft.item.ItemStack;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
+import org.spongepowered.common.item.inventory.lens.Lens;
 
-    private static final long serialVersionUID = 1L;
-    
-    public InvalidLensDefinitionException(String message) {
-        super(message);
-    }
+public interface SlotLens extends Lens {
 
-    public InvalidLensDefinitionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    ItemStack getStack(Fabric inv);
+
+    boolean setStack(Fabric inv, ItemStack stack);
+
+    int getOrdinal(Fabric inv);
     
 }

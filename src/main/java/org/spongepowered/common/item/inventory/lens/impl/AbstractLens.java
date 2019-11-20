@@ -35,9 +35,9 @@ import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 
 import java.util.ArrayList;
 import java.util.Collection;

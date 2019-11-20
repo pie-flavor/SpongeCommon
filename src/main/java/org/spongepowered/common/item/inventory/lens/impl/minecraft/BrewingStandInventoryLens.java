@@ -29,11 +29,11 @@ import static org.spongepowered.api.item.ItemTypes.BLAZE_POWDER;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.FuelSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
 
 public class BrewingStandInventoryLens extends RealLens {
 

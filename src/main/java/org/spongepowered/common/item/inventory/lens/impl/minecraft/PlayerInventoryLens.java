@@ -35,13 +35,13 @@ import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.HeldHandSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.HeldHandSlotLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

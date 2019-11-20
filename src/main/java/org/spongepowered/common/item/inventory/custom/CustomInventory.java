@@ -35,7 +35,7 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.common.SpongeImplHooks;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.HashMap;

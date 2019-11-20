@@ -30,7 +30,7 @@ import org.spongepowered.common.bridge.entity.player.InventoryPlayerBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.HotbarAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 
 public class HotbarLens extends InventoryRowLens {
 

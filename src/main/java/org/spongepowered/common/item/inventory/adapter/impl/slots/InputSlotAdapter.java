@@ -26,7 +26,7 @@ package org.spongepowered.common.item.inventory.adapter.impl.slots;
 
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
 
 import org.spongepowered.api.item.inventory.slot.InputSlot;
 

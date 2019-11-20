@@ -55,13 +55,13 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.FuelSlotAdapte
 import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.FuelSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.OutputSlotLens;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.Collections;

@@ -51,8 +51,8 @@ import org.spongepowered.common.entity.SpongeCareer;
 import org.spongepowered.common.entity.SpongeEntityMeta;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.mixin.core.entity.EntityAgeableMixin;
 import org.spongepowered.common.registry.SpongeVillagerRegistry;
 

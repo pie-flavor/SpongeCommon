@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.crafting.CraftingOutput;
 
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.CraftingOutputSlotLens;
 
 public class CraftingOutputAdapter extends OutputSlotAdapter implements CraftingOutput {
 

@@ -29,7 +29,7 @@ import org.spongepowered.api.item.inventory.InventoryProperties;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 

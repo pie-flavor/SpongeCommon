@@ -33,13 +33,13 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapt
 import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.OutputSlotLens;
 
 import java.util.ArrayList;
 import java.util.List;

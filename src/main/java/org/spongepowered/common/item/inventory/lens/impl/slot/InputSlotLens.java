@@ -22,29 +22,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.slots;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 
 import java.util.function.Predicate;
 
-public class OutputSlotLens extends FilteringSlotLens {
+public class InputSlotLens extends FilteringSlotLens {
 
-    public OutputSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, OutputSlotAdapter.class, stackFilter, typeFilter);
+    public InputSlotLens(int index) {
+        this(index, (s) -> true, (s) -> true);
     }
 
-    public OutputSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+    public InputSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        this(index, InputSlotAdapter.class, stackFilter, typeFilter);
+    }
+
+    public InputSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
         super(index, adapterType, stackFilter, typeFilter);
     }
-
+    
+    @SuppressWarnings("unchecked")
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new OutputSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new InputSlotAdapter(fabric, this, parent);
     }
+
 }

@@ -27,7 +27,7 @@ package org.spongepowered.common.item.inventory.lens.impl.minecraft.container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 
 import java.util.Collections;

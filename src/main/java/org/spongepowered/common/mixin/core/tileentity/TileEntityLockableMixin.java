@@ -32,7 +32,7 @@ import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.plugin.meta.util.NonnullByDefault;
 
 @NonnullByDefault

@@ -31,8 +31,8 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.ReusableLensInventoryAdapaterBridge;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 
 import java.util.HashMap;
 import java.util.Map;

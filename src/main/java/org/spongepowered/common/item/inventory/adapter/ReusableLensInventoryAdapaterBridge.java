@@ -26,7 +26,7 @@ package org.spongepowered.common.item.inventory.adapter;
 
 import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 
 public interface ReusableLensInventoryAdapaterBridge extends InventoryAdapter, InventoryAdapterBridge {

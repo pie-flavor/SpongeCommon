@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.query.SpongeQuery;
 import org.spongepowered.math.vector.Vector2i;

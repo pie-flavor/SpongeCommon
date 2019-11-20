@@ -27,7 +27,7 @@ package org.spongepowered.common.item.inventory.query.type;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 

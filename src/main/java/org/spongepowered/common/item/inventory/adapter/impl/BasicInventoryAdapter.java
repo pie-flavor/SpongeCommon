@@ -34,13 +34,13 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.QueryLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 
 import java.util.List;
 import java.util.Optional;

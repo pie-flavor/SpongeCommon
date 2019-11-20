@@ -31,7 +31,7 @@ import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
 import org.spongepowered.common.item.inventory.query.SpongeQuery;
 

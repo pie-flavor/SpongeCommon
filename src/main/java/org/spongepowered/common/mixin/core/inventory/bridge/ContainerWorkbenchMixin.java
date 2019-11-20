@@ -31,12 +31,12 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.CraftingOutput
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.CraftingOutputSlotLens;
 
 import java.util.ArrayList;
 import java.util.List;

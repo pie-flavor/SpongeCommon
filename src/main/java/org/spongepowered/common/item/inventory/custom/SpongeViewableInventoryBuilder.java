@@ -13,9 +13,9 @@ import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 import java.util.ArrayList;

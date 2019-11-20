@@ -32,10 +32,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLens;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin implements InventoryAdapter, InventoryAdapterBridge {

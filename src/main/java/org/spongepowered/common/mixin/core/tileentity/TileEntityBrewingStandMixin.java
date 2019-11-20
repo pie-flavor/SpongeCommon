@@ -32,12 +32,12 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.FilteringSlotAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FilteringSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.FilteringSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
 
 @Mixin(BrewingStandTileEntity.class)
 public abstract class TileEntityBrewingStandMixin extends TileEntityLockableMixin implements CustomNameableBridge {

@@ -46,8 +46,8 @@ import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerIn
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 
 import java.util.Optional;

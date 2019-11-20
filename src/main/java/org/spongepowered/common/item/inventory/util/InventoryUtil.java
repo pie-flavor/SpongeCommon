@@ -45,7 +45,7 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingGridInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.BasicSlotLens;
 
 import java.util.Optional;
 

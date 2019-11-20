@@ -22,14 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
-public class UnsupportedFabricException extends RuntimeException {
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.CraftingOutputAdapter;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 
-    private static final long serialVersionUID = 1L;
+import java.util.function.Predicate;
 
-    public UnsupportedFabricException(String format, Object... args) {
-        super(String.format(format, args));
+public class CraftingOutputSlotLens extends OutputSlotLens {
+
+    public CraftingOutputSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        this(index, CraftingOutputAdapter.class, stackFilter, typeFilter);
+    }
+
+    public CraftingOutputSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        super(index, adapterType, stackFilter, typeFilter);
+    }
+    
+    @Override
+    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
+        return new CraftingOutputAdapter(inv, this, parent);
     }
 
 }

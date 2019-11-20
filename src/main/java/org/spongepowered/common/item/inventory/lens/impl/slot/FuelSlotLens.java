@@ -22,50 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.slots;
+package org.spongepowered.common.item.inventory.lens.impl.slot;
 
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.FilteringSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.FuelSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.function.Predicate;
 
-public class FilteringSlotLens extends BasicSlotLens {
+public class FuelSlotLens extends InputSlotLens {
 
-    private final Predicate<ItemStack> stackFilter;
-    private final Predicate<ItemType> typeFilter;
-
-    public FilteringSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, FilteringSlotAdapter.class, stackFilter, typeFilter);
+    public FuelSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        this(index, FuelSlotAdapter.class, stackFilter, typeFilter);
     }
 
-    public FilteringSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        super(index, adapterType);
-
-        this.stackFilter = stackFilter;
-        this.typeFilter = typeFilter;
+    public FuelSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        super(index, adapterType, stackFilter, typeFilter);
     }
-
+    
     @Override
-    public boolean setStack(Fabric inv, net.minecraft.item.ItemStack stack) {
-        return this.getItemStackFilter().test(ItemStackUtil.fromNative(stack)) && super.setStack(inv, stack);
-    }
-
-    public Predicate<ItemStack> getItemStackFilter() {
-        return this.stackFilter;
-    }
-
-    public Predicate<ItemType> getItemTypeFilter() {
-        return this.typeFilter;
-    }
-
-    @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new FilteringSlotAdapter(inv, this, parent);
+    public InventoryAdapter getAdapter(Fabric fabric, Inventory parent) {
+        return new FuelSlotAdapter(fabric, this, parent);
     }
 
 }

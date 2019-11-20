@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;

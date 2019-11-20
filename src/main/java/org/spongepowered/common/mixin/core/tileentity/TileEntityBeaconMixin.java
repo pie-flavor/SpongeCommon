@@ -36,10 +36,10 @@ import org.spongepowered.common.bridge.data.CustomNameableBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slot.InputSlotLens;
 
 import javax.annotation.Nullable;
 
