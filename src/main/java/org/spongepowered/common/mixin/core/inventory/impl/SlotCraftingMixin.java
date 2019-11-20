@@ -52,8 +52,7 @@ import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.TrackedInventoryBridge;
 import org.spongepowered.common.event.SpongeCommonEventFactory;
 import org.spongepowered.common.bridge.world.WorldBridge;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
-import org.spongepowered.common.mixin.core.inventory.impl.ContainerMixin;
+import org.spongepowered.common.item.util.ItemStackUtil;
 
 import java.util.Iterator;
 import java.util.List;

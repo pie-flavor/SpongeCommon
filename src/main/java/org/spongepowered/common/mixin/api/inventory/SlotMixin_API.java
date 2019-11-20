@@ -26,7 +26,7 @@ package org.spongepowered.common.mixin.api.inventory;
 
 import net.minecraft.inventory.container.Slot;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.item.inventory.adapter.impl.DefaultImplementedAdapterInventory;
+import org.spongepowered.common.inventory.adapter.impl.DefaultImplementedAdapterInventory;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin_API implements DefaultImplementedAdapterInventory.WithClear {

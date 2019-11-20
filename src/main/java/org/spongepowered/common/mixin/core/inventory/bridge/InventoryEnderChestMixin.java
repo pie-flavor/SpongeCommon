@@ -26,10 +26,10 @@ package org.spongepowered.common.mixin.core.inventory.bridge;
 
 import net.minecraft.inventory.EnderChestInventory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
+import org.spongepowered.common.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.inventory.fabric.Fabric;
+import org.spongepowered.common.inventory.lens.Lens;
+import org.spongepowered.common.inventory.lens.impl.comp.GridInventoryLens;
 
 @Mixin(EnderChestInventory.class)
 public abstract class InventoryEnderChestMixin extends InventoryBasicMixin {

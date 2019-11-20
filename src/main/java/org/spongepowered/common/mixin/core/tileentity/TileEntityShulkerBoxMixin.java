@@ -27,12 +27,12 @@ package org.spongepowered.common.mixin.core.tileentity;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
+import org.spongepowered.common.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.inventory.fabric.Fabric;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.inventory.lens.impl.ReusableLens;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.inventory.lens.impl.comp.GridInventoryLens;
 
 @Mixin(ShulkerBoxTileEntity.class)
 public abstract class TileEntityShulkerBoxMixin extends TileEntityLockableLootMixin {

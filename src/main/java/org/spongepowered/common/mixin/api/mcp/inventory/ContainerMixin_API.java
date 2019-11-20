@@ -43,8 +43,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.bridge.inventory.ContainerBridge;
-import org.spongepowered.common.item.inventory.util.InventoryUtil;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import org.spongepowered.common.inventory.util.InventoryUtil;
+import org.spongepowered.common.item.util.ItemStackUtil;
 
 import java.util.ArrayList;
 import java.util.List;

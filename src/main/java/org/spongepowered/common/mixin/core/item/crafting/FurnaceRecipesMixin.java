@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.SpongeImplHooks;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import org.spongepowered.common.item.util.ItemStackUtil;
 import org.spongepowered.common.item.recipe.smelting.MatchSmeltingVanillaItemStack;
 import org.spongepowered.common.item.recipe.smelting.SpongeSmeltingRecipe;
 import org.spongepowered.common.registry.SpongeAdditionalCatalogRegistryModule;

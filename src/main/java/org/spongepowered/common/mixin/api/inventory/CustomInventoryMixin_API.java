@@ -29,7 +29,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.inventory.custom.CustomInventory;
 
 import java.util.Optional;
 

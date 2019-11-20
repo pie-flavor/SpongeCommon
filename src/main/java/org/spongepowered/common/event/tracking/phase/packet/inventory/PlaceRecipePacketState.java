@@ -28,7 +28,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.network.IPacket;
-import net.minecraft.network.play.client.CPlaceRecipePacket;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.Entity;
@@ -49,7 +48,7 @@ import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.TrackedInventoryBridge;
 import org.spongepowered.common.event.SpongeCommonEventFactory;
 import org.spongepowered.common.event.tracking.phase.packet.PacketPhaseUtil;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import org.spongepowered.common.item.util.ItemStackUtil;
 
 import java.util.List;
 import java.util.Optional;

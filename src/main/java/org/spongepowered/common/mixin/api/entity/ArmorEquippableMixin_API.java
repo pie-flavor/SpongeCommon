@@ -30,13 +30,10 @@ import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.entity.ArmorEquipable;
 import org.spongepowered.api.item.inventory.ArmorEquipable;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.entity.living.human.EntityHuman;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import org.spongepowered.common.item.util.ItemStackUtil;
 import org.spongepowered.common.mixin.api.mcp.entity.EntityLivingBaseMixin_API;
-
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 import net.minecraft.entity.item.ArmorStandEntity;

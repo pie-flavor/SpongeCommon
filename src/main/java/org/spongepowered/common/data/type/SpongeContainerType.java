@@ -30,8 +30,7 @@ import net.minecraft.inventory.container.Container;
 import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.common.SpongeCatalogType;
-import org.spongepowered.common.item.inventory.lens.LensCreator;
-import org.spongepowered.common.registry.RegistryHelper;
+import org.spongepowered.common.inventory.lens.LensCreator;
 import org.spongepowered.common.registry.type.item.ContainerTypeRegistryModule;
 
 public class SpongeContainerType extends SpongeCatalogType implements ContainerType {

@@ -37,9 +37,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.bridge.inventory.ContainerBridge;
 import org.spongepowered.common.bridge.inventory.ViewableInventoryBridge;
 import org.spongepowered.common.entity.player.SpongeUserInventory;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
-import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
-import org.spongepowered.common.item.inventory.custom.ViewableCustomInventory;
+import org.spongepowered.common.inventory.custom.CustomInventory;
+import org.spongepowered.common.inventory.custom.SpongeInventoryMenu;
+import org.spongepowered.common.inventory.custom.ViewableCustomInventory;
 
 import java.util.Set;
 import java.util.stream.Collectors;

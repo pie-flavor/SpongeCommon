@@ -57,10 +57,10 @@ import org.spongepowered.api.registry.CatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
-import org.spongepowered.common.item.inventory.lens.LensCreator;
-import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
+import org.spongepowered.common.inventory.lens.LensCreator;
+import org.spongepowered.common.inventory.lens.impl.comp.GridInventoryLens;
+import org.spongepowered.common.inventory.lens.impl.minecraft.BrewingStandInventoryLens;
+import org.spongepowered.common.inventory.lens.impl.minecraft.FurnaceInventoryLens;
 
 import java.util.Collection;
 import java.util.HashMap;

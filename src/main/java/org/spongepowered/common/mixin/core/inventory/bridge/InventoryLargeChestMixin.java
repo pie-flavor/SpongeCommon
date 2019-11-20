@@ -26,13 +26,13 @@ package org.spongepowered.common.mixin.core.inventory.bridge;
 
 import net.minecraft.inventory.DoubleSidedInventory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.minecraft.LargeChestInventoryLens;
+import org.spongepowered.common.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.inventory.fabric.Fabric;
+import org.spongepowered.common.inventory.lens.ReusableLensProvider;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.inventory.lens.impl.ReusableLens;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.inventory.lens.impl.minecraft.LargeChestInventoryLens;
 
 @Mixin(DoubleSidedInventory.class)
 public abstract class InventoryLargeChestMixin implements InventoryAdapter, ReusableLensProvider {

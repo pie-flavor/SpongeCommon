@@ -32,7 +32,7 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
+import org.spongepowered.common.inventory.custom.SpongeInventoryMenu;
 
 import java.util.LinkedHashMap;
 import java.util.List;

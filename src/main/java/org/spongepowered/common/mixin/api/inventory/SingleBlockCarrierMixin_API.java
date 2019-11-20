@@ -31,7 +31,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.SingleBlockCarrier;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.common.item.inventory.DefaultSingleBlockCarrier;
+import org.spongepowered.common.inventory.DefaultSingleBlockCarrier;
 
 @Mixin({
     RepairContainer.class,

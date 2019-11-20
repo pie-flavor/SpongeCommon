@@ -44,9 +44,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.common.event.SpongeCommonEventFactory;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.util.ContainerUtil;
-import org.spongepowered.common.item.inventory.util.ItemStackUtil;
+import org.spongepowered.common.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.inventory.util.ContainerUtil;
+import org.spongepowered.common.item.util.ItemStackUtil;
 
 import java.util.List;
 import java.util.Random;

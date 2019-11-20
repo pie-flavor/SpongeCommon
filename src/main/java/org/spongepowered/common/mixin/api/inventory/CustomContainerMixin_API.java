@@ -26,8 +26,8 @@ package org.spongepowered.common.mixin.api.inventory;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.item.inventory.custom.CustomContainer;
-import org.spongepowered.common.item.inventory.custom.CustomInventory;
+import org.spongepowered.common.inventory.custom.CustomContainer;
+import org.spongepowered.common.inventory.custom.CustomInventory;
 import org.spongepowered.common.mixin.api.mcp.inventory.ContainerMixin_API;
 
 @Mixin(CustomContainer.class)

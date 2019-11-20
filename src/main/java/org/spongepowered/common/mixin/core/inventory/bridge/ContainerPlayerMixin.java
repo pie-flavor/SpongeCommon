@@ -33,17 +33,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.bridge.entity.player.InventoryPlayerBridge;
 import org.spongepowered.common.bridge.inventory.ContainerPlayerBridge;
-import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.CraftingOutputAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
-import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.inventory.adapter.impl.slots.CraftingOutputAdapter;
+import org.spongepowered.common.inventory.adapter.impl.slots.EquipmentSlotAdapter;
+import org.spongepowered.common.inventory.fabric.Fabric;
+import org.spongepowered.common.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slot.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerPlayerInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slot.CraftingOutputSlotLens;
-import org.spongepowered.common.item.inventory.lens.impl.slot.EquipmentSlotLens;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensProvider;
+import org.spongepowered.common.inventory.lens.impl.slot.SlotLensCollection;
+import org.spongepowered.common.inventory.lens.impl.minecraft.container.ContainerPlayerInventoryLens;
+import org.spongepowered.common.inventory.lens.impl.slot.CraftingOutputSlotLens;
+import org.spongepowered.common.inventory.lens.impl.slot.EquipmentSlotLens;
 import org.spongepowered.common.mixin.core.inventory.impl.ContainerMixin;
 
 @Mixin(PlayerContainer.class)

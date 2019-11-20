@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
-import org.spongepowered.common.item.inventory.adapter.impl.DefaultImplementedAdapterInventory;
+import org.spongepowered.common.inventory.adapter.impl.DefaultImplementedAdapterInventory;
 
 @Mixin(IInventory.class)
 @Implements(@Interface(iface = Inventory.class, prefix = "inventory$"))
