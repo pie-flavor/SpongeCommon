@@ -27,6 +27,7 @@ package org.spongepowered.common.item.inventory.query.type;
 import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
+import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.api.item.inventory.query.QueryTypes;
 
@@ -44,5 +45,10 @@ public class PlayerPrimaryHotbarFirstQuery extends AppendQuery implements QueryT
     @Override
     public CatalogKey getKey() {
         return this.key;
+    }
+
+    @Override
+    public Query toQuery() {
+        return this;
     }
 }

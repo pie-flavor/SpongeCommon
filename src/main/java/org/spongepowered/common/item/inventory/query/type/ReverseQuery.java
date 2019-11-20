@@ -27,8 +27,9 @@ package org.spongepowered.common.item.inventory.query.type;
 import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.api.item.inventory.query.QueryType;
-import org.spongepowered.common.bridge.item.inventory.InventoryBridge;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
@@ -66,4 +67,8 @@ public class ReverseQuery extends SpongeQuery implements QueryType.NoParam {
         return (Inventory) lens.getAdapter(adapter.bridge$getFabric(), (Inventory) inventory);
     }
 
+    @Override
+    public Query toQuery() {
+        return this;
+    }
 }
