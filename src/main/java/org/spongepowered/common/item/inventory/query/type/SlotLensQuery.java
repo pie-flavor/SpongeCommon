@@ -26,13 +26,10 @@ package org.spongepowered.common.item.inventory.query.type;
 
 import com.google.common.collect.ImmutableSet;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.query.Query;
-import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
-import org.spongepowered.common.item.inventory.query.SpongeQueryTypes;
 
 public final class SlotLensQuery extends SpongeDepthQuery {
 

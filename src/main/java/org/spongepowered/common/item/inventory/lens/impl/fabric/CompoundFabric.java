@@ -27,7 +27,7 @@ package org.spongepowered.common.item.inventory.lens.impl.fabric;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 
 import java.util.Collection;
 import java.util.HashSet;

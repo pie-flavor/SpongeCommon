@@ -25,8 +25,7 @@
 package org.spongepowered.common.item.inventory.lens;
 
 import net.minecraft.item.ItemStack;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 
 public interface SlotLens extends Lens {
 

@@ -30,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.text.translation.FixedTranslation;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
-import org.spongepowered.common.item.inventory.lens.Fabric;
 
 import java.util.Collection;
 

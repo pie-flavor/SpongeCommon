@@ -26,7 +26,7 @@ package org.spongepowered.common.item.inventory.adapter.impl;
 
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 
 public class VanillaContainerAdapter extends BasicInventoryAdapter {
 

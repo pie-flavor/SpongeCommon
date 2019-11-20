@@ -27,7 +27,7 @@ package org.spongepowered.common.mixin.core.inventory.bridge;
 import net.minecraft.inventory.EnderChestInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 

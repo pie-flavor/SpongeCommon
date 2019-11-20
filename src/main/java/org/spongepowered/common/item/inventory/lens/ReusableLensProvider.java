@@ -25,6 +25,7 @@
 package org.spongepowered.common.item.inventory.lens;
 
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 
 public interface ReusableLensProvider {

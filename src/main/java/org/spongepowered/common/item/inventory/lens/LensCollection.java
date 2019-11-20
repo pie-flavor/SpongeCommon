@@ -29,7 +29,6 @@ import org.spongepowered.api.data.property.Property;
 import java.util.Collection;
 import java.util.Map;
 
-
 public interface LensCollection extends Iterable<Lens> {
     
     /**

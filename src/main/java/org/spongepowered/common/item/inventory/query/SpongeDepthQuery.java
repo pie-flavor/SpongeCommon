@@ -27,7 +27,7 @@ package org.spongepowered.common.item.inventory.query;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotLens;
 import org.spongepowered.common.item.inventory.lens.impl.QueryLens;

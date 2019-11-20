@@ -24,7 +24,7 @@
  */
 package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.query.SpongeDepthQuery;
 
