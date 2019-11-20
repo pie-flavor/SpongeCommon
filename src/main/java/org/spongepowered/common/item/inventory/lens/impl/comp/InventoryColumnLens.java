@@ -28,15 +28,15 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.InventoryColumnAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 public class InventoryColumnLens extends Inventory2DLens {
 
-    public InventoryColumnLens(int base, int height, int stride, int xBase, int yBase, SlotProvider slots) {
+    public InventoryColumnLens(int base, int height, int stride, int xBase, int yBase, SlotLensProvider slots) {
         this(base, height, stride, xBase, yBase, InventoryColumnAdapter.class, slots);
     }
     
-    public InventoryColumnLens(int base, int height, int stride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public InventoryColumnLens(int base, int height, int stride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(base, 1, height, stride, xBase, yBase, adapterType, slots);
     }
 

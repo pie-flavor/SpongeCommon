@@ -46,8 +46,8 @@ import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerIn
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 
 import java.util.Optional;
@@ -77,7 +77,7 @@ public abstract class SpongeUserInventoryMixin implements InventoryAdapter, User
     }
 
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
+    public SlotLensProvider bridge$generateSlotProvider() {
         return new SlotLensCollection.Builder()
             .add(this.mainInventory.size())
             .add(this.offHandInventory.size())
@@ -87,7 +87,7 @@ public abstract class SpongeUserInventoryMixin implements InventoryAdapter, User
     }
 
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
+    public Lens bridge$generateLens(SlotLensProvider slots) {
         return new PlayerInventoryLens(this.getSizeInventory(), this.getClass(), slots);
     }
 

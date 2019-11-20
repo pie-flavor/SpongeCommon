@@ -29,7 +29,7 @@ import org.spongepowered.api.item.inventory.InventoryProperties;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 
@@ -41,12 +41,12 @@ public class ContainerPlayerInventoryLens extends ContainerLens {
     private static final int CRAFTING_OUTPUT = 1;
     private static final int CRAFTING_GRID = 2;
 
-    public ContainerPlayerInventoryLens(int size, Class<? extends Inventory> adapter, SlotProvider slots) {
+    public ContainerPlayerInventoryLens(int size, Class<? extends Inventory> adapter, SlotLensProvider slots) {
         super(size, adapter, slots, lenses(size, slots));
         this.init(slots);
     }
 
-    private static List<Lens> lenses(int size, SlotProvider slots) {
+    private static List<Lens> lenses(int size, SlotLensProvider slots) {
         int base = CRAFTING_OUTPUT; // 1
         final CraftingInventoryLens crafting = new CraftingInventoryLens(0, base, CRAFTING_GRID, CRAFTING_GRID, slots);
         base += CRAFTING_GRID * CRAFTING_GRID; // 4
@@ -55,7 +55,7 @@ public class ContainerPlayerInventoryLens extends ContainerLens {
     }
 
     @Override
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
         super.init(slots);
 
         this.addChild(slots.getSlotLens(base + 0), PropertyEntry.of(InventoryProperties.EQUIPMENT_TYPE, EquipmentTypes.HEADWEAR));

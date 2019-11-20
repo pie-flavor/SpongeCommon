@@ -35,7 +35,7 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.common.SpongeImplHooks;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.HashMap;
@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
 public class CustomInventory implements IInventory {
 
     // shadow usage
-    private SlotProvider slots;
+    private SlotLensProvider slots;
     private Lens lens;
 
     private final List<Inventory> inventories;
@@ -58,7 +58,7 @@ public class CustomInventory implements IInventory {
     private Carrier carrier;
     private final PluginContainer plugin; // TODO
 
-    public CustomInventory(int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
+    public CustomInventory(int size, Lens lens, SlotLensProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
         this.size = size;
         this.properties.put(InventoryProperties.UNIQUE_ID, identity);
         this.carrier = carrier;

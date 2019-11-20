@@ -29,7 +29,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
@@ -43,11 +43,11 @@ public class CraftingInventoryLens extends RealLens {
     private final CraftingGridInventoryLens craftingGrid;
 
 
-    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, SlotProvider slots) {
+    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, SlotLensProvider slots) {
         this(outputSlotIndex, gridBase, width, height, CraftingInventoryAdapter.class, slots);
     }
 
-    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public CraftingInventoryLens(int outputSlotIndex, int gridBase, int width, int height, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(gridBase, width * height + 1, adapterType);
         this.outputSlotIndex = outputSlotIndex;
         this.outputSlot = (CraftingOutputSlotLens)slots.getSlotLens(this.outputSlotIndex);
@@ -57,7 +57,7 @@ public class CraftingInventoryLens extends RealLens {
         this.init(slots);
     }
 
-    private void init(SlotProvider slots) {
+    private void init(SlotLensProvider slots) {
         this.addSpanningChild(this.outputSlot);
         this.addSpanningChild(this.craftingGrid);
         this.addChild(new DefaultIndexedLens(0, this.size, slots));

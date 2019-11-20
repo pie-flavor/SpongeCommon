@@ -33,14 +33,14 @@ import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.EquipmentInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.SlotBasedLens;
 
 import java.util.Optional;
 
 public class ArmorInventoryLens extends SlotBasedLens {
 
-    public ArmorInventoryLens(int base, SlotProvider slots, boolean isContainer) {
+    public ArmorInventoryLens(int base, SlotLensProvider slots, boolean isContainer) {
         super(base, 4, 1, EquipmentInventoryAdapter.class, slots);
         if (isContainer) {
             this.initContainer(slots);
@@ -49,7 +49,7 @@ public class ArmorInventoryLens extends SlotBasedLens {
         }
     }
 
-    private void initInventory(SlotProvider slots) {
+    private void initInventory(SlotLensProvider slots) {
         int index = this.base;
 
         this.addSpanningChild(slots.getSlotLens(index), PropertyEntry.of(InventoryProperties.EQUIPMENT_TYPE, EquipmentTypes.BOOTS));
@@ -61,7 +61,7 @@ public class ArmorInventoryLens extends SlotBasedLens {
         this.addSpanningChild(slots.getSlotLens(index), PropertyEntry.of(InventoryProperties.EQUIPMENT_TYPE, EquipmentTypes.HEADWEAR));
     }
 
-    private void initContainer(SlotProvider slots) {
+    private void initContainer(SlotLensProvider slots) {
         int index = this.base;
         this.addSpanningChild(slots.getSlotLens(index), PropertyEntry.of(InventoryProperties.EQUIPMENT_TYPE, EquipmentTypes.HEADWEAR));
         index += this.stride;

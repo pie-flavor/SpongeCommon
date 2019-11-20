@@ -34,9 +34,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLens;
 
 @Mixin(CraftingInventory.class)
@@ -47,12 +47,12 @@ public abstract class InventoryCraftingMixin implements IInventory, InventoryAda
     @Shadow @Final private int height;
 
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
+    public SlotLensProvider bridge$generateSlotProvider() {
         return new SlotLensCollection.Builder().add(this.stackList.size()).build();
     }
 
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
+    public Lens bridge$generateLens(SlotLensProvider slots) {
         if (this.stackList.size() == 0) {
             return new DefaultEmptyLens(this);
         }

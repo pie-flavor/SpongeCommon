@@ -64,11 +64,11 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.CraftingOutput
 import org.spongepowered.common.item.inventory.custom.CustomContainer;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.DelegatingLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
@@ -189,7 +189,7 @@ public final class ContainerUtil {
      * @param slots The slots of the Container
      * @return The generated fallback lens
      */
-    @SuppressWarnings("unchecked") public static Lens generateLens(final net.minecraft.inventory.container.Container container, final SlotProvider slots) {
+    @SuppressWarnings("unchecked") public static Lens generateLens(final net.minecraft.inventory.container.Container container, final SlotLensProvider slots) {
         // Get all inventories viewed in the Container & count slots & retain order
         final Map<Optional<IInventory>, List<Slot>> viewed = container.inventorySlots.stream()
                 .collect(Collectors.groupingBy(i -> Optional.<IInventory>ofNullable(i.inventory), LinkedHashMap::new, Collectors.toList()));
@@ -258,7 +258,7 @@ public final class ContainerUtil {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static @Nullable Lens generateAdapterLens(final SlotProvider slots, final int index,
+    private static @Nullable Lens generateAdapterLens(final SlotLensProvider slots, final int index,
             final CraftingInventoryData crafting, final List<Slot> slotList, @Nullable final IInventory subInventory) {
         if (!(subInventory instanceof InventoryAdapter)) {
             return null;
@@ -305,7 +305,7 @@ public final class ContainerUtil {
      *
      * @return The {@link SlotLensCollection} with the amount of slots for this container.
      */
-    public static SlotProvider countSlots(final net.minecraft.inventory.container.Container container, final Fabric fabric) {
+    public static SlotLensProvider countSlots(final net.minecraft.inventory.container.Container container, final Fabric fabric) {
         if (container instanceof LensProviderBridge) {
             return ((LensProviderBridge) container).bridge$slotProvider(fabric, ((InventoryAdapter) container));
         }

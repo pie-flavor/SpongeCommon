@@ -51,8 +51,8 @@ import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLens;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
@@ -97,7 +97,7 @@ public abstract class InventoryPlayerMixin implements InventoryPlayerBridge, Inv
 
     @SuppressWarnings("RedundantCast")
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
+    public SlotLensProvider bridge$generateSlotProvider() {
         if ((Class<?>) this.getClass() == net.minecraft.entity.player.PlayerInventory.class) { // Build Player Lens
             return new SlotLensCollection.Builder()
                 .add(this.mainInventory.size())
@@ -120,7 +120,7 @@ public abstract class InventoryPlayerMixin implements InventoryPlayerBridge, Inv
 
     @SuppressWarnings({"RedundantCast", "Unchecked"})
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
+    public Lens bridge$generateLens(SlotLensProvider slots) {
         if ((Class<?>) this.getClass() == net.minecraft.entity.player.PlayerInventory.class) { // Build Player Lens
             return new PlayerInventoryLens(this.getSizeInventory(), (Class<? extends Inventory>) this.getClass(), slots);
         }

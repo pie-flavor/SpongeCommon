@@ -29,9 +29,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.LargeChestInventoryLens;
 
 @Mixin(DoubleSidedInventory.class)
@@ -42,11 +42,11 @@ public abstract class InventoryLargeChestMixin implements InventoryAdapter, Reus
         return ReusableLens.getLens(LargeChestInventoryLens.class, this, this::impl$generateSlotProvider, this::impl$generateInventoryLens);
     }
 
-    private SlotProvider impl$generateSlotProvider() {
+    private SlotLensProvider impl$generateSlotProvider() {
         return new SlotLensCollection.Builder().add(this.bridge$getFabric().fabric$getSize()).build();
     }
 
-    private LargeChestInventoryLens impl$generateInventoryLens(final SlotProvider slots) {
+    private LargeChestInventoryLens impl$generateInventoryLens(final SlotLensProvider slots) {
         return new LargeChestInventoryLens(this, slots);
     }
 

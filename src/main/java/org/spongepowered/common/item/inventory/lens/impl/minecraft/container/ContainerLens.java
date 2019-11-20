@@ -27,7 +27,7 @@ package org.spongepowered.common.item.inventory.lens.impl.minecraft.container;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 
 import java.util.Collections;
@@ -39,11 +39,11 @@ public class ContainerLens extends RealLens {
     protected List<Lens> viewedInventories;
     private List<Lens> additonal;
 
-    public ContainerLens(int size, Class<? extends Inventory> adapter, SlotProvider slots, List<Lens> lenses) {
+    public ContainerLens(int size, Class<? extends Inventory> adapter, SlotLensProvider slots, List<Lens> lenses) {
         this(size, adapter, slots, lenses, Collections.emptyList());
     }
 
-    public ContainerLens(int size, Class<? extends Inventory> adapter, SlotProvider slots, List<Lens> lenses, List<Lens> additonal) {
+    public ContainerLens(int size, Class<? extends Inventory> adapter, SlotLensProvider slots, List<Lens> lenses, List<Lens> additonal) {
         this(size, adapter);
         this.viewedInventories = lenses;
         this.additonal = additonal;
@@ -58,7 +58,7 @@ public class ContainerLens extends RealLens {
         this.additonal = Collections.emptyList();
     }
 
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
 
         // Adding slots
         for (int ord = 0, slot = this.base; ord < this.size; ord++, slot++) {

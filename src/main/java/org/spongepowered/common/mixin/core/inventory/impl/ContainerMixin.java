@@ -74,7 +74,7 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.custom.SpongeInventoryMenu;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
 import org.spongepowered.common.item.inventory.util.ContainerUtil;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
@@ -129,13 +129,13 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
     @Nullable private ItemStack impl$previousCursor;
 
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
+    public SlotLensProvider bridge$generateSlotProvider() {
         return ContainerUtil.countSlots((Container) (Object) this, bridge$getFabric());
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
+    public Lens bridge$generateLens(SlotLensProvider slots) {
         if (this.impl$isLensInitialized) {
             return null; // Means that we've tried to generate a lens before, but it was null. And because the lens is null,
             // the generate will try again. So, we stop trying to generate it.

@@ -30,16 +30,16 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.custom.CustomInventory;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 @Mixin(CustomInventory.class)
 public abstract class CustomInventoryMixin implements InventoryAdapter {
 
-    @Shadow(remap = false) private SlotProvider slots;
+    @Shadow(remap = false) private SlotLensProvider slots;
     @Shadow(remap = false) private Lens lens;
 
     @Override
-    public SlotProvider bridge$getSlotProvider() {
+    public SlotLensProvider bridge$getSlotProvider() {
         return this.slots;
     }
 

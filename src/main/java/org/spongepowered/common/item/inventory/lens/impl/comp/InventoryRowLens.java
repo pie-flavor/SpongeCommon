@@ -28,15 +28,15 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.InventoryRowAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 public class InventoryRowLens extends Inventory2DLens {
 
-    public InventoryRowLens(int base, int width, int xBase, int yBase, SlotProvider slots) {
+    public InventoryRowLens(int base, int width, int xBase, int yBase, SlotLensProvider slots) {
         this(base, width, xBase, yBase, InventoryRowAdapter.class, slots);
     }
     
-    public InventoryRowLens(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public InventoryRowLens(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(base, width, 1, 1, xBase, yBase, adapterType, slots);
     }
 

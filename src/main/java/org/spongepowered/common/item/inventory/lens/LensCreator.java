@@ -24,8 +24,10 @@
  */
 package org.spongepowered.common.item.inventory.lens;
 
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+
 public interface LensCreator {
 
-    Lens createLens(SlotProvider slotProvider);
+    Lens createLens(SlotLensProvider slotProvider);
 
 }

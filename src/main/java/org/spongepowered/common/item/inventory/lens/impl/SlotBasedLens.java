@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 /**
  * Lenses for inventory based on slots.
@@ -40,13 +40,13 @@ import org.spongepowered.common.item.inventory.lens.SlotProvider;
 public abstract class SlotBasedLens extends AbstractLens {
 
     protected final int stride;
-    public SlotBasedLens(int base, int size, int stride, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public SlotBasedLens(int base, int size, int stride, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(base, size, adapterType);
         checkArgument(stride > 0, "Invalid stride: %s", stride);
         this.stride = stride;
         this.init(slots);
     }
-    private void init(SlotProvider slots) {
+    private void init(SlotLensProvider slots) {
         for (int ord = 0, slot = this.base; ord < this.size; ord++, slot += this.stride) {
             this.addSpanningChild(slots.getSlotLens(slot), PropertyEntry.slotIndex(ord));
         }

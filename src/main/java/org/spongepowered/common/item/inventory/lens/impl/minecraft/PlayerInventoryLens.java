@@ -35,13 +35,13 @@ import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.HeldHandSlotLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class PlayerInventoryLens extends AbstractLens {
     private SlotLens offhand;
     private final boolean isContainer;
 
-    public PlayerInventoryLens(int size, Class<? extends Inventory> adapter, SlotProvider slots) {
+    public PlayerInventoryLens(int size, Class<? extends Inventory> adapter, SlotLensProvider slots) {
         super(0, size, adapter);
         this.isContainer = false;
         this.init(slots);
@@ -71,13 +71,13 @@ public class PlayerInventoryLens extends AbstractLens {
      * @param size The size
      * @param slots The slots
      */
-    public PlayerInventoryLens(int base, int size, SlotProvider slots) {
+    public PlayerInventoryLens(int base, int size, SlotLensProvider slots) {
         super(base, size, PlayerInventory.class);
         this.isContainer = true;
         this.init(slots);
     }
 
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
         // Adding slots
         for (int ord = 0, slot = this.base; ord < this.size; ord++, slot++) {
             this.addChild(slots.getSlotLens(slot), PropertyEntry.slotIndex(ord));

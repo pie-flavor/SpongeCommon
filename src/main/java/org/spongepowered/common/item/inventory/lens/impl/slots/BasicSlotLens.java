@@ -36,7 +36,6 @@ import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidOrdinalException;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
 import org.spongepowered.common.text.translation.SpongeTranslation;
 
 import java.util.Collection;

@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
@@ -41,22 +41,22 @@ public class FurnaceInventoryLens extends RealLens {
     private FuelSlotLens fuel;
     private OutputSlotLens output;
 
-    public FurnaceInventoryLens(SlotProvider sp) {
+    public FurnaceInventoryLens(SlotLensProvider sp) {
         super(0, 3, BasicInventoryAdapter.class);
         this.init(sp);
     }
 
-    public FurnaceInventoryLens(final InventoryAdapter adapter, final SlotProvider slots) {
+    public FurnaceInventoryLens(final InventoryAdapter adapter, final SlotLensProvider slots) {
         this(0, adapter, slots);
     }
 
     @SuppressWarnings("unchecked")
-    public FurnaceInventoryLens(final int base, final InventoryAdapter adapter, final SlotProvider slots) {
+    public FurnaceInventoryLens(final int base, final InventoryAdapter adapter, final SlotLensProvider slots) {
         super(base, adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass());
         this.init(slots);
     }
 
-    protected void init(final SlotProvider slots) {
+    protected void init(final SlotLensProvider slots) {
         this.addChild(new DefaultIndexedLens(0, 3, slots));
 
         this.input = new InputSlotLens(0, (i) -> true, (i) -> true);

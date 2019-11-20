@@ -29,6 +29,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.List;
 

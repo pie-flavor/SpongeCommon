@@ -50,9 +50,9 @@ import org.spongepowered.common.event.ShouldFire;
 import org.spongepowered.common.event.SpongeCommonEventFactory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.util.InventoryUtil;
 
@@ -87,12 +87,12 @@ public abstract class TileEntityHopperMixin extends TileEntityLockableLootMixin 
         return ReusableLens.getLens(GridInventoryLens.class, this, this::impl$generateSlotProvider, this::impl$generateRootLens);
     }
 
-    private SlotProvider impl$generateSlotProvider() {
+    private SlotLensProvider impl$generateSlotProvider() {
         return new SlotLensCollection.Builder().add(5).build();
     }
 
     @SuppressWarnings("unchecked")
-    private GridInventoryLens impl$generateRootLens(final SlotProvider slots) {
+    private GridInventoryLens impl$generateRootLens(final SlotLensProvider slots) {
         return new GridInventoryLens(0, 5, 1, (Class<? extends Inventory>) this.getClass(), slots);
     }
 

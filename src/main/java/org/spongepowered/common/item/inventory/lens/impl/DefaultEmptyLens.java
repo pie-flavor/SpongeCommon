@@ -31,11 +31,10 @@ import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -125,8 +124,8 @@ public class DefaultEmptyLens implements Lens {
     }
 
     @Override
-    public Iterator<Lens> iterator() {
-        return Collections.emptyIterator();
+    public List<Lens> children() {
+        return Collections.emptyList()
     }
 
     @Override

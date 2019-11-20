@@ -29,8 +29,8 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ import java.util.Optional;
  */
 public interface InventoryAdapter {
     
-    SlotProvider bridge$getSlotProvider();
+    SlotLensProvider bridge$getSlotProvider();
 
     Lens bridge$getRootLens();
 

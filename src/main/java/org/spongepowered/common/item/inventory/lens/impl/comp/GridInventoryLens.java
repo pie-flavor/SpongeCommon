@@ -28,7 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 
 import java.util.ArrayList;
@@ -39,16 +39,16 @@ public class GridInventoryLens extends Inventory2DLens {
     protected List<LensHandle> rows;
     protected List<LensHandle> cols;
 
-    public GridInventoryLens(int base, int width, int height, SlotProvider slots) {
+    public GridInventoryLens(int base, int width, int height, SlotLensProvider slots) {
         this(base, width, height, GridInventoryAdapter.class, slots);
     }
 
-    public GridInventoryLens(int base, int width, int height, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public GridInventoryLens(int base, int width, int height, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(base, width, height, 1, 0, 0, adapterType, slots);
         this.init(slots);
     }
 
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
         this.rows = new ArrayList<>();
         this.cols = new ArrayList<>();
 

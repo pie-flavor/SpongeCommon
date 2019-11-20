@@ -22,40 +22,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl.collections;
+package org.spongepowered.common.item.inventory.lens.impl.slots;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
+import net.minecraft.item.ItemStack;
+import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.MutableLensSet;
 
-import java.util.Spliterator;
-import java.util.Spliterators;
+public interface SlotLens extends Lens {
 
-public class MutableLensSetImpl extends MutableLensCollectionImpl implements MutableLensSet {
+    ItemStack getStack(Fabric inv);
 
-    public MutableLensSetImpl(boolean allowRemove) {
-        super(0, allowRemove);
-    }
-    
-    @Override
-    public void add(Lens lens, InventoryProperty<?, ?>... properties) {
-        if (this.contains(lens)) {
-            return;
-        }
-        super.add(lens, properties);
-    }
+    boolean setStack(Fabric inv, ItemStack stack);
 
-    @Override
-    public void add(int index, Lens lens, InventoryProperty<?, ?>... properties) {
-        if (this.contains(lens)) {
-            return;
-        }
-        super.add(index, lens, properties);
-    }
-
-    @Override
-    public Spliterator<Lens> spliterator() {
-        return Spliterators.spliterator(this, Spliterator.ORDERED);
-    }
+    int getOrdinal(Fabric inv);
     
 }

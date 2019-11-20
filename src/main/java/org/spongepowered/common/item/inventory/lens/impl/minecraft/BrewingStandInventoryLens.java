@@ -29,7 +29,7 @@ import static org.spongepowered.api.item.ItemTypes.BLAZE_POWDER;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
@@ -41,24 +41,24 @@ public class BrewingStandInventoryLens extends RealLens {
     private InputSlotLens ingredient;
     private InputSlotLens fuel;
 
-    public BrewingStandInventoryLens(SlotProvider slots) {
+    public BrewingStandInventoryLens(SlotLensProvider slots) {
         super(0, 5, BasicInventoryAdapter.class);
         this.init(slots);
     }
 
     @SuppressWarnings("unchecked")
-    public BrewingStandInventoryLens(final InventoryAdapter adapter, final SlotProvider slots) {
+    public BrewingStandInventoryLens(final InventoryAdapter adapter, final SlotLensProvider slots) {
         super(0, adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass());
         this.init(slots);
     }
 
     @SuppressWarnings("unchecked")
-    public BrewingStandInventoryLens(final int base, final InventoryAdapter adapter, final SlotProvider slots) {
+    public BrewingStandInventoryLens(final int base, final InventoryAdapter adapter, final SlotLensProvider slots) {
         super(base, adapter.bridge$getFabric().fabric$getSize(), (Class<? extends Inventory>) adapter.getClass());
         this.init(slots);
     }
 
-    protected void init(final SlotProvider slots) {
+    protected void init(final SlotLensProvider slots) {
 
         this.potions = new DefaultIndexedLens(0, 3, slots); // TODO correct type
         this.ingredient = new InputSlotLens(3, (i) -> true, (i) -> true); // TODO filter PotionIngredients

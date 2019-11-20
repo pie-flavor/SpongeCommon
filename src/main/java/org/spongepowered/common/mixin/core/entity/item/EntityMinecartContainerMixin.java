@@ -33,9 +33,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 
 import javax.annotation.Nullable;
 
@@ -62,12 +62,12 @@ public abstract class EntityMinecartContainerMixin extends EntityMinecartMixin i
     }
 
     @Override
-    public SlotProvider bridge$generateSlotProvider() {
+    public SlotLensProvider bridge$generateSlotProvider() {
         return new SlotLensCollection.Builder().add(this.getSizeInventory()).build();
     }
 
     @Override
-    public Lens bridge$generateLens(SlotProvider slots) {
+    public Lens bridge$generateLens(SlotLensProvider slots) {
         return this.getSizeInventory() == 0
                 ? new DefaultEmptyLens(this)
                 : new OrderedInventoryLensImpl(0, this.getSizeInventory(), 1, slots);

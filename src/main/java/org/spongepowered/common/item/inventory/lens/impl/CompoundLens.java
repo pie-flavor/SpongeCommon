@@ -31,7 +31,7 @@ import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapte
 import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +44,13 @@ public class CompoundLens extends SlotBasedLens {
 
     protected final List<Lens> inventories;
 
-    private CompoundLens(int size, Class<? extends Inventory> adapterType, SlotProvider slots, List<Lens> lenses) {
+    private CompoundLens(int size, Class<? extends Inventory> adapterType, SlotLensProvider slots, List<Lens> lenses) {
         super(0, size, 1, adapterType, slots);
         this.inventories = lenses;
         this.init(slots);
     }
 
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
 
         // Adding slots
         for (int ord = 0, slot = this.base; ord < this.size; ord++, slot++) {

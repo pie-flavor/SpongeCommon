@@ -28,8 +28,8 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 public class PrimaryPlayerInventoryLens extends GridInventoryLens {
 
@@ -41,11 +41,11 @@ public class PrimaryPlayerInventoryLens extends GridInventoryLens {
     private GridInventoryLens fullGrid;
     private boolean isContainer;
 
-    public PrimaryPlayerInventoryLens(int base, SlotProvider slots, boolean isContainer) {
+    public PrimaryPlayerInventoryLens(int base, SlotLensProvider slots, boolean isContainer) {
         this(base, PrimaryPlayerInventoryAdapter.class, slots, isContainer);
     }
 
-    public PrimaryPlayerInventoryLens(int base, Class<? extends Inventory> adapterType, SlotProvider slots, boolean isContainer) {
+    public PrimaryPlayerInventoryLens(int base, Class<? extends Inventory> adapterType, SlotLensProvider slots, boolean isContainer) {
         super(base, 9, 4, adapterType, slots);
         this.isContainer = isContainer;
 
@@ -53,7 +53,7 @@ public class PrimaryPlayerInventoryLens extends GridInventoryLens {
     }
 
     @Override
-    protected void init(SlotProvider slots) {
+    protected void init(SlotLensProvider slots) {
         int base = this.base;
 
         if (this.isContainer) {
@@ -95,13 +95,13 @@ public class PrimaryPlayerInventoryLens extends GridInventoryLens {
         }
     }
 
-    private static class ShiftedSlotProvider implements SlotProvider {
+    private static class ShiftedSlotProvider implements SlotLensProvider {
 
-        private final SlotProvider provider;
+        private final SlotLensProvider provider;
         private final int shiftBy;
         private final int shiftAt;
 
-        public ShiftedSlotProvider(SlotProvider provider, int shiftBy, int shiftAt) {
+        public ShiftedSlotProvider(SlotLensProvider provider, int shiftBy, int shiftAt) {
             this.provider = provider;
             this.shiftBy = shiftBy;
             this.shiftAt = shiftAt;

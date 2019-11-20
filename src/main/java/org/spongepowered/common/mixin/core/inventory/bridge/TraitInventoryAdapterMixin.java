@@ -43,7 +43,7 @@ import org.spongepowered.common.entity.player.SpongeUserInventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.util.InventoryUtil;
 
 import javax.annotation.Nullable;
@@ -66,7 +66,7 @@ import javax.annotation.Nullable;
 }, priority = 999)
 public abstract class TraitInventoryAdapterMixin implements InventoryAdapter, InventoryAdapterBridge, InventoryBridge {
 
-    @Nullable private SlotProvider impl$provider;
+    @Nullable private SlotLensProvider impl$provider;
     @Nullable private Lens impl$lens;
     @Nullable private PluginContainer impl$PluginParent;
 
@@ -76,7 +76,7 @@ public abstract class TraitInventoryAdapterMixin implements InventoryAdapter, In
     }
 
     @Override
-    public SlotProvider bridge$getSlotProvider() {
+    public SlotLensProvider bridge$getSlotProvider() {
         if (this.impl$provider == null) {
             this.impl$provider = this.bridge$generateSlotProvider();
         }
@@ -84,7 +84,7 @@ public abstract class TraitInventoryAdapterMixin implements InventoryAdapter, In
     }
 
     @Override
-    public void bridge$setSlotProvider(final SlotProvider provider) {
+    public void bridge$setSlotProvider(final SlotLensProvider provider) {
         this.impl$provider = provider;
     }
 

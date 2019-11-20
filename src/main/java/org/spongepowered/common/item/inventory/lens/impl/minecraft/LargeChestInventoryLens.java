@@ -28,7 +28,7 @@ import org.spongepowered.api.block.entity.carrier.chest.Chest;
 import org.spongepowered.api.item.inventory.Inventory;
 import net.minecraft.tileentity.ChestTileEntity;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.mixin.core.inventory.accessor.InventoryLargeChestAccessor;
@@ -42,7 +42,7 @@ public class LargeChestInventoryLens extends RealLens {
     private int upperChest;
     private int lowerChest;
 
-    public LargeChestInventoryLens(final InventoryAdapter adapter, final SlotProvider slots) {
+    public LargeChestInventoryLens(final InventoryAdapter adapter, final SlotLensProvider slots) {
         super(0, adapter.bridge$getFabric().fabric$getSize(), Inventory.class);
         final InventoryLargeChestAccessor inventory = (InventoryLargeChestAccessor) adapter;
         this.upperChest = inventory.accessor$getUpperChest().getSizeInventory();
@@ -50,7 +50,7 @@ public class LargeChestInventoryLens extends RealLens {
         this.init(slots);
     }
 
-    public LargeChestInventoryLens(final int base, final InventoryAdapter adapter, final SlotProvider slots) {
+    public LargeChestInventoryLens(final int base, final InventoryAdapter adapter, final SlotLensProvider slots) {
         super(base, adapter.bridge$getFabric().fabric$getSize(), Inventory.class);
         final InventoryLargeChestAccessor inventory = (InventoryLargeChestAccessor) adapter.bridge$getFabric().fabric$get(0);
         this.upperChest = inventory.accessor$getUpperChest().getSizeInventory();
@@ -59,7 +59,7 @@ public class LargeChestInventoryLens extends RealLens {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void init(final SlotProvider slots) {
+    private void init(final SlotLensProvider slots) {
         // add grids
         int base = 0;
         this.addSpanningChild(new GridInventoryLens(base, 9, this.upperChest / 9, (Class) ChestTileEntity.class, slots));

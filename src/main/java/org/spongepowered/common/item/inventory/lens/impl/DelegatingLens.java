@@ -29,8 +29,8 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 import org.spongepowered.common.mixin.core.inventory.accessor.SlotAccessor;
 
 import java.util.ArrayList;
@@ -45,13 +45,13 @@ public class DelegatingLens extends AbstractLens {
 
     private Lens delegate;
 
-    public DelegatingLens(final int base, final Lens lens, final SlotProvider slots) {
+    public DelegatingLens(final int base, final Lens lens, final SlotLensProvider slots) {
         super(base, lens.slotCount(), BasicInventoryAdapter.class);
         this.delegate = lens;
         this.init(slots);
     }
     // TODO check if this is still working as intended
-    public DelegatingLens(final int base, final List<Slot> containerSlots, final Lens lens, final SlotProvider slots) {
+    public DelegatingLens(final int base, final List<Slot> containerSlots, final Lens lens, final SlotLensProvider slots) {
         super(base, containerSlots.size(), BasicInventoryAdapter.class);
         this.delegate = lens;
         final CustomSlotProvider slotProvider = new CustomSlotProvider();
@@ -64,7 +64,7 @@ public class DelegatingLens extends AbstractLens {
         this.addChild(this.delegate);
     }
 
-    protected void init(final SlotProvider slots) {
+    protected void init(final SlotLensProvider slots) {
         this.addSpanningChild(new DefaultIndexedLens(this.base, this.size, slots));
         this.addChild(this.delegate);
     }
@@ -75,7 +75,7 @@ public class DelegatingLens extends AbstractLens {
         return new BasicInventoryAdapter(inv, this, parent);
     }
 
-    public static class CustomSlotProvider implements SlotProvider {
+    public static class CustomSlotProvider implements SlotLensProvider {
 
         private List<SlotLens> lenses = new ArrayList<>();
 

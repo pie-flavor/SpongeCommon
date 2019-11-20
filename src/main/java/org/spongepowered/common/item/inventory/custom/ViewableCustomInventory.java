@@ -32,7 +32,7 @@ import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 import java.util.HashSet;
 import java.util.List;
@@ -48,7 +48,7 @@ public class ViewableCustomInventory extends CustomInventory implements IContain
 
     private Set<PlayerEntity> viewers = new HashSet<>();
 
-    public ViewableCustomInventory(ContainerType type, int size, Lens lens, SlotProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
+    public ViewableCustomInventory(ContainerType type, int size, Lens lens, SlotLensProvider provider, List<Inventory> inventories, @Nullable UUID identity, @Nullable Carrier carrier) {
         super(size, lens, provider, inventories, identity, carrier);
         this.type = type;
     }

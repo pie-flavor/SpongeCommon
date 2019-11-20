@@ -32,9 +32,9 @@ import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.Inventory2DAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.SlotBasedLens;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 public class Inventory2DLens extends SlotBasedLens {
@@ -45,15 +45,15 @@ public class Inventory2DLens extends SlotBasedLens {
     protected final int xBase;
     protected final int yBase;
 
-    public Inventory2DLens(int base, int width, int height, SlotProvider slots) {
+    public Inventory2DLens(int base, int width, int height, SlotLensProvider slots) {
         this(base, width, height, width, Inventory2DAdapter.class, slots);
     }
 
-    public Inventory2DLens(int base, int width, int height, int rowStride, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public Inventory2DLens(int base, int width, int height, int rowStride, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         this(base, width, height, rowStride, 0, 0, adapterType, slots);
     }
 
-    protected Inventory2DLens(int base, int width, int height, int rowStride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    protected Inventory2DLens(int base, int width, int height, int rowStride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotLensProvider slots) {
         super(base, width * height, rowStride, adapterType, slots);
 
         checkArgument(width > 0, "Invalid width: %s", width);
@@ -67,7 +67,7 @@ public class Inventory2DLens extends SlotBasedLens {
         this.init(slots);
     }
 
-    private void init(SlotProvider slots) {
+    private void init(SlotLensProvider slots) {
         for (int y = 0, slot = this.base; y < this.height; y++) {
             for (int x = 0; x < this.width; x++, slot += stride) {
                 SlotLens slotLens = slots.getSlotLens(slot);

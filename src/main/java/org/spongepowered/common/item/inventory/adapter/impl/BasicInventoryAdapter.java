@@ -34,13 +34,13 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.bridge.inventory.LensProviderBridge;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultEmptyLens;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.QueryLens;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ import javax.annotation.Nullable;
 public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplementedAdapterInventory, InventoryBridge, Inventory {
 
     private final Fabric inventory;
-    protected final SlotProvider slots;
+    protected final SlotLensProvider slots;
     protected final Lens lens;
     @Nullable private SlotCollection slotCollection;
 
@@ -72,7 +72,7 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
         this.inventory = inventory;
         this.parent = this;
         if (inventory.fabric$getSize() == 0) {
-            this.slots = new SlotLensCollection(0);
+            this.slots = new SlotLensCollection.Builder().build();
             this.lens = new DefaultEmptyLens(this);
         } else {
             final ReusableLens<T> lens = ReusableLens.getLens(lensType, this, () -> this.initSlots(inventory, this.parent),
@@ -104,11 +104,11 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
         this.children = children; // Init cached children
     }
 
-    private SlotProvider initSlots(final Fabric inventory, @Nullable final Inventory parent) {
+    private SlotLensProvider initSlots(final Fabric inventory, @Nullable final Inventory parent) {
         if (parent instanceof InventoryAdapter) {
             return ((InventoryAdapter) parent).bridge$getSlotProvider();
         }
-        return new SlotLensCollection(inventory.fabric$getSize());
+        return new SlotLensCollection.Builder().add(inventory.fabric$getSize()).build();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class BasicInventoryAdapter implements InventoryAdapter, DefaultImplement
     }
 
     @Override
-    public SlotProvider bridge$getSlotProvider() {
+    public SlotLensProvider bridge$getSlotProvider() {
         return this.slots;
     }
 

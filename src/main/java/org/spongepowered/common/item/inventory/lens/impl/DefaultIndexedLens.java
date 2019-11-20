@@ -28,11 +28,11 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 public class DefaultIndexedLens extends SlotBasedLens {
 
-    public DefaultIndexedLens(int base, int size, SlotProvider slots) {
+    public DefaultIndexedLens(int base, int size, SlotLensProvider slots) {
         super(base, size, 1, BasicInventoryAdapter.class, slots);
     }
 

@@ -13,9 +13,9 @@ import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
 
     private List<Inventory> finalInventories;
     private Lens finalLens;
-    private SlotProvider finalProvider;
+    private SlotLensProvider finalProvider;
 
     @Override
     public BuildingStep type(ContainerType type) {
@@ -236,7 +236,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
         return this;
     }
 
-    public static class CustomSlotProvider implements SlotProvider {
+    public static class CustomSlotProvider implements SlotLensProvider {
 
         private List<SlotLens> lenses = new ArrayList<>();
 

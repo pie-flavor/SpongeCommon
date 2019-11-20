@@ -28,11 +28,11 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingGridInventoryAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 public class CraftingGridInventoryLens extends GridInventoryLens {
 
-    public CraftingGridInventoryLens(int base, int width, int height, SlotProvider slots) {
+    public CraftingGridInventoryLens(int base, int width, int height, SlotLensProvider slots) {
         super(base, width, height, slots);
     }
 

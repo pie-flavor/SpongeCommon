@@ -22,14 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens;
+package org.spongepowered.common.item.inventory.lens.impl.slots;
 
-import org.spongepowered.api.item.inventory.InventoryProperty;
-
-import java.util.Set;
-
-public interface MutableLensSet extends Set<Lens>, DynamicLensCollection {
+@FunctionalInterface
+public interface SlotLensProvider {
     
-    void add(Lens lens, InventoryProperty<?, ?>... properties);
+    SlotLens getSlotLens(int index);
 
 }

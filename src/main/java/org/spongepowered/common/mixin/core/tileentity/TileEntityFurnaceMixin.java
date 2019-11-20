@@ -55,9 +55,9 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.FuelSlotAdapte
 import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
@@ -81,7 +81,7 @@ public abstract class TileEntityFurnaceMixin extends TileEntityLockableMixin imp
         return ReusableLens.getLens(FurnaceInventoryLens.class, this, this::impl$generateSlotProvider, this::impl$generateRootLens);
     }
 
-    private SlotProvider impl$generateSlotProvider() {
+    private SlotLensProvider impl$generateSlotProvider() {
         return new SlotLensCollection.Builder().add(InputSlotAdapter.class, InputSlotLens::new)
                 .add(FuelSlotAdapter.class, (i) -> new FuelSlotLens(i, (s) -> FurnaceTileEntity.isItemFuel((ItemStack) s) || func_178173_c_(
                         (ItemStack) s), t -> {
@@ -93,7 +93,7 @@ public abstract class TileEntityFurnaceMixin extends TileEntityLockableMixin imp
                 .build();
     }
 
-    private FurnaceInventoryLens impl$generateRootLens(final SlotProvider slots) {
+    private FurnaceInventoryLens impl$generateRootLens(final SlotLensProvider slots) {
         return new FurnaceInventoryLens(this, slots);
     }
 

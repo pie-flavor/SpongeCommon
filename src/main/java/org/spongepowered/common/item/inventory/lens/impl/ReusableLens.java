@@ -31,8 +31,8 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.ReusableLensInventoryAdapaterBridge;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.ReusableLensProvider;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensCollection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,27 +46,27 @@ public class ReusableLens<T extends Lens> {
     private static Map<Class<? extends InventoryAdapter>, Map<Class<? extends Lens>, Int2ObjectMap<ReusableLens>>>
             reusableLenses = new HashMap<>();
 
-    private final SlotProvider slots;
+    private final SlotLensProvider slots;
     private final T lens;
 
-    private ReusableLens(SlotProvider slots, T lens) {
+    private ReusableLens(SlotLensProvider slots, T lens) {
         this.slots = slots;
         this.lens = lens;
     }
 
-    private ReusableLens(SlotProvider slots, Function<SlotProvider, T> lensProvider) {
+    private ReusableLens(SlotLensProvider slots, Function<SlotLensProvider, T> lensProvider) {
         this.slots = slots;
         this.lens = lensProvider.apply(slots);
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends Lens> ReusableLens<T> getLens(Class<T> lensType, InventoryAdapter adapter,
-            Supplier<SlotProvider> slots, Function<SlotProvider, T> lens) {
+            Supplier<SlotLensProvider> slots, Function<SlotLensProvider, T> lens) {
         Map<Class<? extends Lens>, Int2ObjectMap<ReusableLens>>
                 adapterLenses = reusableLenses.computeIfAbsent(adapter.getClass(), k -> new HashMap<>());
         Int2ObjectMap<ReusableLens> lenses = adapterLenses.computeIfAbsent(lensType, k -> new Int2ObjectOpenHashMap<>());
         return lenses.computeIfAbsent(adapter.bridge$getFabric().fabric$getSize(), k -> {
-            SlotProvider sl = slots.get();
+            SlotLensProvider sl = slots.get();
             return new ReusableLens(sl, lens);
         });
     }
@@ -79,7 +79,7 @@ public class ReusableLens<T extends Lens> {
         }
         if (adapter instanceof LensProviderBridge) {
             // TODO this is not actually creating lenses that will be reused
-            SlotProvider slotProvider = ((LensProviderBridge) adapter).bridge$slotProvider(adapter.bridge$getFabric(), adapter);
+            SlotLensProvider slotProvider = ((LensProviderBridge) adapter).bridge$slotProvider(adapter.bridge$getFabric(), adapter);
             adapter.bridge$setSlotProvider(slotProvider);
             final Lens lens = ((LensProviderBridge) adapter).bridge$rootLens(adapter.bridge$getFabric(), adapter);
             adapter.bridge$setLens(lens);
@@ -91,16 +91,16 @@ public class ReusableLens<T extends Lens> {
                 (slots) -> defaultLens(adapter, slots));
     }
 
-    private static SlotProvider defaultSlots(InventoryAdapter adapter) {
+    private static SlotLensProvider defaultSlots(InventoryAdapter adapter) {
         return new SlotLensCollection.Builder().add(adapter.bridge$getFabric().fabric$getSize()).build();
     }
 
-    private static Lens defaultLens(InventoryAdapter adapter, SlotProvider slots) {
+    private static Lens defaultLens(InventoryAdapter adapter, SlotLensProvider slots) {
         int slotCount = adapter.bridge$getFabric().fabric$getSize();
         if (slotCount == 0) {
             return new DefaultEmptyLens(adapter);
         } else {
-            return new OrderedInventoryLensImpl(0, slotCount, 1, slots);
+            return new DefaultIndexedLens(0, slotCount, slots);
         }
     }
 
@@ -110,7 +110,7 @@ public class ReusableLens<T extends Lens> {
                 (slots) -> defaultLens(adapter, slots));
     }
 
-    public SlotProvider getSlots() {
+    public SlotLensProvider getSlots() {
         return this.slots;
     }
 

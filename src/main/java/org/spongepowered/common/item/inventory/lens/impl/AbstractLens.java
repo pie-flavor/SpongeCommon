@@ -35,16 +35,13 @@ import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.fabric.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.MutableLensCollection;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.collections.MutableLensCollectionImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
-import org.spongepowered.common.item.inventory.lens.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -77,7 +74,7 @@ public abstract class AbstractLens implements Lens {
         this.size = size;
         this.adapterType = adapterType;
 
-        this.children = new MutableLensCollectionImpl(0, false);
+        this.children = new MutableLensCollection( );
         this.spanningChildren = new ArrayList<>();
     }
 
@@ -179,7 +176,7 @@ public abstract class AbstractLens implements Lens {
 
     @Override
     public List<Lens> getChildren() {
-        return Collections.unmodifiableList(this.children);
+        return Collections.unmodifiableList(this.children.children());
     }
 
     @Override
@@ -208,11 +205,10 @@ public abstract class AbstractLens implements Lens {
 
     @Override
     public Map<Property<?>, Object> getProperties(final Lens child) {
-        final int index = this.children.indexOf(child);
-        if (index < 0) {
+        if (!this.children.has(child)) {
             throw new NoSuchElementException("Specified child lens is not a direct descendant this lens");
         }
-        return this.children.getProperties(index);
+        return this.children.getProperties(child);
     }
 
     /**
@@ -221,7 +217,7 @@ public abstract class AbstractLens implements Lens {
      * @param base The last added slot
      * @param slots The slot provider
      */
-    protected void addMissingSpanningSlots(int base, SlotProvider slots) {
+    protected void addMissingSpanningSlots(int base, SlotLensProvider slots) {
 
         int additionalSlots = this.size - base;
         if (additionalSlots > 0) {
@@ -231,7 +227,7 @@ public abstract class AbstractLens implements Lens {
 
     @Override
     public boolean has(final Lens lens) {
-        return this.children.contains(lens);
+        return this.children.has(lens);
     }
 
     @Override
@@ -240,8 +236,8 @@ public abstract class AbstractLens implements Lens {
     }
 
     @Override
-    public Iterator<Lens> iterator() {
-        return this.children.iterator();
+    public List<Lens> children() {
+        return this.children.children();
     }
 
     @Override
@@ -258,10 +254,10 @@ public abstract class AbstractLens implements Lens {
     public static final int LIMIT = 2;
 
     public String toString(int deep) {
-        String result = ident(deep) + this.getClass().getSimpleName() + ": (" + this.size + ") base:" + this.base + "\n";
-        if (!this.children.isEmpty() && deep < LIMIT) {
-            result += ident(deep) + "Children: ";
-            for (Lens child : this.children) {
+        String result = this.ident(deep) + this.getClass().getSimpleName() + ": (" + this.size + ") base:" + this.base + "\n";
+        if (!this.children.children().isEmpty() && deep < LIMIT) {
+            result += this.ident(deep) + "Children: ";
+            for (Lens child : this.children.children()) {
                 for (LensHandle spanningChild : this.spanningChildren) {
                     if (spanningChild.lens == child) {
                         result += "\n" + ident(deep) + "(Spanning)";

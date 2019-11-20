@@ -27,6 +27,8 @@ package org.spongepowered.common.item.inventory.lens;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * A custom slot provider without duplicate slot-lenses.
  */
-public class CompoundSlotProvider implements SlotProvider {
+public class CompoundSlotProvider implements SlotLensProvider {
 
     private final List<SlotLens> slotList = new ArrayList<>();
 

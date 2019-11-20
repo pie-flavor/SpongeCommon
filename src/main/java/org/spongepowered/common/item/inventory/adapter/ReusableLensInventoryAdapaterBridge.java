@@ -26,7 +26,7 @@ package org.spongepowered.common.item.inventory.adapter;
 
 import org.spongepowered.common.bridge.inventory.InventoryAdapterBridge;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.SlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 
 public interface ReusableLensInventoryAdapaterBridge extends InventoryAdapter, InventoryAdapterBridge {
@@ -34,12 +34,12 @@ public interface ReusableLensInventoryAdapaterBridge extends InventoryAdapter, I
     ReusableLens<?> bridge$getReusableLens();
 
     @Override
-    default SlotProvider bridge$generateSlotProvider() {
+    default SlotLensProvider bridge$generateSlotProvider() {
         return bridge$getReusableLens().getSlots();
     }
 
     @Override
-    default Lens bridge$generateLens(SlotProvider slotProvider) {
+    default Lens bridge$generateLens(SlotLensProvider slotProvider) {
         return bridge$getReusableLens().getLens();
     }
 
