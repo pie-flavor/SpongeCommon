@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.comp;
 
-import net.minecraft.entity.player.PlayerInventory;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.PrimaryPlayerInventoryAdapter;
@@ -74,8 +73,8 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
             this.addSpanningChild(this.mainGrid);
             this.addSpanningChild(this.hotbar);
 
-            fullGrid = new GridInventoryLensImpl(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, slots);
-            this.addChild(fullGrid);
+            this.fullGrid = new GridInventoryLensImpl(this.base, INVENTORY_WIDTH, MAIN_INVENTORY_HEIGHT + 1, slots);
+            this.addChild(this.fullGrid);
 
         } else {
             this.hotbar = new HotbarLensImpl(base, INVENTORY_WIDTH, slots);
@@ -99,7 +98,7 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
         }
     }
 
-    private class ShiftedSlotProvider implements SlotProvider {
+    private static class ShiftedSlotProvider implements SlotProvider {
 
         private final SlotProvider provider;
         private final int shiftBy;
@@ -131,11 +130,12 @@ public class PrimaryPlayerInventoryLensImpl extends GridInventoryLensImpl implem
         return this.hotbar;
     }
 
-    public GridInventoryLens getMain() {
+    @Override
+    public GridInventoryLens getGrid() {
         return this.mainGrid;
     }
 
     public GridInventoryLens getFullGrid() {
-        return fullGrid;
+        return this.fullGrid;
     }
 }

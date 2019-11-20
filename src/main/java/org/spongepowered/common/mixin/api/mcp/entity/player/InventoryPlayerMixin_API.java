@@ -73,7 +73,7 @@ public abstract class InventoryPlayerMixin_API implements PlayerInventory {
         if (this.api$primary == null && ((InventoryAdapter) this).bridge$getRootLens() instanceof PlayerInventoryLens) {
             final Lens lens = ((InventoryAdapter) this).bridge$getRootLens();
             final Fabric fabric = ((InventoryAdapter) this).bridge$getFabric();
-            this.api$primary = (PrimaryPlayerInventoryAdapter) ((PlayerInventoryLens) lens).getMainLens().getAdapter(fabric, this);
+            this.api$primary = (PrimaryPlayerInventoryAdapter) ((PlayerInventoryLens) lens).getPrimaryInventoryLens().getAdapter(fabric, this);
         }
         return this.api$primary;
     }

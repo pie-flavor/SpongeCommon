@@ -54,7 +54,7 @@ public class PlayerInventoryLens extends AbstractLens {
     private static final int ARMOR = 4;
     private static final int OFFHAND = 1;
 
-    private PrimaryPlayerInventoryLensImpl main;
+    private PrimaryPlayerInventoryLensImpl primary;
     private EquipmentInventoryLensImpl equipment;
     private ArmorInventoryLensImpl armor;
     private SlotLens offhand;
@@ -94,15 +94,15 @@ public class PlayerInventoryLens extends AbstractLens {
             equipmentLenses.put(EquipmentTypes.LEGGINGS, slots.getSlotLens(base + 2));
             equipmentLenses.put(EquipmentTypes.BOOTS, slots.getSlotLens(base + 3));
             base += ARMOR; // 4
-            this.main = new PrimaryPlayerInventoryLensImpl(base, slots, true);
-            base += this.main.slotCount();
+            this.primary = new PrimaryPlayerInventoryLensImpl(base, slots, true);
+            base += this.primary.slotCount();
             this.offhand = slots.getSlotLens(base);
 
             base += OFFHAND;
             equipmentLenses.put(EquipmentTypes.OFF_HAND, this.offhand);
         } else {
-            this.main = new PrimaryPlayerInventoryLensImpl(base, slots, false);
-            base += this.main.slotCount();
+            this.primary = new PrimaryPlayerInventoryLensImpl(base, slots, false);
+            base += this.primary.slotCount();
             this.armor = new ArmorInventoryLensImpl(base, slots, false);
 
             equipmentLenses.put(EquipmentTypes.BOOTS, slots.getSlotLens(base + 0));
@@ -120,7 +120,7 @@ public class PlayerInventoryLens extends AbstractLens {
         equipmentLenses.put(EquipmentTypes.MAIN_HAND, new HeldHandSlotLensImpl());
         this.equipment = new EquipmentInventoryLensImpl(equipmentLenses);
 
-        this.addSpanningChild(this.main);
+        this.addSpanningChild(this.primary);
         this.addSpanningChild(this.armor);
         this.addSpanningChild(this.offhand);
 
@@ -145,8 +145,8 @@ public class PlayerInventoryLens extends AbstractLens {
         return fabric.fabric$get(this.base).bridge$getAdapter();
     }
 
-    public PrimaryPlayerInventoryLens getMainLens() {
-        return this.main;
+    public PrimaryPlayerInventoryLens getPrimaryInventoryLens() {
+        return this.primary;
     }
 
     public EquipmentInventoryLens getEquipmentLens() {

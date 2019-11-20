@@ -27,7 +27,6 @@ package org.spongepowered.common.item.inventory.lens.impl;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.data.property.Property;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
@@ -128,11 +127,6 @@ public class DefaultEmptyLens implements Lens {
     @Override
     public Iterator<Lens> iterator() {
         return Collections.emptyIterator();
-    }
-
-    @Override
-    public SlotLens getSlotLens(final int ordinal) {
-        return null;
     }
 
     @Override

@@ -35,7 +35,11 @@ import org.spongepowered.common.item.inventory.lens.comp.HotbarLens;
 
 public class HotbarLensImpl extends InventoryRowLensImpl implements HotbarLens {
 
-    public HotbarLensImpl(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
+    public HotbarLensImpl(int base, int width, SlotProvider slots) {
+        this(base, width, 0, 0, HotbarAdapter.class, slots);
+    }
+
+    private HotbarLensImpl(int base, int width, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider slots) {
         super(base, width, xBase, yBase, adapterType, slots);
     }
 

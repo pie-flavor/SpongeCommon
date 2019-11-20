@@ -29,6 +29,7 @@ import static org.spongepowered.api.item.ItemTypes.BLAZE_POWDER;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.slot.OutputSlot;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
@@ -42,7 +43,7 @@ public class BrewingStandInventoryLens extends RealLens {
     private InputSlotLensImpl fuel;
 
     public BrewingStandInventoryLens(SlotProvider slots) {
-        super(0, 5, VanillaAdapter.class);
+        super(0, 5, BasicInventoryAdapter.class);
         this.init(slots);
     }
 

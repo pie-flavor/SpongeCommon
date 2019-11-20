@@ -97,9 +97,4 @@ public class Inventory2DLensImpl extends SlotBasedLens implements Inventory2DLen
         return new Inventory2DAdapter(inv, this, parent);
     }
 
-    @Override
-    public int getStide() {
-        return this.stride;
-    }
-
 }

@@ -37,7 +37,6 @@ import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GridInventoryLensImpl extends Inventory2DLensImpl implements GridInventoryLens {
 
     protected List<LensHandle> rows;
@@ -52,7 +51,6 @@ public class GridInventoryLensImpl extends Inventory2DLensImpl implements GridIn
         this.init(slots);
     }
 
-    @Override
     protected void init(SlotProvider slots) {
         this.rows = new ArrayList<>();
         this.cols = new ArrayList<>();

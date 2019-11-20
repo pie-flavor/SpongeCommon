@@ -24,11 +24,9 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.minecraft;
 
-import net.minecraft.tileentity.TileEntityChest;
 import org.spongepowered.api.block.entity.carrier.chest.Chest;
 import org.spongepowered.api.item.inventory.Inventory;
 import net.minecraft.tileentity.ChestTileEntity;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;

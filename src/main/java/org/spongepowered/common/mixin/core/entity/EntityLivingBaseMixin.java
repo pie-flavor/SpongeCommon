@@ -914,7 +914,7 @@ public abstract class EntityLivingBaseMixin extends EntityMixin implements Livin
                             slotLens = ((PlayerInventoryLens) inventoryLens).getOffhandLens();
                             break;
                         case MAINHAND:
-                            final HotbarLens hotbarLens = ((PlayerInventoryLens) inventoryLens).getMainLens().getHotbar();
+                            final HotbarLens hotbarLens = ((PlayerInventoryLens) inventoryLens).getPrimaryInventoryLens().getHotbar();
                             slotLens = hotbarLens.getSlotLens(hotbarLens.getSelectedSlotIndex(((InventoryAdapter) inventory).bridge$getFabric()));
                             break;
                         default:

@@ -29,7 +29,6 @@ import net.minecraft.util.NonNullList;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
-import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
 import org.spongepowered.api.item.inventory.entity.UserInventory;
 import org.spongepowered.api.item.inventory.equipment.EquipmentInventory;
 import org.spongepowered.asm.mixin.Final;
@@ -100,7 +99,7 @@ public abstract class SpongeUserInventoryMixin implements InventoryAdapter, User
     @Override
     public PrimaryPlayerInventory getPrimary() {
         if (this.impl$grid == null) {
-            this.impl$grid = (PrimaryPlayerInventoryAdapter) ((PlayerInventoryLens) this.bridge$getRootLens()).getMainLens().getAdapter(this.bridge$getFabric(), this);
+            this.impl$grid = (PrimaryPlayerInventoryAdapter) ((PlayerInventoryLens) this.bridge$getRootLens()).getPrimaryInventoryLens().getAdapter(this.bridge$getFabric(), this);
         }
         return this.impl$grid;
     }
