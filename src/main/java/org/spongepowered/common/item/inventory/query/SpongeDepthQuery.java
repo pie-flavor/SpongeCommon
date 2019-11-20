@@ -66,8 +66,7 @@ public abstract class SpongeDepthQuery extends SpongeQuery {
             return matches.iterator().next().getAdapter(fabric, inventory);
         }
 
-        int size = matches.stream().map(Lens::slotCount).mapToInt(i -> i).sum();
-        QueryLens lens = new QueryLens(size, matches);
+        QueryLens lens = new QueryLens(matches);
         return lens.getAdapter(fabric, inventory);
     }
 

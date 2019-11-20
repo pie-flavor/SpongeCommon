@@ -22,28 +22,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.impl;
+package org.spongepowered.common.item.inventory.query.type;
 
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
-import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.Lens;
+import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
+import org.spongepowered.common.item.inventory.lens.impl.CompoundLens;
+import org.spongepowered.common.item.inventory.lens.impl.fabric.CompoundFabric;
+import org.spongepowered.common.item.inventory.query.SpongeQuery;
 
-import java.util.Collection;
+public final class UnionQuery extends SpongeQuery {
 
-public class QueryLens extends AbstractLens {
+    private final Inventory other;
 
-    public QueryLens(Collection<Lens> lenses) {
-        super(0, lenses.stream().map(Lens::slotCount).mapToInt(i -> i).sum(), BasicInventoryAdapter.class);
-        for (Lens match : lenses) {
-            this.addSpanningChild(match); // TODO properties?
-        }
+    public UnionQuery(Inventory inventory) {
+        this.other = inventory;
     }
 
     @Override
-    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new BasicInventoryAdapter(inv, this, parent);
+    public Inventory execute(Inventory inventory, InventoryAdapter adapter) {
+        final CompoundLens.Builder lensBuilder = CompoundLens.builder().add(adapter.bridge$getRootLens());
+        final CompoundFabric fabric = new CompoundFabric(adapter.bridge$getFabric(), ((InventoryBridge)this.other).bridge$getAdapter().bridge$getFabric());
+        final CompoundSlotProvider provider = new CompoundSlotProvider().add(adapter);
+        for (final Inventory inv : this.other.children()) {
+            lensBuilder.add(((InventoryAdapter) inv).bridge$getRootLens());
+            provider.add((InventoryAdapter) inv);
+        }
+        final CompoundLens lens = lensBuilder.build(provider);
+        return (Inventory) lens.getAdapter(fabric, inventory);
     }
+
 
 }

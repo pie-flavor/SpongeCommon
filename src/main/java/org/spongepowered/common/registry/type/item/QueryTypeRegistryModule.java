@@ -71,5 +71,6 @@ public final class QueryTypeRegistryModule extends AbstractCatalogRegistryModule
 
         register(SpongeQueryTypes.LENS);
         register(SpongeQueryTypes.SLOT_LENS);
+        register(SpongeQueryTypes.UNION);
     }
 }

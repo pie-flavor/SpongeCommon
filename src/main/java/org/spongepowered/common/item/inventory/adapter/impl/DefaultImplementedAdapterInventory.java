@@ -151,6 +151,10 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
     }
 
     default List<Inventory> children() {
+        return this.impl$generateChildren();
+    }
+
+    default List<Inventory> impl$generateChildren() {
         return this.impl$getLens().getSpanningChildren().stream()
                 .map(l -> l.getAdapter(this.impl$getFabric(), this))
                 .map(Inventory.class::cast)
@@ -174,15 +178,7 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
 
     @Override
     default Inventory union(Inventory inventory) {
-        final CompoundLens.Builder lensBuilder = CompoundLens.builder().add(impl$getLens());
-        final CompoundFabric fabric = new CompoundFabric(impl$getFabric(), ((InventoryAdapter) inventory).bridge$getFabric());
-        final CompoundSlotProvider provider = new CompoundSlotProvider().add(((InventoryBridge) this).bridge$getAdapter());
-        for (final Inventory inv : inventory.children()) {
-            lensBuilder.add(((InventoryAdapter) inv).bridge$getRootLens());
-            provider.add((InventoryAdapter) inv);
-        }
-        final CompoundLens lens = lensBuilder.build(provider);
-        return (Inventory) lens.getAdapter(fabric, this);
+        return this.query(SpongeQueryTypes.UNION.of(inventory));
     }
 
     @Override
@@ -193,8 +189,7 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
 
     @Override
     default boolean containsChild(Inventory child) {
-        // TODO implement me;
-        return false;
+        return this.impl$getLens().getSpanningChildren().contains(((InventoryBridge) child).bridge$getAdapter().bridge$getRootLens());
     }
 
     @Override

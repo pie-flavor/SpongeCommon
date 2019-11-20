@@ -28,6 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.query.Query;
 import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.query.SpongeQuery;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class AppendQuery extends SpongeQuery {
             newQueries.add(query);
         }
         newQueries.addAll(Arrays.asList(queries));
-        return new OrQuery(newQueries);
+        return new AppendQuery(newQueries);
     }
 
     @Override
@@ -62,12 +63,8 @@ public class AppendQuery extends SpongeQuery {
             return result;
         }
 
-        //List<Inventory> results = this.queryList.stream().map(q -> q.execute(inventory)).collect(Collectors.toList());
-
-        for (Query operation : this.queryList) {
-            result = result.union(inventory.query(operation));
-        }
-        return result;
+        List<Inventory> results = this.queryList.stream().map(q -> q.execute(inventory)).collect(Collectors.toList());
+        return new BasicInventoryAdapter(adapter.bridge$getFabric(), results, inventory);
     }
 
 
