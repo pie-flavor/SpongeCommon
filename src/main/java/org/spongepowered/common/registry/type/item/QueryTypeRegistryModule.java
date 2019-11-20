@@ -24,30 +24,27 @@
  */
 package org.spongepowered.common.registry.type.item;
 
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.entity.PrimaryPlayerInventory;
 import org.spongepowered.api.item.inventory.query.QueryType;
 import org.spongepowered.api.item.inventory.query.QueryTypes;
 import org.spongepowered.api.registry.CatalogRegistryModule;
 import org.spongepowered.api.registry.util.RegisterCatalog;
-import org.spongepowered.common.item.inventory.query.type.PlayerPrimaryHotbarFirstQuery;
-import org.spongepowered.common.item.inventory.query.type.ReverseQuery;
 import org.spongepowered.common.item.inventory.query.SpongeOneParamQueryType;
 import org.spongepowered.common.item.inventory.query.SpongeQueryTypes;
 import org.spongepowered.common.item.inventory.query.SpongeTwoParamQueryType;
 import org.spongepowered.common.item.inventory.query.type.EmptyQuery;
 import org.spongepowered.common.item.inventory.query.type.GridQuery;
 import org.spongepowered.common.item.inventory.query.type.InventoryPropertyMatcherQuery;
-import org.spongepowered.common.item.inventory.query.type.InventoryTranslationQueryOperation;
+import org.spongepowered.common.item.inventory.query.type.InventoryTranslationQuery;
 import org.spongepowered.common.item.inventory.query.type.InventoryTypeQuery;
 import org.spongepowered.common.item.inventory.query.type.ItemStackCustomQuery;
 import org.spongepowered.common.item.inventory.query.type.ItemStackExactQuery;
 import org.spongepowered.common.item.inventory.query.type.ItemStackIgnoreQuantityQuery;
 import org.spongepowered.common.item.inventory.query.type.ItemTypeQuery;
+import org.spongepowered.common.item.inventory.query.type.PlayerPrimaryHotbarFirstQuery;
+import org.spongepowered.common.item.inventory.query.type.ReverseQuery;
 import org.spongepowered.common.item.inventory.query.type.TypeQuery;
 import org.spongepowered.common.registry.AbstractCatalogRegistryModule;
 
-import java.util.Arrays;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 @RegisterCatalog(QueryTypes.class)
@@ -56,7 +53,7 @@ public final class QueryTypeRegistryModule extends AbstractCatalogRegistryModule
     @Override
     public void registerDefaults() {
 
-        register(new SpongeOneParamQueryType<>("inventory_translation", InventoryTranslationQueryOperation::new));
+        register(new SpongeOneParamQueryType<>("inventory_translation", InventoryTranslationQuery::new));
 
         register(new SpongeOneParamQueryType<>("inventory_type", InventoryTypeQuery::new));
         register(new SpongeOneParamQueryType<>("item_stack_custom", ItemStackCustomQuery::new));

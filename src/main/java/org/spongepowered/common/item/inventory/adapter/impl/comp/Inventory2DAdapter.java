@@ -34,7 +34,7 @@ import org.spongepowered.common.item.inventory.adapter.impl.AdapterLogic;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.comp.Inventory2DLens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
-import com.spongepowered.math.vector.Vector2i;
+import org.spongepowered.math.vector.Vector2i;
 
 import java.util.Optional;
 
@@ -47,8 +47,8 @@ public class Inventory2DAdapter extends BasicInventoryAdapter implements Invento
         this.lens2d = root;
     }
     
-    protected SlotLens getSlotLens(int x, int y) {
-        return this.getSlotLens(Vector2i.of(x, y));
+    public SlotLens getSlotLens(int x, int y) {
+        return this.getSlotLens(Vector2i.from(x, y));
     }
 
     protected SlotLens getSlotLens(Vector2i pos) {

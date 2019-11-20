@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AppendQuery extends SpongeQuery {
 
@@ -55,13 +56,16 @@ public class AppendQuery extends SpongeQuery {
     }
 
     @Override
-    public Inventory execute(InventoryAdapter inventory) {
-        Inventory result = new EmptyInventoryImpl((Inventory) inventory);
+    public Inventory execute(Inventory inventory, InventoryAdapter adapter) {
+        Inventory result = new EmptyInventoryImpl(inventory);
         if (this.queryList.isEmpty()) {
             return result;
         }
+
+        //List<Inventory> results = this.queryList.stream().map(q -> q.execute(inventory)).collect(Collectors.toList());
+
         for (Query operation : this.queryList) {
-            result = result.union(((Inventory) inventory).query(operation));
+            result = result.union(inventory.query(operation));
         }
         return result;
     }

@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.item.inventory.query.type;
 
-import com.spongepowered.math.vector.Vector2i;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
@@ -33,6 +32,7 @@ import org.spongepowered.common.item.inventory.lens.CompoundSlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLensImpl;
 import org.spongepowered.common.item.inventory.query.SpongeQuery;
+import org.spongepowered.math.vector.Vector2i;
 
 public class GridQuery extends SpongeQuery {
 
@@ -45,13 +45,13 @@ public class GridQuery extends SpongeQuery {
     }
 
     @Override
-    public Inventory execute(InventoryAdapter inventory) {
+    public Inventory execute(Inventory inventory, InventoryAdapter adapter) {
 
-        if (!(inventory instanceof GridInventoryAdapter)) {
+        if (!(adapter instanceof GridInventoryAdapter)) {
             return new EmptyInventoryImpl(inventory);
         }
 
-        GridInventoryAdapter gridAdapter = (GridInventoryAdapter) inventory;
+        GridInventoryAdapter gridAdapter = (GridInventoryAdapter) adapter;
 
         Vector2i max = gridAdapter.getDimensions();
         if (max.getX() < offset.getX() + size.getX() && max.getY() < offset.getY() + size.getY()) {
@@ -69,8 +69,8 @@ public class GridQuery extends SpongeQuery {
         }
 
         // build new grid lens
-        GridInventoryLens lens = new GridInventoryLensImpl(size.getX(), size.getY(), slotProvider);
-        return new GridInventoryAdapter(inventory.bridge$getFabric(), lens, inventory);
+        GridInventoryLens lens = new GridInventoryLensImpl(0, size.getX(), size.getY(), slotProvider);
+        return new GridInventoryAdapter(adapter.bridge$getFabric(), lens, inventory);
     }
 
 

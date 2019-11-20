@@ -30,6 +30,7 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.QueryLens;
 import org.spongepowered.common.item.inventory.query.result.QueryResultAdapter;
 
 import java.util.Collection;
@@ -44,28 +45,30 @@ import java.util.Set;
  */
 public abstract class SpongeDepthQuery extends SpongeQuery {
 
-    public abstract boolean matches(Lens lens, Lens parent, Fabric inventory);
+    public abstract boolean matches(Lens lens, Lens parent, Fabric fabric);
 
-    public Inventory execute(InventoryAdapter adapter) {
-        Fabric fabric = adapter.getFabric();
-        Lens lens = adapter.getRootLens();
+    public Inventory execute(Inventory inventory, InventoryAdapter adapter) {
+        Fabric fabric = adapter.bridge$getFabric();
+        Lens lens = adapter.bridge$getRootLens();
 
         if (this.matches(lens, null, fabric)) {
-            return lens.getAdapter(fabric, adapter);
+            return lens.getAdapter(fabric, inventory);
         }
 
-        return this.toResult(adapter, fabric, this.reduce(lens, this.depthFirstSearch(fabric, lens)));
+        return this.toResult(inventory, adapter, fabric, this.reduce(lens, this.depthFirstSearch(fabric, lens)));
     }
 
-    private Inventory toResult(InventoryAdapter adapter, Fabric fabric, Set<Lens> matches) {
+    private Inventory toResult(Inventory inventory, InventoryAdapter adapter, Fabric fabric, Set<Lens> matches) {
         if (matches.isEmpty()) {
-            return new EmptyInventoryImpl(adapter);
+            return new EmptyInventoryImpl(inventory);
         }
         if (matches.size() == 1) {
-            return matches.iterator().next().getAdapter(fabric, adapter);
+            return matches.iterator().next().getAdapter(fabric, inventory);
         }
 
-        return new QueryResultAdapter(fabric, adapter, matches);
+        int size = matches.stream().map(Lens::slotCount).mapToInt(i -> i).sum();
+        QueryLens lens = new QueryLens(size, matches);
+        return lens.getAdapter(fabric, inventory);
     }
 
     private Set<Lens> depthFirstSearch(Fabric fabric, Lens lens) {

@@ -32,7 +32,7 @@ import org.spongepowered.common.item.inventory.EmptyInventoryImpl;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.query.SpongeQuery;
 
-public class EmptyQuery extends SpongeQuery implements QueryType.NoParam, Query {
+public class EmptyQuery extends SpongeQuery implements QueryType.NoParam {
 
     private CatalogKey key = CatalogKey.sponge("empty");
 
@@ -45,8 +45,8 @@ public class EmptyQuery extends SpongeQuery implements QueryType.NoParam, Query 
     }
 
     @Override
-    public Inventory execute(InventoryAdapter inventory) {
-        return new EmptyInventoryImpl((Inventory) inventory);
+    public Inventory execute(Inventory inventory, InventoryAdapter adapter) {
+        return new EmptyInventoryImpl(inventory);
     }
 
     @Override

@@ -25,8 +25,6 @@
 package org.spongepowered.common.item.inventory.lens.impl;
 
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryProperties;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
@@ -47,7 +45,7 @@ public class CompoundLens extends SlotBasedLens {
     protected final List<Lens> inventories;
 
     private CompoundLens(int size, Class<? extends Inventory> adapterType, SlotProvider slots, List<Lens> lenses) {
-        super(0, size, 1, adapterType);
+        super(0, size, 1, adapterType, slots);
         this.inventories = lenses;
         this.init(slots);
     }

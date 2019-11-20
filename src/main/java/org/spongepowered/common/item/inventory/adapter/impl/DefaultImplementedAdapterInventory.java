@@ -157,11 +157,6 @@ public interface DefaultImplementedAdapterInventory extends InventoryPropertyHol
                 .collect(Collectors.toList());
     }
 
-    @Override
-    default Inventory query(Query<?>... queries) {
-        return Query.compile(((InventoryBridge) this).bridge$getAdapter(), queries).execute();
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     default <T extends Inventory> Optional<T> query(Class<T> inventoryType) {

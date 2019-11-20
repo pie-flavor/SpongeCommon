@@ -30,8 +30,6 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.PropertyEntry;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.api.item.inventory.type.GridInventory;
-import org.spongepowered.common.item.inventory.adapter.impl.AbstractInventoryAdapter;
 
 /**
  * Lenses for inventory based on slots.

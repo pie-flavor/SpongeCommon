@@ -44,7 +44,7 @@ public final class SlotLensQuery extends SpongeDepthQuery {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+    public boolean matches(Lens lens, Lens parent, Fabric fabric) {
         for (Inventory inv : this.inventories) {
             for (Inventory slot : inv.slots()) {
                 if (((SlotAdapter) slot).impl$getLens().equals(lens)) {

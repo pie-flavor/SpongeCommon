@@ -22,27 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.query;
+package org.spongepowered.common.item.inventory.lens.impl;
 
-import org.spongepowered.api.item.inventory.query.Query;
-import org.spongepowered.api.item.inventory.query.QueryType;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 
-public abstract class SpongeQuery<T> implements Query<T> {
+import java.util.Set;
 
-    protected final QueryType<T> type;
+public class QueryLens extends AbstractLens {
 
-    protected SpongeQuery(QueryType<T> type) {
-        this.type = type;
+    public QueryLens(int size, Set<Lens> lenses) {
+        super(0, size, BasicInventoryAdapter.class);
+        for (Lens match : lenses) {
+            this.addSpanningChild(match); // TODO properties?
+        }
     }
 
     @Override
-    public final QueryType<T> getType() {
-        return this.type;
+    public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
+        return new BasicInventoryAdapter(inv, this, parent);
     }
-
-    public abstract boolean matches(Lens lens, Lens parent,
-            Fabric inventory);
 
 }

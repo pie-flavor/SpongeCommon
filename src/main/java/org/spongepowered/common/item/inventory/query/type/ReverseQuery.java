@@ -52,7 +52,7 @@ public class ReverseQuery extends SpongeQuery implements QueryType.NoParam {
     }
 
     @Override
-    public Inventory execute(InventoryAdapter inventory) {
+    public Inventory execute(Inventory parent, InventoryAdapter inventory) {
 
         List<Slot> slots = new ArrayList<>(((Inventory) inventory).slots());
         Collections.reverse(slots);

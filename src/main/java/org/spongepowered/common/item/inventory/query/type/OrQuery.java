@@ -54,10 +54,10 @@ public class OrQuery extends SpongeDepthQuery {
 
     }
 
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+    public boolean matches(Lens lens, Lens parent, Fabric fabric) {
         for (Query orQuery : orQueries) {
             if (orQuery instanceof SpongeDepthQuery) {
-                if (((SpongeDepthQuery) orQuery).matches(lens, parent, inventory)) {
+                if (((SpongeDepthQuery) orQuery).matches(lens, parent, fabric)) {
                     return true;
                 }
             }

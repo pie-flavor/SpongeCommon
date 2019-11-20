@@ -26,30 +26,19 @@ package org.spongepowered.common.item.inventory.query;
 
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.query.Query;
+import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.query.type.OrQuery;
-import org.spongepowered.common.item.inventory.query.type.AppendQuery;
 
 public abstract class SpongeQuery implements Query {
 
     @Override
-    public Query and(Query... queries) {
-        return AppendQuery.of(this, queries);
-    }
-
-    @Override
-    public Query or(Query... queries) {
-        return OrQuery.of(this, queries);
-    }
-
-    @Override
     public Inventory execute(Inventory inventory) {
-        if (!(inventory instanceof InventoryAdapter)) {
+        if (!(inventory instanceof InventoryBridge)) {
             throw new IllegalArgumentException("Unsupported Inventory! " + inventory.getClass().getName());
         }
-        return this.execute(((InventoryAdapter) inventory));
+        return this.execute(inventory, ((InventoryBridge) inventory).bridge$getAdapter());
     }
 
-    public abstract Inventory execute(InventoryAdapter inventory);
+    public abstract Inventory execute(Inventory inventory, InventoryAdapter adapter);
 }
 

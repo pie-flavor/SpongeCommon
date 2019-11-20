@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.item.inventory.query.type;
 
-import org.spongepowered.api.item.inventory.query.QueryTypes;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
@@ -41,8 +40,8 @@ public final class InventoryTranslationQuery extends SpongeDepthQuery {
     }
 
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
-        return Objects.equals(lens.getName(inventory), translation);
+    public boolean matches(Lens lens, Lens parent, Fabric fabric) {
+        return Objects.equals(lens.getName(fabric), translation);
     }
 
 }

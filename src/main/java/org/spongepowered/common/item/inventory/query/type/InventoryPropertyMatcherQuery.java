@@ -42,14 +42,14 @@ public final class InventoryPropertyMatcherQuery extends SpongeDepthQuery {
     }
 
     @Override
-    public boolean matches(Lens lens, Lens parent, Fabric inventory) {
+    public boolean matches(Lens lens, Lens parent, Fabric fabric) {
         if (parent == null) {
             return false;
         }
 
         // Check for custom inventory properties first
         // TODO check if this works
-        Collection<?> invs = inventory.fabric$allInventories();
+        Collection<?> invs = fabric.fabric$allInventories();
         if (invs.size() > 0) {
             Object inv = invs.iterator().next();
             if (inv instanceof CustomInventory) {
