@@ -45,7 +45,7 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingGridInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingGridInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
 
 import java.util.Optional;
 
@@ -57,7 +57,7 @@ public final class InventoryUtil {
 
     @SuppressWarnings("rawtypes")
     public static CraftingGridInventory toSpongeInventory(CraftingInventory inv) {
-        CraftingGridInventoryLens lens = new CraftingGridInventoryLens(0, inv.getWidth(), inv.getHeight(), inv.getWidth(), SlotLensImpl::new);
+        CraftingGridInventoryLens lens = new CraftingGridInventoryLens(0, inv.getWidth(), inv.getHeight(), inv.getWidth(), BasicSlotLens::new);
 
         return new CraftingGridInventoryAdapter((Fabric) inv, lens);
     }

@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.common.bridge.inventory.InventoryBridge;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -82,7 +82,7 @@ public abstract class EntityLivingEquipmentFabricMixin implements Fabric, Invent
 
     @Override
     public Translation fabric$getDisplayName() {
-        return SlotLensImpl.SLOT_NAME;
+        return BasicSlotLens.SLOT_NAME;
     }
 
     @Override

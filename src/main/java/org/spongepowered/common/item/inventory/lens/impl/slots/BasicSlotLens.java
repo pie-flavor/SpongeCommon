@@ -36,7 +36,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidOrdinalException;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.impl.AbstractLens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 import org.spongepowered.common.text.translation.SpongeTranslation;
 
 import java.util.Collection;
@@ -47,23 +47,23 @@ import java.util.Map;
 /**
  * Base Lens for Slots
  */
-public class SlotLensImpl extends AbstractLens implements SlotLens {
+public class BasicSlotLens extends AbstractLens implements SlotLens {
 
     public static final Translation SLOT_NAME = new SpongeTranslation("slot.name");
 
     protected int maxStackSize = -1;
 
-    public SlotLensImpl(int index) {
+    public BasicSlotLens(int index) {
         this(index, SlotAdapter.class);
     }
 
-    public SlotLensImpl(int index, Class<? extends Inventory> adapterType) {
+    public BasicSlotLens(int index, Class<? extends Inventory> adapterType) {
         super(index, 1, adapterType);
     }
 
     @Override
     public Translation getName(Fabric inv) {
-        return SlotLensImpl.SLOT_NAME;
+        return BasicSlotLens.SLOT_NAME;
     }
 
     @Override

@@ -28,8 +28,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.slot.OutputSlot;
 
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.slots.OutputSlotLens;
-
+import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
 
 public class OutputSlotAdapter extends FilteringSlotAdapter implements OutputSlot {
 

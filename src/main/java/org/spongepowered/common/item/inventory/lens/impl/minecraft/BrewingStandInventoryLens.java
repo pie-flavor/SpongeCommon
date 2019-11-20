@@ -27,20 +27,19 @@ package org.spongepowered.common.item.inventory.lens.impl.minecraft;
 import static org.spongepowered.api.item.ItemTypes.BLAZE_POWDER;
 
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.slot.OutputSlot;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
 
 public class BrewingStandInventoryLens extends RealLens {
 
     private DefaultIndexedLens potions;
-    private InputSlotLensImpl ingredient;
-    private InputSlotLensImpl fuel;
+    private InputSlotLens ingredient;
+    private InputSlotLens fuel;
 
     public BrewingStandInventoryLens(SlotProvider slots) {
         super(0, 5, BasicInventoryAdapter.class);
@@ -62,8 +61,8 @@ public class BrewingStandInventoryLens extends RealLens {
     protected void init(final SlotProvider slots) {
 
         this.potions = new DefaultIndexedLens(0, 3, slots); // TODO correct type
-        this.ingredient = new InputSlotLensImpl(3, (i) -> true, (i) -> true); // TODO filter PotionIngredients
-        this.fuel = new FuelSlotLensImpl(4, (i) -> BLAZE_POWDER.equals(i.getType()), BLAZE_POWDER::equals);
+        this.ingredient = new InputSlotLens(3, (i) -> true, (i) -> true); // TODO filter PotionIngredients
+        this.fuel = new FuelSlotLens(4, (i) -> BLAZE_POWDER.equals(i.getType()), BLAZE_POWDER::equals);
 
         this.addSpanningChild(this.potions);
         this.addSpanningChild(this.ingredient);

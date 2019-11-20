@@ -34,14 +34,15 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import org.spongepowered.api.text.translation.Translation;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.HeldSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidOrdinalException;
 import org.spongepowered.common.item.inventory.lens.Lens;
-import org.spongepowered.common.item.inventory.lens.slots.EquipmentSlotLens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -49,7 +50,7 @@ import java.util.function.Predicate;
 /**
  * Single Slot pointing to a players {@link EquipmentTypes#MAIN_HAND} slot.
  */
-public class HeldHandSlotLens implements EquipmentSlotLens {
+public class HeldHandSlotLens implements SlotLens {
 
     private PlayerInventory getInventoryPlayer(Fabric fabric) {
         return (PlayerInventory) fabric.fabric$get(0); // Only players have this lens
@@ -86,7 +87,7 @@ public class HeldHandSlotLens implements EquipmentSlotLens {
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new EquipmentSlotAdapter(inv, this, parent);
+        return new HeldSlotAdapter(inv, this, parent);
     }
 
     @Override
@@ -151,18 +152,30 @@ public class HeldHandSlotLens implements EquipmentSlotLens {
         return this;
     }
 
-    @Override
     public Predicate<EquipmentType> getEquipmentTypeFilter() {
         return (e) -> e == EquipmentTypes.MAIN_HAND;
     }
 
-    @Override
     public Predicate<ItemStack> getItemStackFilter() {
         return (i) -> true;
     }
 
-    @Override
     public Predicate<ItemType> getItemTypeFilter() {
         return (i) -> true;
+    }
+
+    @Override
+    public String toString(int deep) {
+        return "[HeldSlot]";
+    }
+
+    @Override
+    public String toString() {
+        return this.toString(0);
+    }
+
+    @Override
+    public Iterator<Lens> iterator() {
+        return Collections.singletonList((Lens) this).iterator();
     }
 }

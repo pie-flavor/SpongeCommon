@@ -14,8 +14,8 @@ import org.spongepowered.common.data.type.SpongeContainerType;
 import org.spongepowered.common.data.type.SpongeContainerTypeEntity;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 import java.util.ArrayList;
@@ -202,7 +202,7 @@ public class SpongeViewableInventoryBuilder implements ViewableInventory.Builder
                 for (int i = 0; i < this.finalInventories.indexOf(slot.parent()); i++) {
                     offset += this.finalInventories.get(i).freeCapacity();
                 }
-                slotProvider.add(new SlotLensImpl(idx + offset));
+                slotProvider.add(new BasicSlotLens(idx + offset));
             }
             this.finalProvider = slotProvider;
         }

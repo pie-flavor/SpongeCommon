@@ -74,8 +74,8 @@ import org.spongepowered.common.item.inventory.lens.impl.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.PlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
 import org.spongepowered.common.mixin.core.inventory.accessor.ContainerAccessor;
 import org.spongepowered.common.mixin.core.inventory.accessor.ContainerBrewingStandAccessor;
 import org.spongepowered.common.mixin.core.inventory.accessor.ContainerDispenserAccessor;
@@ -211,14 +211,14 @@ public final class ContainerUtil {
             if (lens == null || lens.slotCount() != slotCount) {
                 if (subInventory instanceof CraftResultInventory) { // InventoryCraftResult is a Slot
                     final Slot slot = slotList.get(0);
-                    lens = new CraftingOutputSlotLensImpl(index,
+                    lens = new CraftingOutputSlotLens(index,
                             item -> slot.isItemValid(((ItemStack) item)),
                             itemType -> (slot.isItemValid((ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(itemType, 1))));
                 } else if (subInventory instanceof CraftingInventory) { // InventoryCrafting has width and height and is Input
                     final CraftingInventory craftGrid = (CraftingInventory) subInventory;
                     lens = new GridInventoryLens(index, craftGrid.getWidth(), craftGrid.getHeight(), InputSlot.class, slots);
                 } else if (slotCount == 1) { // Unknown - A single Slot
-                    lens = new SlotLensImpl(index);
+                    lens = new BasicSlotLens(index);
                 }
                 else if (subInventory instanceof net.minecraft.inventory.Inventory && subInventory.getClass().isAnonymousClass()) {
                     // Anonymous InventoryBasic -> Check for Vanilla Containers:
@@ -280,7 +280,7 @@ public final class ContainerUtil {
         // For Crafting Result we need the Slot to get Filter logic
         if (subInventory instanceof CraftResultInventory) {
             final Slot slot = slotList.get(0);
-            adapterLens = new CraftingOutputSlotLensImpl(index, item -> slot.isItemValid(((ItemStack) item)),
+            adapterLens = new CraftingOutputSlotLens(index, item -> slot.isItemValid(((ItemStack) item)),
                     itemType -> (slot.isItemValid((ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(itemType, 1))));
             if (slot instanceof SlotCraftingAccessor) {
                 crafting.out = index;
@@ -313,7 +313,7 @@ public final class ContainerUtil {
         final SlotLensCollection.Builder builder = new SlotLensCollection.Builder();
         for (final Slot slot : container.inventorySlots) {
             if (slot instanceof CraftingResultSlot) {
-                builder.add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i,
+                builder.add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLens(i,
                         item -> slot.isItemValid(((ItemStack) item)),
                         itemType -> (slot.isItemValid((ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(itemType, 1)))));
             } else {

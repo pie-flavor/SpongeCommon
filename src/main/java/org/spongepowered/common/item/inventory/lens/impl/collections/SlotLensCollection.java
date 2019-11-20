@@ -34,8 +34,8 @@ import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class SlotLensCollection extends DynamicLensCollectionImpl implements Slo
     public static class Builder {
 
         private List<Tuple<Class<? extends SlotAdapter>, SlotLensProvider>> slotTypes = new ArrayList<>();
-        private final SlotLensProvider defaultProvider = (i) -> new SlotLensImpl(i, this.slotTypes.get(i).getFirst());
+        private final SlotLensProvider defaultProvider = (i) -> new BasicSlotLens(i, this.slotTypes.get(i).getFirst());
 
         public Builder add() {
             return this.add(SlotAdapter.class);
@@ -113,7 +113,7 @@ public class SlotLensCollection extends DynamicLensCollectionImpl implements Slo
 
     @SuppressWarnings("rawtypes")
     private SlotLens createSlotLens(int slotIndex) {
-        return this.builder == null ? new SlotLensImpl(slotIndex, SlotAdapter.class) : this.builder.getProvider(slotIndex).createSlotLens(slotIndex);
+        return this.builder == null ? new BasicSlotLens(slotIndex, SlotAdapter.class) : this.builder.getProvider(slotIndex).createSlotLens(slotIndex);
     }
 
     @Override

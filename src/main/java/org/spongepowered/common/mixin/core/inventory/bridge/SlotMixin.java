@@ -34,8 +34,8 @@ import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.BasicSlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin implements InventoryAdapter, InventoryAdapterBridge {
@@ -60,7 +60,7 @@ public abstract class SlotMixin implements InventoryAdapter, InventoryAdapterBri
         }
         // TODO figure out how to make it always work with existing lenses
         // this works as a fallback but removes Inventory Property Support completely
-        return new SlotLensImpl(0);
+        return new BasicSlotLens(0);
     }
 
 }

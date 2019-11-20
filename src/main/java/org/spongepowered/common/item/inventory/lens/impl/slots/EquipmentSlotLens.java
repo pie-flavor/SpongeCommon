@@ -27,26 +27,33 @@ package org.spongepowered.common.item.inventory.lens.impl.slots;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.slots.OutputSlotLens;
 
 import java.util.function.Predicate;
 
+public class EquipmentSlotLens extends FilteringSlotLens {
+    
+    private final Predicate<EquipmentType> equipmentTypeFilter;
 
-public class OutputSlotLensImpl extends FilteringSlotLensImpl implements OutputSlotLens {
-
-    public OutputSlotLensImpl(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, OutputSlotAdapter.class, stackFilter, typeFilter);
+    public EquipmentSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter, Predicate<EquipmentType> equipmentTypeFilter) {
+        this(index, EquipmentSlotAdapter.class, stackFilter, typeFilter, equipmentTypeFilter);
     }
 
-    public OutputSlotLensImpl(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+    public EquipmentSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter, Predicate<EquipmentType> equipmentTypeFilter) {
         super(index, adapterType, stackFilter, typeFilter);
+        this.equipmentTypeFilter = equipmentTypeFilter;
     }
 
+    public Predicate<EquipmentType> getEquipmentTypeFilter() {
+        return this.equipmentTypeFilter;
+    }
+    
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new OutputSlotAdapter(inv, this, parent);
+        return new EquipmentSlotAdapter(inv, this, parent);
     }
+
 }

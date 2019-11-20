@@ -31,15 +31,15 @@ import org.spongepowered.common.item.inventory.adapter.impl.BasicInventoryAdapte
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
 
 public class FurnaceInventoryLens extends RealLens {
 
-    private InputSlotLensImpl input;
-    private FuelSlotLensImpl fuel;
-    private OutputSlotLensImpl output;
+    private InputSlotLens input;
+    private FuelSlotLens fuel;
+    private OutputSlotLens output;
 
     public FurnaceInventoryLens(SlotProvider sp) {
         super(0, 3, BasicInventoryAdapter.class);
@@ -59,11 +59,11 @@ public class FurnaceInventoryLens extends RealLens {
     protected void init(final SlotProvider slots) {
         this.addChild(new DefaultIndexedLens(0, 3, slots));
 
-        this.input = new InputSlotLensImpl(0, (i) -> true, (i) -> true);
-        this.fuel = new FuelSlotLensImpl(1, (i) -> true, (i) -> true);       // TODO SlotFurnaceFuel
+        this.input = new InputSlotLens(0, (i) -> true, (i) -> true);
+        this.fuel = new FuelSlotLens(1, (i) -> true, (i) -> true);       // TODO SlotFurnaceFuel
 
         // TODO represent the filtering in the API somehow
-        this.output = new OutputSlotLensImpl(2, (i) -> true, (i) -> true); // SlotFurnaceOutput
+        this.output = new OutputSlotLens(2, (i) -> true, (i) -> true); // SlotFurnaceOutput
 
         this.addSpanningChild(this.input, PropertyEntry.slotIndex(0));
         this.addSpanningChild(this.fuel, PropertyEntry.slotIndex(1));

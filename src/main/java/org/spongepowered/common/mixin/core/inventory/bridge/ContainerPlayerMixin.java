@@ -42,8 +42,8 @@ import org.spongepowered.common.bridge.inventory.LensProviderBridge;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerPlayerInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLens;
 import org.spongepowered.common.mixin.core.inventory.impl.ContainerMixin;
 
 @Mixin(PlayerContainer.class)
@@ -66,16 +66,16 @@ public abstract class ContainerPlayerMixin extends ContainerMixin implements Con
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
         final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
-                .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i, (t) -> false, (t) -> false))
+                .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLens(i, (t) -> false, (t) -> false))
                 .add(4)
                 // TODO predicates for ItemStack/ItemType?
                 // order for equipment is reversed in containers
-                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLensImpl(index, i -> true, t -> true, e -> e == EquipmentTypes.HEADWEAR))
-                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLensImpl(index, i -> true, t -> true, e -> e == EquipmentTypes.CHESTPLATE))
-                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLensImpl(index, i -> true, t -> true, e -> e == EquipmentTypes.LEGGINGS))
-                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLensImpl(index, i -> true, t -> true, e -> e == EquipmentTypes.BOOTS))
+                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLens(index, i -> true, t -> true, e -> e == EquipmentTypes.HEADWEAR))
+                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLens(index, i -> true, t -> true, e -> e == EquipmentTypes.CHESTPLATE))
+                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLens(index, i -> true, t -> true, e -> e == EquipmentTypes.LEGGINGS))
+                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLens(index, i -> true, t -> true, e -> e == EquipmentTypes.BOOTS))
                 .add(36)
-                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLensImpl(index, i -> true, t -> true, e -> e == EquipmentTypes.OFF_HAND));
+                .add(EquipmentSlotAdapter.class, index -> new EquipmentSlotLens(index, i -> true, t -> true, e -> e == EquipmentTypes.OFF_HAND));
 
         if (this.impl$offHandSlot == -1) {
             this.impl$offHandSlot = builder.size() - 1;

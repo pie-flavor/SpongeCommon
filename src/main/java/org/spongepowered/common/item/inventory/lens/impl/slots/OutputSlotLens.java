@@ -28,46 +28,23 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.FilteringSlotAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.OutputSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.slots.FilteringSlotLens;
 
 import java.util.function.Predicate;
 
-public class FilteringSlotLensImpl extends SlotLensImpl implements FilteringSlotLens {
+public class OutputSlotLens extends FilteringSlotLens {
 
-    private final Predicate<ItemStack> stackFilter;
-    private final Predicate<ItemType> typeFilter;
-
-    public FilteringSlotLensImpl(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, FilteringSlotAdapter.class, stackFilter, typeFilter);
+    public OutputSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        this(index, OutputSlotAdapter.class, stackFilter, typeFilter);
     }
 
-    public FilteringSlotLensImpl(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        super(index, adapterType);
-
-        this.stackFilter = stackFilter;
-        this.typeFilter = typeFilter;
-    }
-
-    @Override
-    public boolean setStack(Fabric inv, net.minecraft.item.ItemStack stack) {
-        return this.getItemStackFilter().test((ItemStack) stack) && super.setStack(inv, stack);
-    }
-
-    @Override
-    public Predicate<ItemStack> getItemStackFilter() {
-        return this.stackFilter;
-    }
-
-    @Override
-    public Predicate<ItemType> getItemTypeFilter() {
-        return this.typeFilter;
+    public OutputSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        super(index, adapterType, stackFilter, typeFilter);
     }
 
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new FilteringSlotAdapter(inv, this, parent);
+        return new OutputSlotAdapter(inv, this, parent);
     }
-
 }

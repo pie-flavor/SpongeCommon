@@ -41,7 +41,7 @@ import org.spongepowered.common.item.inventory.lens.impl.comp.ArmorInventoryLens
 import org.spongepowered.common.item.inventory.lens.impl.comp.EquipmentInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.slots.HeldHandSlotLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

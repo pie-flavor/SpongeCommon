@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.item.inventory.lens.slots;
+package org.spongepowered.common.item.inventory.lens;
 
 import net.minecraft.item.ItemStack;
 import org.spongepowered.common.item.inventory.lens.Fabric;

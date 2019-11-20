@@ -32,7 +32,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.RealLens;
-import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
 
 public class CraftingInventoryLens extends RealLens {
 

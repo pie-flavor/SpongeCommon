@@ -28,26 +28,44 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
-import org.spongepowered.common.item.inventory.adapter.impl.slots.CraftingOutputAdapter;
+import org.spongepowered.common.item.inventory.adapter.impl.slots.FilteringSlotAdapter;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.function.Predicate;
 
+public class FilteringSlotLens extends BasicSlotLens {
 
-public class CraftingOutputSlotLensImpl extends OutputSlotLensImpl implements CraftingOutputSlotLens {
+    private final Predicate<ItemStack> stackFilter;
+    private final Predicate<ItemType> typeFilter;
 
-    public CraftingOutputSlotLensImpl(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        this(index, CraftingOutputAdapter.class, stackFilter, typeFilter);
+    public FilteringSlotLens(int index, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        this(index, FilteringSlotAdapter.class, stackFilter, typeFilter);
     }
 
-    public CraftingOutputSlotLensImpl(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
-        super(index, adapterType, stackFilter, typeFilter);
+    public FilteringSlotLens(int index, Class<? extends Inventory> adapterType, Predicate<ItemStack> stackFilter, Predicate<ItemType> typeFilter) {
+        super(index, adapterType);
+
+        this.stackFilter = stackFilter;
+        this.typeFilter = typeFilter;
     }
-    
+
+    @Override
+    public boolean setStack(Fabric inv, net.minecraft.item.ItemStack stack) {
+        return this.getItemStackFilter().test(ItemStackUtil.fromNative(stack)) && super.setStack(inv, stack);
+    }
+
+    public Predicate<ItemStack> getItemStackFilter() {
+        return this.stackFilter;
+    }
+
+    public Predicate<ItemType> getItemTypeFilter() {
+        return this.typeFilter;
+    }
+
     @Override
     public InventoryAdapter getAdapter(Fabric inv, Inventory parent) {
-        return new CraftingOutputAdapter(inv, this, parent);
+        return new FilteringSlotAdapter(inv, this, parent);
     }
 
 }

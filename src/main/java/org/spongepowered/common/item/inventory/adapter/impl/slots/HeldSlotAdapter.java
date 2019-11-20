@@ -24,19 +24,23 @@
  */
 package org.spongepowered.common.item.inventory.adapter.impl.slots;
 
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.slot.EquipmentSlot;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.common.item.inventory.lens.Fabric;
-import org.spongepowered.common.item.inventory.lens.impl.slots.EquipmentSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.HeldHandSlotLens;
+import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.function.Predicate;
 
-public class EquipmentSlotAdapter extends FilteringSlotAdapter implements EquipmentSlot {
-    
-    protected final EquipmentSlotLens equipmentSlot;
+public class HeldSlotAdapter extends SlotAdapter implements EquipmentSlot {
 
-    public EquipmentSlotAdapter(Fabric inventory, EquipmentSlotLens lens, Inventory parent) {
+    protected final HeldHandSlotLens equipmentSlot;
+
+    public HeldSlotAdapter(Fabric inventory, HeldHandSlotLens lens, Inventory parent) {
         super(inventory, lens, parent);
         this.equipmentSlot = lens;
     }
@@ -47,4 +51,27 @@ public class EquipmentSlotAdapter extends FilteringSlotAdapter implements Equipm
         return filter == null || filter.test(type);
     }
 
+    @Override
+    public boolean isValidItem(ItemStack stack) {
+        Predicate<ItemStack> filter = this.equipmentSlot.getItemStackFilter();
+        return filter == null || filter.test(stack);
+    }
+
+    @Override
+    public boolean isValidItem(ItemType type) {
+        Predicate<ItemType> filter = this.equipmentSlot.getItemTypeFilter();
+        return filter == null || filter.test(type);
+    }
+
+    @Override
+    public InventoryTransactionResult set(ItemStack stack) {
+        final boolean canSet = this.isValidItem(stack);
+        if (!canSet) {
+            final InventoryTransactionResult.Builder result = InventoryTransactionResult.builder().type(InventoryTransactionResult.Type.FAILURE);
+            result.reject(ItemStackUtil.cloneDefensive(stack));
+            return result.build();
+        }
+
+        return super.set(stack);
+    }
 }

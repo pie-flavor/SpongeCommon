@@ -27,7 +27,6 @@ package org.spongepowered.common.item.inventory.lens;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 
 import java.util.ArrayList;
 import java.util.List;

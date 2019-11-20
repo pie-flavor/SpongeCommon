@@ -34,7 +34,7 @@ import org.spongepowered.common.item.inventory.adapter.impl.comp.Inventory2DAdap
 import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.SlotBasedLens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 import org.spongepowered.math.vector.Vector2i;
 
 public class Inventory2DLens extends SlotBasedLens {

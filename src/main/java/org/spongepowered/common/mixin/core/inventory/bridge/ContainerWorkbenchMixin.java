@@ -36,7 +36,7 @@ import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCol
 import org.spongepowered.common.item.inventory.lens.impl.comp.CraftingInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.CraftingOutputSlotLens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public abstract class ContainerWorkbenchMixin extends ContainerMixin implements 
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
         final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
-                .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLensImpl(i, (t) -> false, (t) -> false))
+                .add(1, CraftingOutputAdapter.class, (i) -> new CraftingOutputSlotLens(i, (t) -> false, (t) -> false))
                 .add(9)
                 .add(36);
         builder.add(this.inventorySlots.size() - 46);

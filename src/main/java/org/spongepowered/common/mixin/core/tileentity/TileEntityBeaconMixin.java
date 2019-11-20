@@ -39,8 +39,7 @@ import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
 
 import javax.annotation.Nullable;
 
@@ -60,7 +59,7 @@ public abstract class TileEntityBeaconMixin extends TileEntityLockableMixin impl
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private SlotProvider impl$generateBeaconSlotProvider() {
-        final InputSlotLensImpl lens = new InputSlotLensImpl(0, ((Class) BeaconTileEntity.class), itemStack -> isItemValidForSlot(0, (ItemStack) itemStack),
+        final InputSlotLens lens = new InputSlotLens(0, ((Class) BeaconTileEntity.class), itemStack -> isItemValidForSlot(0, (ItemStack) itemStack),
                 itemType -> isItemValidForSlot(0, (ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(itemType, 1)));
         return new SlotLensCollection.Builder()
                 .add(InputSlotAdapter.class, i -> lens)

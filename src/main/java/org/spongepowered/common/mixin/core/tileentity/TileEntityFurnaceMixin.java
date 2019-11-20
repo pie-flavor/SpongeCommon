@@ -59,9 +59,9 @@ import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.ReusableLens;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.FurnaceInventoryLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.FuelSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
 import org.spongepowered.common.item.inventory.util.ItemStackUtil;
 
 import java.util.Collections;
@@ -82,14 +82,14 @@ public abstract class TileEntityFurnaceMixin extends TileEntityLockableMixin imp
     }
 
     private SlotProvider impl$generateSlotProvider() {
-        return new SlotLensCollection.Builder().add(InputSlotAdapter.class, InputSlotLensImpl::new)
-                .add(FuelSlotAdapter.class, (i) -> new FuelSlotLensImpl(i, (s) -> FurnaceTileEntity.isItemFuel((ItemStack) s) || func_178173_c_(
+        return new SlotLensCollection.Builder().add(InputSlotAdapter.class, InputSlotLens::new)
+                .add(FuelSlotAdapter.class, (i) -> new FuelSlotLens(i, (s) -> FurnaceTileEntity.isItemFuel((ItemStack) s) || func_178173_c_(
                         (ItemStack) s), t -> {
                     final ItemStack nmsStack = (ItemStack) org.spongepowered.api.item.inventory.ItemStack.of(t, 1);
                     return FurnaceTileEntity.isItemFuel(nmsStack) || func_178173_c_(nmsStack);
                 }))
                 // TODO represent the filtering in the API somehow
-                .add(OutputSlotAdapter.class, (i) -> new OutputSlotLensImpl(i, (s) -> true, (t) -> true))
+                .add(OutputSlotAdapter.class, (i) -> new OutputSlotLens(i, (s) -> true, (t) -> true))
                 .build();
     }
 

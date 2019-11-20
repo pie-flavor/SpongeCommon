@@ -38,8 +38,8 @@ import org.spongepowered.common.item.inventory.lens.impl.DefaultIndexedLens;
 import org.spongepowered.common.item.inventory.lens.impl.collections.SlotLensCollection;
 import org.spongepowered.common.item.inventory.lens.impl.comp.PrimaryPlayerInventoryLens;
 import org.spongepowered.common.item.inventory.lens.impl.minecraft.container.ContainerLens;
-import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLensImpl;
-import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLensImpl;
+import org.spongepowered.common.item.inventory.lens.impl.slots.InputSlotLens;
+import org.spongepowered.common.item.inventory.lens.impl.slots.OutputSlotLens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,8 @@ public abstract class ContainerRepairMixin implements LensProviderBridge {
     @Override
     public SlotProvider bridge$slotProvider(final Fabric fabric, final InventoryAdapter adapter) {
         final SlotLensCollection.Builder builder = new SlotLensCollection.Builder()
-                .add(2, InputSlotAdapter.class, i -> new InputSlotLensImpl(i, s -> true, t -> true))
-                .add(1, OutputSlotAdapter.class, i -> new OutputSlotLensImpl(i, s -> false, t -> false))
+                .add(2, InputSlotAdapter.class, i -> new InputSlotLens(i, s -> true, t -> true))
+                .add(1, OutputSlotAdapter.class, i -> new OutputSlotLens(i, s -> false, t -> false))
                 .add(36);
         return builder.build();
     }

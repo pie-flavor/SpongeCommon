@@ -39,7 +39,7 @@ import org.spongepowered.common.item.inventory.lens.MutableLensCollection;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.collections.MutableLensCollectionImpl;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.SlotLens;
 
 import java.util.ArrayList;
 import java.util.Collection;
