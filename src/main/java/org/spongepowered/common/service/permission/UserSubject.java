@@ -71,7 +71,7 @@ public class UserSubject extends SpongeSubject {
                 }
                 if (opLevel > 0) {
                     // TODO: Should bypassesPlayerLimit be true or false?
-                    SpongePermissionService.getOps().addEntry(new UserListOpsEntry(player, opLevel, false));
+                    SpongePermissionService.getOps().func_152687_a(new UserListOpsEntry(player, opLevel, false));
                 } else {
                     SpongePermissionService.getOps().removeEntry(player);
                 }
@@ -93,7 +93,7 @@ public class UserSubject extends SpongeSubject {
     @Override
     public Optional<CommandSource> getCommandSource() {
         if (Sponge.isServerAvailable()) {
-            return Optional.ofNullable((CommandSource) SpongeImpl.getServer().getPlayerList().getPlayerByUUID(this.player.getId()));
+            return Optional.ofNullable((CommandSource) SpongeImpl.getServer().func_184103_al().func_177451_a(this.player.getId()));
         }
         return Optional.empty();
     }
@@ -105,9 +105,9 @@ public class UserSubject extends SpongeSubject {
         UserListOpsEntry entry = SpongePermissionService.getOps().getEntry(this.player);
         if (entry == null) {
             // Take care of singleplayer commands -- unless an op level is specified, this player follows global rules
-            return SpongeImpl.getServer().getPlayerList().canSendCommands(this.player) ? SpongeImpl.getServer().getOpPermissionLevel() : 0;
+            return SpongeImpl.getServer().func_184103_al().canSendCommands(this.player) ? SpongeImpl.getServer().func_110455_j() : 0;
         } else {
-            return entry.getPermissionLevel();
+            return entry.func_152644_a();
         }
     }
 

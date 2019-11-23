@@ -51,7 +51,7 @@ public class SkullRepresentedPlayerDataProcessor extends
 
     @Override
     public boolean supports(TileEntitySkull skull) {
-        return SkullUtils.getSkullType(skull.getSkullType()).equals(SkullTypes.PLAYER);
+        return SkullUtils.getSkullType(skull.func_145904_a()).equals(SkullTypes.PLAYER);
     }
 
     @Override

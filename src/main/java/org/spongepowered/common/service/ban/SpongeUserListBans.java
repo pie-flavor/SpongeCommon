@@ -61,7 +61,7 @@ public class SpongeUserListBans extends UserListBans {
     }
 
     @Override
-    public String[] getKeys() {
+    public String[] func_152685_a() {
         List<String> names = new ArrayList<>();
         for (Ban.Profile ban : getService().getProfileBans()) {
             ban.getProfile().getName().ifPresent(names::add);
