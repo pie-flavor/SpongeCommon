@@ -63,7 +63,7 @@ public class ProjectileSourceSerializer {
             }
         }
         if (tag instanceof LongNBT) {
-            BlockPos pos = BlockPos.func_177969_a(((LongNBT) tag).getLong());
+            BlockPos pos = BlockPos.fromLong(((LongNBT) tag).getLong());
             if (worldObj.isBlockLoaded(pos)) {
                 TileEntity tileEntity = worldObj.getTileEntity(pos);
                 if (tileEntity instanceof ProjectileSource) {
@@ -80,7 +80,7 @@ public class ProjectileSourceSerializer {
         }
         NBTBase projectileNbt = toNbt(projectileSource);
         if (projectileNbt != null) {
-            compound.func_74782_a("projectileSource", projectileNbt);
+            compound.setTag("projectileSource", projectileNbt);
         }
     }
 

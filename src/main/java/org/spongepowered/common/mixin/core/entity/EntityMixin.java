@@ -406,12 +406,12 @@ public abstract class EntityMixin implements EntityBridge, TrackableBridge, Vani
     @Inject(method = "onUpdate", at = @At("RETURN"))
     private void impl$updateVanishState(final CallbackInfo callbackInfo) {
         if (this.vanish$pendingVisibilityUpdate && !this.world.isRemote) {
-            final EntityTracker entityTracker = ((ServerWorld) this.world).func_73039_n();
+            final EntityTracker entityTracker = ((ServerWorld) this.world).getEntityTracker();
             // TODO - remove once Mixin 0.8 fixes accessors
-            final EntityTrackerEntry lookup = entityTracker.field_72794_c.func_76041_a(this.getEntityId());
+            final EntityTrackerEntry lookup = entityTracker.trackedEntityHashTable.lookup(this.getEntityId());
             if (lookup != null && this.vanish$visibilityTicks % 4 == 0) {
                 if (this.vanish$isVanished) {
-                    for (final ServerPlayerEntity entityPlayerMP : lookup.field_73134_o) { // TODO - remove once Mixin 0.8 fixes accessors
+                    for (final ServerPlayerEntity entityPlayerMP : lookup.trackingPlayers) { // TODO - remove once Mixin 0.8 fixes accessors
                         entityPlayerMP.connection.sendPacket(new SDestroyEntitiesPacket(this.getEntityId()));
                         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
                             entityPlayerMP.connection.sendPacket(
@@ -430,7 +430,7 @@ public abstract class EntityMixin implements EntityBridge, TrackableBridge, Vani
                             entityPlayerMP.connection.sendPacket(packet);
                         }
                         // TODO - replace with accessor once Mixin 0.8 fixes accessors within mixins
-                        final IPacket<?> newPacket = lookup.func_151260_c(); // creates the spawn packet for us
+                        final IPacket<?> newPacket = lookup.createSpawnPacket(); // creates the spawn packet for us
                         entityPlayerMP.connection.sendPacket(newPacket);
                     }
                 }
@@ -569,12 +569,12 @@ public abstract class EntityMixin implements EntityBridge, TrackableBridge, Vani
         }
 
         if (world.isRemote) {
-            block.func_180634_a(world, pos, state, entity);
+            block.onEntityCollision(world, pos, state, entity);
             return;
         }
 
         if (!SpongeCommonEventFactory.handleCollideBlockEvent(block, world, pos, state, entity, Direction.NONE)) {
-            block.func_180634_a(world, pos, state, entity);
+            block.onEntityCollision(world, pos, state, entity);
             this.lastCollidedBlockPos = pos;
         }
 
@@ -678,7 +678,7 @@ public abstract class EntityMixin implements EntityBridge, TrackableBridge, Vani
     private void spawnParticle(final net.minecraft.world.World world, final EnumParticleTypes particleTypes, final double xCoord, final double yCoord, final double zCoord,
         final double xOffset, final double yOffset, final double zOffset, final int... p_175688_14_) {
         if (!this.vanish$isVanished) {
-            this.world.func_175688_a(particleTypes, xCoord, yCoord, zCoord, xOffset, yOffset, zOffset, p_175688_14_);
+            this.world.spawnParticle(particleTypes, xCoord, yCoord, zCoord, xOffset, yOffset, zOffset, p_175688_14_);
         }
     }
 
@@ -686,7 +686,7 @@ public abstract class EntityMixin implements EntityBridge, TrackableBridge, Vani
     private void runningSpawnParticle(final net.minecraft.world.World world, final EnumParticleTypes particleTypes, final double xCoord, final double yCoord, final double zCoord,
         final double xOffset, final double yOffset, final double zOffset, final int... p_175688_14_) {
         if (!this.vanish$isVanished) {
-            this.world.func_175688_a(particleTypes, xCoord, yCoord, zCoord, xOffset, yOffset, zOffset, p_175688_14_);
+            this.world.spawnParticle(particleTypes, xCoord, yCoord, zCoord, xOffset, yOffset, zOffset, p_175688_14_);
         }
     }
 

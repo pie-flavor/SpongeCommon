@@ -97,7 +97,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
      *  their packet handling threads and end up causing exceptions
      */
     @Override
-    public int func_71556_a(final ICommandSender sender, String command) {
+    public int executeCommand(final ICommandSender sender, String command) {
         command = command.trim();
         if (command.startsWith("/")) {
             command = command.substring(1);
@@ -123,7 +123,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
                         .add("Details of the command:")
                         .add("%s : %s", "Command", command)
                         .add("%s : %s", "Offending Mod", id)
-                        .add("%s : %s", "Sender", sender.getDisplayName() == null ? "null" : sender.getDisplayName().func_150260_c())
+                        .add("%s : %s", "Sender", sender.getDisplayName() == null ? "null" : sender.getDisplayName().getUnformattedText())
                         .add("Stacktrace")
                         .add(new Exception("Async Command Executor"))
                         .trace(SpongeImpl.getLogger(), Level.WARN);
@@ -146,7 +146,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
                         .add("Details of the command:")
                         .add("%s : %s", "Command", command)
                         .add("%s : %s", "Offending Mod", id)
-                        .add("%s : %s", "Sender", sender == null || sender.getDisplayName() == null ? "null" : sender.getDisplayName().func_150260_c())
+                        .add("%s : %s", "Sender", sender == null || sender.getDisplayName() == null ? "null" : sender.getDisplayName().getUnformattedText())
                         .add("Stacktrace")
                         .add(new Exception("Async Command Executor"))
                         .trace(SpongeImpl.getLogger(), Level.WARN);
@@ -155,7 +155,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
             }
             Task.builder().name("Sponge Async to Sync Command Executor")
                 .execute(() -> {
-                    func_71556_a(sender, cleanedCommand);
+                    executeCommand(sender, cleanedCommand);
                 })
                 .submit(activeModContainer);
             return 0;
@@ -180,7 +180,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
      * Reasoning: All commands should go through one system -- we need none of the MC handling code
      */
     @Override
-    public ICommand func_71560_a(final ICommand command) {
+    public ICommand registerCommand(final ICommand command) {
         final MinecraftCommandWrapper cmd = bridge$wrapCommand(command);
         if ("minecraft".equalsIgnoreCase(cmd.getOwner().getId())) {
             this.impl$lowPriorityCommands.add(cmd);
@@ -190,7 +190,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
             SpongeImpl.getGame().getCommandManager().register(cmd.getOwner(), cmd, cmd.getNames());
             registerDefaultPermissions(SpongeImpl.getGame(), cmd);
         }
-        return super.func_71560_a(command);
+        return super.registerCommand(command);
     }
 
     @Override
@@ -244,7 +244,7 @@ public abstract class ServerCommandManagerMixin extends CommandHandler implement
      * We redirect this method in MinecraftServer, to provide the real value of 'usingBlock'. This override is just for mods
      */
     @Override
-    public List<String> func_180524_a(final ICommandSender sender, final String input, @Nullable final BlockPos pos) {
+    public List<String> getTabCompletions(final ICommandSender sender, final String input, @Nullable final BlockPos pos) {
         @Nullable Location<org.spongepowered.api.world.World> targetPos = null;
         if (pos != null) {
             targetPos = new Location<>((org.spongepowered.api.world.World) sender.getEntityWorld(), VecHelper.toVector3i(pos));
