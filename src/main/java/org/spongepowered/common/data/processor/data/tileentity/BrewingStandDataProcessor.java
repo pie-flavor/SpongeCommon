@@ -28,8 +28,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableBrewingStandData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.BrewingStandData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.manipulator.mutable.tileentity.SpongeBrewingStandData;
 import org.spongepowered.common.data.processor.common.AbstractTileEntitySingleDataProcessor;
@@ -72,7 +72,7 @@ public class BrewingStandDataProcessor extends
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(final Integer value) {
+    protected Immutable<Integer> constructImmutableValue(final Integer value) {
         return constructValue(value).asImmutable();
     }
 

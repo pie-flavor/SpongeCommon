@@ -26,11 +26,8 @@ package org.spongepowered.common.mixin.api.mcp.tileentity;
 
 import org.spongepowered.api.block.tileentity.MobSpawner;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.MobSpawnerData;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
-import org.spongepowered.api.data.value.mutable.Value;
-import org.spongepowered.api.data.value.mutable.WeightedCollectionValue;
 import org.spongepowered.api.entity.EntityArchetype;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.api.util.weighted.WeightedSerializableObject;
@@ -168,18 +165,18 @@ public abstract class TileEntityMobSpawnerMixin_API extends TileEntityMixin_API 
     }
 
     @Override
-    public Value<WeightedSerializableObject<EntityArchetype>> nextEntityToSpawn() {
+    public org.spongepowered.api.data.value.Value.Mutable<WeightedSerializableObject<EntityArchetype>> nextEntityToSpawn() {
         return new SpongeValue<>(Keys.SPAWNER_NEXT_ENTITY_TO_SPAWN,
             Constants.TileEntity.Spawner.DEFAULT_NEXT_ENTITY_TO_SPAWN, SpawnerUtils.getNextEntity((MobSpawnerBaseLogicBridge) getSpawnerBaseLogic()));
     }
 
     @Override
-    public WeightedCollectionValue<EntityArchetype> possibleEntitiesToSpawn() {
+    public org.spongepowered.api.data.value.WeightedCollectionValue.Mutable<EntityArchetype> possibleEntitiesToSpawn() {
         return new SpongeWeightedCollectionValue<>(Keys.SPAWNER_ENTITIES, SpawnerUtils.getEntities(getSpawnerBaseLogic()));
     }
 
     @Override
-    public void supplyVanillaManipulators(final List<DataManipulator<?, ?>> manipulators) {
+    public void supplyVanillaManipulators(final List<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators) {
         super.supplyVanillaManipulators(manipulators);
         manipulators.add(getMobSpawnerData());
     }

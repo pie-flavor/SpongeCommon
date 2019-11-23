@@ -28,12 +28,11 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
 import org.apache.logging.log4j.Level;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
-import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.Queries;
-import org.spongepowered.api.data.manipulator.DataManipulator;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -151,7 +150,7 @@ public abstract class ItemStackMixin_API implements DataHolder {       // confli
             }
         }
         // We only need to include the custom data, not vanilla manipulators supported by sponge implementation
-        final Collection<DataManipulator<?, ?>> manipulators = ((CustomDataHolderBridge) this).bridge$getCustomManipulators();
+        final Collection<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators = ((CustomDataHolderBridge) this).bridge$getCustomManipulators();
         if (!manipulators.isEmpty()) {
             container.set(Constants.Sponge.DATA_MANIPULATORS, DataUtil.getSerializedManipulatorList(manipulators));
         }
@@ -184,11 +183,11 @@ public abstract class ItemStackMixin_API implements DataHolder {       // confli
     }
 
     @Override
-    public Collection<DataManipulator<?, ?>> getContainers() {
+    public Collection<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> getContainers() {
         if (this.shadow$isEmpty()) {
             return Lists.newArrayList();
         }
-        final List<DataManipulator<?, ?>> manipulators = Lists.newArrayList();
+        final List<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> manipulators = Lists.newArrayList();
         final Item item = this.shadow$getItem();
         // Null items should be impossible to create
         if (item == null) {
@@ -203,7 +202,7 @@ public abstract class ItemStackMixin_API implements DataHolder {       // confli
         }
         ((ItemBridge) item).bridge$gatherManipulators((net.minecraft.item.ItemStack) (Object) this, manipulators);
         if (((CustomDataHolderBridge) this).bridge$hasManipulators()) {
-            final Collection<DataManipulator<?, ?>> customManipulators = ((CustomDataHolderBridge) this).bridge$getCustomManipulators();
+            final Collection<org.spongepowered.api.data.DataManipulator.Mutable<?, ?>> customManipulators = ((CustomDataHolderBridge) this).bridge$getCustomManipulators();
             manipulators.addAll(customManipulators);
         }
         return manipulators;

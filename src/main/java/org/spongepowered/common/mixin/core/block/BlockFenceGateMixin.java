@@ -32,7 +32,7 @@ import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.manipulator.immutable.block.ImmutableInWallData;
 import org.spongepowered.api.data.manipulator.immutable.block.ImmutableOpenData;
 import org.spongepowered.api.data.manipulator.immutable.block.ImmutablePoweredData;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.data.ImmutableDataCachingUtil;
 import org.spongepowered.common.data.manipulator.immutable.block.ImmutableSpongeInWallData;
@@ -77,7 +77,7 @@ public abstract class BlockFenceGateMixin extends BlockHorizontalMixin {
     }
 
     @Override
-    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends Value<E>> key, final E value) {
         if (key.equals(Keys.OPEN)) {
             final boolean isOpen = (Boolean) value;
             return Optional.of((BlockState) blockState.withProperty(FenceGateBlock.OPEN, isOpen));

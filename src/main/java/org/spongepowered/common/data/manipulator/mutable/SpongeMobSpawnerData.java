@@ -27,13 +27,12 @@ package org.spongepowered.common.data.manipulator.mutable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.ImmutableMobSpawnerData;
 import org.spongepowered.api.data.manipulator.mutable.MobSpawnerData;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.value.Value.Mutable;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
-import org.spongepowered.api.data.value.mutable.Value;
-import org.spongepowered.api.data.value.mutable.WeightedCollectionValue;
 import org.spongepowered.api.entity.EntityArchetype;
 import org.spongepowered.api.util.weighted.WeightedSerializableObject;
 import org.spongepowered.api.util.weighted.WeightedTable;
@@ -158,13 +157,13 @@ public class SpongeMobSpawnerData extends AbstractData<MobSpawnerData, Immutable
     }
 
     @Override
-    public Value<WeightedSerializableObject<EntityArchetype>> nextEntityToSpawn() {
+    public Mutable<WeightedSerializableObject<EntityArchetype>> nextEntityToSpawn() {
         return new SpongeValue<>(Keys.SPAWNER_NEXT_ENTITY_TO_SPAWN, Constants.TileEntity.Spawner.DEFAULT_NEXT_ENTITY_TO_SPAWN,
                 this.nextEntityToSpawn);
     }
 
     @Override
-    public WeightedCollectionValue<EntityArchetype> possibleEntitiesToSpawn() {
+    public org.spongepowered.api.data.value.WeightedCollectionValue.Mutable<EntityArchetype> possibleEntitiesToSpawn() {
         return new SpongeWeightedCollectionValue<>(Keys.SPAWNER_ENTITIES, this.entities);
     }
 

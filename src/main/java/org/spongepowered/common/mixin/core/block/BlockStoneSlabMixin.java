@@ -38,7 +38,7 @@ import org.spongepowered.api.data.manipulator.immutable.block.ImmutableSlabData;
 import org.spongepowered.api.data.type.PortionType;
 import org.spongepowered.api.data.type.SlabType;
 import org.spongepowered.api.data.type.SlabTypes;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.data.ImmutableDataCachingUtil;
 import org.spongepowered.common.data.manipulator.immutable.block.ImmutableSpongePortionData;
@@ -93,7 +93,7 @@ public abstract class BlockStoneSlabMixin extends BlockMixin {
     }
 
     @Override
-    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends Value<E>> key, final E value) {
         if (key.equals(Keys.SLAB_TYPE)) {
             final SlabType type = (SlabType) value;
             if (blockState.getBlock() instanceof BlockStoneSlab) {

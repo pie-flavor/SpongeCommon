@@ -25,15 +25,15 @@
 package org.spongepowered.common.world.schematic;
 
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.biome.BiomeType;
-import org.spongepowered.api.world.extent.MutableBiomeVolume;
 import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
 import org.spongepowered.api.world.schematic.Palette;
 import org.spongepowered.api.world.schematic.Schematic;
+import org.spongepowered.api.world.volume.biome.MutableBiomeVolume;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
 
 import java.util.Objects;

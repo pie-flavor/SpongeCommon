@@ -529,7 +529,7 @@ public abstract class WorldMixin implements WorldBridge {
 
     @SuppressWarnings("ConstantConditions")
     private boolean canTileUpdate(final TileEntity tile) {
-        final org.spongepowered.api.block.tileentity.TileEntity spongeTile = (org.spongepowered.api.block.tileentity.TileEntity) tile;
+        final org.spongepowered.api.block.entity.BlockEntity spongeTile = (org.spongepowered.api.block.entity.BlockEntity) tile;
         return spongeTile.getType() == null || ((SpongeTileEntityType) spongeTile.getType()).canTick();
     }
 

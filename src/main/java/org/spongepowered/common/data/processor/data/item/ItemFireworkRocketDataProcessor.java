@@ -31,8 +31,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.ImmutableFireworkRocketData;
 import org.spongepowered.api.data.manipulator.mutable.FireworkRocketData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -95,7 +95,7 @@ public class ItemFireworkRocketDataProcessor
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(Integer value) {
+    protected Immutable<Integer> constructImmutableValue(Integer value) {
         return new ImmutableSpongeBoundedValue<>(Keys.FIREWORK_FLIGHT_MODIFIER, value, 0, Constants.Functional.intComparator(), 0, Integer.MAX_VALUE);
     }
 

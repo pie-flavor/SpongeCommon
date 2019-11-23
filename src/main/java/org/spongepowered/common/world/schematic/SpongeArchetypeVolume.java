@@ -24,8 +24,6 @@
  */
 package org.spongepowered.common.world.schematic;
 
-import com.flowpowered.math.vector.Vector3d;
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -41,17 +39,18 @@ import org.spongepowered.api.util.DiscreteTransform3;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.extent.ArchetypeVolume;
-import org.spongepowered.api.world.extent.ImmutableBlockVolume;
-import org.spongepowered.api.world.extent.MutableBlockVolume;
-import org.spongepowered.api.world.extent.StorageType;
-import org.spongepowered.api.world.extent.UnmodifiableBlockVolume;
 import org.spongepowered.api.world.extent.worker.MutableBlockVolumeWorker;
 import org.spongepowered.api.world.schematic.Palette;
+import org.spongepowered.api.world.volume.StorageType;
+import org.spongepowered.api.world.volume.archetype.ArchetypeVolume;
+import org.spongepowered.api.world.volume.block.ImmutableBlockVolume;
+import org.spongepowered.api.world.volume.block.MutableBlockVolume;
+import org.spongepowered.api.world.volume.block.UnmodifiableBlockVolume;
 import org.spongepowered.common.entity.SpongeEntityArchetype;
 import org.spongepowered.common.util.gen.AbstractBlockBuffer;
 import org.spongepowered.common.world.extent.worker.SpongeMutableBlockVolumeWorker;
-
+import org.spongepowered.math.vector.Vector3d;
+import org.spongepowered.math.vector.Vector3i;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;

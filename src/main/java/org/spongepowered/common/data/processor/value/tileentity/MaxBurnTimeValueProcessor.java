@@ -27,8 +27,8 @@ package org.spongepowered.common.data.processor.value.tileentity;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.world.World;
 import org.spongepowered.common.data.processor.common.AbstractSpongeValueProcessor;
@@ -70,7 +70,7 @@ public class MaxBurnTimeValueProcessor extends AbstractSpongeValueProcessor<Furn
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(Integer value) {
+    protected Immutable<Integer> constructImmutableValue(Integer value) {
         return SpongeValueFactory.boundedBuilder(Keys.MAX_BURN_TIME)
                 .minimum(0)
                 .maximum(Integer.MAX_VALUE)

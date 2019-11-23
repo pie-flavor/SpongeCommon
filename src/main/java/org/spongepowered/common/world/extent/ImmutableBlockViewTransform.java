@@ -24,11 +24,11 @@
  */
 package org.spongepowered.common.world.extent;
 
-import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.util.DiscreteTransform3;
-import org.spongepowered.api.world.extent.ImmutableBlockVolume;
 import org.spongepowered.api.world.extent.worker.BlockVolumeWorker;
+import org.spongepowered.api.world.volume.block.ImmutableBlockVolume;
 import org.spongepowered.common.world.extent.worker.SpongeBlockVolumeWorker;
+import org.spongepowered.math.vector.Vector3i;
 
 public class ImmutableBlockViewTransform extends AbstractBlockViewTransform<ImmutableBlockVolume> implements ImmutableBlockVolume {
 

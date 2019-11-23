@@ -26,17 +26,16 @@ package org.spongepowered.common.data.processor.common;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.DataManipulator.Mutable;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.value.MergeFunction;
+import org.spongepowered.api.data.value.Value;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.common.SpongeImpl;
 import org.spongepowered.common.data.ValueProcessor;
@@ -44,7 +43,7 @@ import org.spongepowered.common.data.util.DataUtil;
 
 import java.util.Optional;
 
-public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V extends BaseValue<T>, M extends DataManipulator<M, I>, I extends ImmutableDataManipulator<I, M>>
+public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V extends Value<T>, M extends Mutable<M, I>, I extends ImmutableDataManipulator<I, M>>
         extends AbstractSingleDataProcessor<T, V, M, I> implements ValueProcessor<T, V> {
 
     protected final Class<Holder> holderClass;
@@ -62,7 +61,7 @@ public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V exten
 
     protected abstract Optional<T> getVal(Holder dataHolder);
 
-    protected abstract ImmutableValue<T> constructImmutableValue(T value);
+    protected abstract Immutable<T> constructImmutableValue(T value);
 
     @SuppressWarnings("unchecked")
     @Override
@@ -83,18 +82,18 @@ public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V exten
             final Optional<M> old = from(dataHolder);
             final M merged = checkNotNull(function).merge(old.orElse(null), manipulator);
             final T newValue = merged.get(this.key).get();
-            final V immutableValue = (V) ((Value) merged.getValue(this.key).get()).asImmutable();
+            final V immutableValue = (V) ((org.spongepowered.api.data.value.Value.Mutable) merged.getValue(this.key).get()).asImmutable();
             try {
                 if (set((Holder) dataHolder, newValue)) {
                     if (old.isPresent()) {
                         builder.replace(old.get().getValues());
                     }
-                    return builder.result(DataTransactionResult.Type.SUCCESS).success((ImmutableValue<?>) immutableValue).build();
+                    return builder.result(DataTransactionResult.Type.SUCCESS).success((Immutable<?>) immutableValue).build();
                 }
-                return builder.result(DataTransactionResult.Type.FAILURE).reject((ImmutableValue<?>) immutableValue).build();
+                return builder.result(DataTransactionResult.Type.FAILURE).reject((Immutable<?>) immutableValue).build();
             } catch (Exception e) {
                 SpongeImpl.getLogger().debug("An exception occurred when setting data: ", e);
-                return builder.result(DataTransactionResult.Type.ERROR).reject((ImmutableValue<?>) immutableValue).build();
+                return builder.result(DataTransactionResult.Type.ERROR).reject((Immutable<?>) immutableValue).build();
             }
         }
         return DataTransactionResult.failResult(manipulator.getValues());
@@ -118,7 +117,7 @@ public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V exten
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<I> with(Key<? extends BaseValue<?>> key, Object value, I immutable) {
+    public Optional<I> with(Key<? extends Value<?>> key, Object value, I immutable) {
         if (immutable.supports(key)) {
             return Optional.of(immutable.asMutable().set(this.key, (T) value).asImmutable());
         }
@@ -179,7 +178,7 @@ public abstract class AbstractSingleDataSingleTargetProcessor<Holder, T, V exten
     @SuppressWarnings("unchecked")
     @Override
     public DataTransactionResult offerToStore(ValueContainer<?> container, T value) {
-        final ImmutableValue<T> newValue = constructImmutableValue(value);
+        final Immutable<T> newValue = constructImmutableValue(value);
         if (supports(container)) {
             final DataTransactionResult.Builder builder = DataTransactionResult.builder();
             final Optional<T> oldVal = getVal((Holder) container);

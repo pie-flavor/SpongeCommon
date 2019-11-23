@@ -30,8 +30,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableExpirableData;
 import org.spongepowered.api.data.manipulator.mutable.entity.ExpirableData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeExpirableData;
 import org.spongepowered.common.data.processor.common.AbstractEntitySingleDataProcessor;
@@ -70,7 +70,7 @@ public class EndermiteExpirableDataProcessor extends
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(final Integer value) {
+    protected Immutable<Integer> constructImmutableValue(final Integer value) {
         return constructValue(value).asImmutable();
     }
 

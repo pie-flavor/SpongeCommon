@@ -24,12 +24,12 @@
  */
 package org.spongepowered.common.data.manipulator.mutable.entity;
 
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableAgeableData;
 import org.spongepowered.api.data.manipulator.mutable.entity.AgeableData;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.value.Value.Mutable;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
-import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.common.data.manipulator.immutable.entity.ImmutableSpongeAgeableData;
 import org.spongepowered.common.data.manipulator.mutable.common.AbstractData;
 import org.spongepowered.common.util.Constants;
@@ -73,7 +73,7 @@ public class SpongeAgeableData extends AbstractData<AgeableData, ImmutableAgeabl
     }
 
     @Override
-    public Value<Boolean> adult() {
+    public Mutable<Boolean> adult() {
         return new SpongeValue<>(Keys.IS_ADULT, this.adult);
     }
 

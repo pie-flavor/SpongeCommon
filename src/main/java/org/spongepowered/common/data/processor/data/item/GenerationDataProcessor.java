@@ -31,8 +31,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.item.ImmutableGenerationData;
 import org.spongepowered.api.data.manipulator.mutable.item.GenerationData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.manipulator.mutable.item.SpongeGenerationData;
 import org.spongepowered.common.data.processor.common.AbstractItemSingleDataProcessor;
@@ -79,7 +79,7 @@ public final class GenerationDataProcessor
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(final Integer value) {
+    protected Immutable<Integer> constructImmutableValue(final Integer value) {
         return ImmutableSpongeValue.cachedOf(Keys.GENERATION, 0, value);
     }
 

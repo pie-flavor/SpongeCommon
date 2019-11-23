@@ -24,7 +24,6 @@
  */
 package org.spongepowered.common.event.tracking;
 
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
@@ -56,7 +55,6 @@ import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.gen.Populator;
 import org.spongepowered.common.SpongeImplHooks;
 import org.spongepowered.common.block.SpongeBlockSnapshot;
 import org.spongepowered.common.bridge.block.BlockEventDataBridge;
@@ -79,7 +77,7 @@ import org.spongepowered.common.mixin.core.world.chunk.ChunkMixin;
 import org.spongepowered.common.mixin.tracking.world.ChunkMixin_Tracker;
 import org.spongepowered.common.world.BlockChange;
 import org.spongepowered.common.world.SpongeBlockChangeFlag;
-
+import org.spongepowered.math.vector.Vector3i;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;

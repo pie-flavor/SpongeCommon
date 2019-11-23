@@ -28,8 +28,8 @@ import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.entity.ImmutableAngerableData;
 import org.spongepowered.api.data.manipulator.mutable.entity.AngerableData;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.manipulator.mutable.entity.SpongeAngerableData;
 import org.spongepowered.common.data.processor.common.AbstractSingleDataSingleTargetProcessor;
@@ -68,7 +68,7 @@ public class AngerableDataProcessor extends
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(final Integer value) {
+    protected Immutable<Integer> constructImmutableValue(final Integer value) {
         return new ImmutableSpongeValue<Integer>(Keys.ANGER, 0, value);
     }
 

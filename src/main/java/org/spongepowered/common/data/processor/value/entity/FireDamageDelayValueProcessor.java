@@ -29,8 +29,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import net.minecraft.entity.Entity;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.Value.Immutable;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.common.data.processor.common.AbstractSpongeValueProcessor;
 import org.spongepowered.common.data.value.SpongeValueFactory;
@@ -74,7 +74,7 @@ public class FireDamageDelayValueProcessor extends AbstractSpongeValueProcessor<
     }
 
     @Override
-    protected ImmutableValue<Integer> constructImmutableValue(Integer value) {
+    protected Immutable<Integer> constructImmutableValue(Integer value) {
         return constructValue(value).asImmutable();
     }
 }

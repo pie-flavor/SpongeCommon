@@ -28,12 +28,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.data.DataHolder;
-import org.spongepowered.api.data.manipulator.DataManipulator;
+import org.spongepowered.api.data.DataManipulator.Mutable;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 
 import java.util.function.Predicate;
 
-public abstract class AbstractItemDataProcessor<Manipulator extends DataManipulator<Manipulator, Immutable>,
+public abstract class AbstractItemDataProcessor<Manipulator extends Mutable<Manipulator, Immutable>,
     Immutable extends ImmutableDataManipulator<Immutable, Manipulator>>
     extends AbstractMultiDataSingleTargetProcessor<ItemStack, Manipulator, Immutable> {
 

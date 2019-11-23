@@ -30,8 +30,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.Property;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.bridge.world.WorldServerBridge;
@@ -89,7 +88,7 @@ public interface BlockBridge {
      * @param <E> The type of value, for type checking
      * @return The blockstate with the new value, if available and compatible
      */
-    <E> Optional<BlockState> bridge$getStateWithValue(net.minecraft.block.BlockState blockState, Key<? extends BaseValue<E>> key, E value);
+    <E> Optional<BlockState> bridge$getStateWithValue(net.minecraft.block.BlockState blockState, Key<? extends Value<E>> key, E value);
 
     /**
      * Again, another delegate method directly to the block, usually not all

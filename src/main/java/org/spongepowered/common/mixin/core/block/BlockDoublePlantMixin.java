@@ -34,7 +34,7 @@ import org.spongepowered.api.data.manipulator.immutable.block.ImmutablePortionDa
 import org.spongepowered.api.data.type.DoublePlantType;
 import org.spongepowered.api.data.type.PortionType;
 import org.spongepowered.api.data.type.PortionTypes;
-import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.common.data.ImmutableDataCachingUtil;
 import org.spongepowered.common.data.manipulator.immutable.block.ImmutableSpongeDoublePlantData;
@@ -72,7 +72,7 @@ public abstract class BlockDoublePlantMixin extends BlockMixin {
     }
 
     @Override
-    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends BaseValue<E>> key, final E value) {
+    public <E> Optional<BlockState> bridge$getStateWithValue(final net.minecraft.block.BlockState blockState, final Key<? extends Value<E>> key, final E value) {
         if (key.equals(Keys.DOUBLE_PLANT_TYPE)) {
             final DoublePlantBlock.EnumPlantType doublePlantType = (DoublePlantBlock.EnumPlantType) value;
             return Optional.of((BlockState) blockState.withProperty(DoublePlantBlock.VARIANT, doublePlantType));

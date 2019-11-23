@@ -37,8 +37,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.block.tileentity.TileEntityType;
+import org.spongepowered.api.block.entity.BlockEntityType;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -69,7 +68,7 @@ public class TimingHistory {
     final MinuteReport[] minuteReports;
 
     final TimingHistoryEntry[] entries;
-    final Set<TileEntityType> tileEntityTypeSet = Sets.newHashSet();
+    final Set<BlockEntityType> tileEntityTypeSet = Sets.newHashSet();
     final Set<EntityType> entityTypeSet = Sets.newHashSet();
     final JsonObject worlds;
 
@@ -164,7 +163,7 @@ public class TimingHistory {
         }
 
         final Map<EntityType, Counter> entityCounts = MRUMapCache.of(LoadingMap.of(Maps.newHashMap(), Counter.loader()));
-        final Map<TileEntityType, Counter> tileEntityCounts = MRUMapCache.of(LoadingMap.of(Maps.newHashMap(), Counter.loader()));
+        final Map<BlockEntityType, Counter> tileEntityCounts = MRUMapCache.of(LoadingMap.of(Maps.newHashMap(), Counter.loader()));
 
         @Override
         public int hashCode() {

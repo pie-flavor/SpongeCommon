@@ -27,8 +27,6 @@ package org.spongepowered.common.mixin.api.mcp.world;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.flowpowered.math.vector.Vector3d;
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -55,7 +53,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.ScheduledBlockUpdate;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.sound.SoundCategory;
 import org.spongepowered.api.effect.sound.SoundType;
@@ -67,9 +64,9 @@ import org.spongepowered.api.event.world.ExplosionEvent;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.ChunkRegenerateFlag;
-import org.spongepowered.api.world.PortalAgent;
-import org.spongepowered.api.world.gen.WorldGenerator;
+import org.spongepowered.api.world.gen.TerrainGenerator;
 import org.spongepowered.api.world.storage.WorldStorage;
+import org.spongepowered.api.world.teleport.PortalAgent;
 import org.spongepowered.api.world.weather.Weather;
 import org.spongepowered.api.world.weather.Weathers;
 import org.spongepowered.asm.mixin.Final;
@@ -106,7 +103,8 @@ import org.spongepowered.common.event.tracking.phase.plugin.PluginPhase;
 import org.spongepowered.common.util.NonNullArrayList;
 import org.spongepowered.common.world.SpongeBlockChangeFlag;
 import org.spongepowered.common.world.WorldManager;
-
+import org.spongepowered.math.vector.Vector3d;
+import org.spongepowered.math.vector.Vector3i;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -155,7 +153,7 @@ public abstract class WorldServerMixin_API extends WorldMixin_API {
     }
 
     @Override
-    public WorldGenerator getWorldGenerator() {
+    public TerrainGenerator getWorldGenerator() {
         return ((WorldServerBridge) this).bridge$getSpongeGenerator();
     }
 

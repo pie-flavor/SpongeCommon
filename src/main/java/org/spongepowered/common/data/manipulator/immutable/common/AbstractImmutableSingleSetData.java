@@ -27,25 +27,25 @@ package org.spongepowered.common.data.manipulator.immutable.common;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableSet;
+import org.spongepowered.api.data.DataManipulator.Mutable;
 import org.spongepowered.api.data.key.Key;
-import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
-import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableSetValue;
+import org.spongepowered.api.data.value.SetValue.Immutable;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.common.data.value.immutable.ImmutableSpongeSetValue;
 import org.spongepowered.common.util.ReflectionUtil;
 
 import java.lang.reflect.Modifier;
 import java.util.Set;
 
-public abstract class AbstractImmutableSingleSetData<E, I extends ImmutableDataManipulator<I, M>, M extends DataManipulator<M, I>>
+public abstract class AbstractImmutableSingleSetData<E, I extends ImmutableDataManipulator<I, M>, M extends Mutable<M, I>>
     extends AbstractImmutableSingleData<Set<E>, I, M> {
 
     private final Class<? extends M> mutableClass;
-    private final ImmutableSetValue<E> setValue;
+    private final Immutable<E> setValue;
 
     public AbstractImmutableSingleSetData(Class<I> manipulatorClass, Set<E> value,
-                                          Key<? extends BaseValue<Set<E>>> usedKey,
+                                          Key<? extends Value<Set<E>>> usedKey,
                                           Class<? extends M> mutableClass) {
         super(manipulatorClass, ImmutableSet.copyOf(value), usedKey);
         checkArgument(!Modifier.isAbstract(mutableClass.getModifiers()), "The immutable class cannot be abstract!");
@@ -55,7 +55,7 @@ public abstract class AbstractImmutableSingleSetData<E, I extends ImmutableDataM
     }
 
     @Override
-    protected ImmutableSetValue<E> getValueGetter() {
+    protected Immutable<E> getValueGetter() {
         return this.setValue;
     }
 
