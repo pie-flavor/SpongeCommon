@@ -68,7 +68,7 @@ public final class InteractAtEntityPacketState extends BasicPacketState {
     public boolean isPacketIgnored(IPacket<?> packetIn, ServerPlayerEntity packetPlayer) {
         final CUseEntityPacket useEntityPacket = (CUseEntityPacket) packetIn;
         // There are cases where a player is interacting with an entity that doesn't exist on the server.
-        @Nullable net.minecraft.entity.Entity entity = useEntityPacket.func_149564_a(packetPlayer.field_70170_p);
+        @Nullable net.minecraft.entity.Entity entity = useEntityPacket.func_149564_a(packetPlayer.world);
         return entity == null;
     }
 
@@ -93,16 +93,16 @@ public final class InteractAtEntityPacketState extends BasicPacketState {
         final ServerPlayerEntity player = context.getPacketPlayer();
 
         final CUseEntityPacket useEntityPacket = context.getPacket();
-        final net.minecraft.entity.Entity entity = useEntityPacket.func_149564_a(player.field_70170_p);
+        final net.minecraft.entity.Entity entity = useEntityPacket.func_149564_a(player.world);
         if (entity == null) {
             // Something happened?
             return;
         }
-        final World spongeWorld = (World) player.field_70170_p;
+        final World spongeWorld = (World) player.world;
         if (entity instanceof OwnershipTrackedBridge) {
             ((OwnershipTrackedBridge) entity).tracked$setOwnerReference((User) player);
         } else {
-            ((Entity) entity).setNotifier(player.func_110124_au());
+            ((Entity) entity).setNotifier(player.getUniqueID());
         }
 
 

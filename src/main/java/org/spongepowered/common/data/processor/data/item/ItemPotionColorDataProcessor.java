@@ -47,13 +47,13 @@ import java.util.Optional;
 public class ItemPotionColorDataProcessor extends AbstractItemSingleDataProcessor<Color, Value<Color>, PotionColorData, ImmutablePotionColorData> {
 
     public ItemPotionColorDataProcessor() {
-        super(itemStack -> itemStack.func_77973_b() == Items.field_151068_bn || itemStack.func_77973_b() == Items.field_185155_bH ||
-                itemStack.func_77973_b() == Items.field_185156_bI, Keys.POTION_COLOR);
+        super(itemStack -> itemStack.getItem() == Items.field_151068_bn || itemStack.getItem() == Items.field_185155_bH ||
+                itemStack.getItem() == Items.field_185156_bI, Keys.POTION_COLOR);
     }
 
     @Override
     protected boolean set(ItemStack dataHolder, Color value) {
-        if (!dataHolder.func_77942_o()) {
+        if (!dataHolder.hasTagCompound()) {
             dataHolder.func_77982_d(new CompoundNBT());
         }
 
@@ -64,7 +64,7 @@ public class ItemPotionColorDataProcessor extends AbstractItemSingleDataProcesso
 
     @Override
     protected Optional<Color> getVal(ItemStack dataHolder) {
-        return Optional.of(Color.ofRgb(PotionUtils.func_190932_c(dataHolder)));
+        return Optional.of(Color.ofRgb(PotionUtils.getColor(dataHolder)));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ItemPotionColorDataProcessor extends AbstractItemSingleDataProcesso
         }
 
         ItemStack itemStack = (ItemStack) container;
-        if (!itemStack.func_77942_o()) {
+        if (!itemStack.hasTagCompound()) {
             return DataTransactionResult.successNoData();
         }
 

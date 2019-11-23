@@ -61,7 +61,7 @@ public class FoodDataProcessor extends AbstractEntityDataProcessor<PlayerEntity,
 
     @Override
     protected boolean set(final PlayerEntity entity, final Map<Key<?>, Object> keyValues) {
-        entity.func_71024_bL().func_75114_a((Integer) keyValues.get(Keys.FOOD_LEVEL));
+        entity.func_71024_bL().setFoodLevel((Integer) keyValues.get(Keys.FOOD_LEVEL));
         ((FoodStatsAccessor) entity.func_71024_bL()).accessor$setFoodSaturationLevel(((Double) keyValues.get(Keys.SATURATION)).floatValue());
         ((FoodStatsAccessor) entity.func_71024_bL()).accessor$setFoodExhaustionLevel(((Double) keyValues.get(Keys.EXHAUSTION)).floatValue());
         return true;
@@ -69,8 +69,8 @@ public class FoodDataProcessor extends AbstractEntityDataProcessor<PlayerEntity,
 
     @Override
     protected Map<Key<?>, ?> getValues(final PlayerEntity entity) {
-        final int food = entity.func_71024_bL().func_75116_a();
-        final double saturation = entity.func_71024_bL().func_75115_e();
+        final int food = entity.func_71024_bL().getFoodLevel();
+        final double saturation = entity.func_71024_bL().getSaturationLevel();
         final double exhaustion = ((FoodStatsAccessor) entity.func_71024_bL()).accessor$getFoodExhaustionLevel();
         return ImmutableMap.<Key<?>, Object>of(Keys.FOOD_LEVEL, food,
                                                Keys.SATURATION, saturation,

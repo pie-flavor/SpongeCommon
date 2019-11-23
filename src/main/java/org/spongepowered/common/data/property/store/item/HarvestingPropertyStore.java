@@ -44,7 +44,7 @@ public class HarvestingPropertyStore extends AbstractItemStackPropertyStore<Harv
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Optional<HarvestingProperty> getFor(ItemStack itemStack) {
-        final Item item = itemStack.func_77973_b();
+        final Item item = itemStack.getItem();
         if (item instanceof ItemToolAccessor && !(item instanceof PickaxeItem)) {
             final ImmutableSet<BlockType> blocks = ImmutableSet.copyOf((Set) ((ItemToolAccessor) item).accessor$getEffectiveBlocks());
             return Optional.of(new HarvestingProperty(blocks));

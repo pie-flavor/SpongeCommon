@@ -248,15 +248,15 @@ class EntityTickPhaseState extends TickPhaseState<EntityTickContext> {
             final Entity tickingEntity = context.getSource(Entity.class).get();
             final BlockPos blockPos = VecHelper.toBlockPos(transaction.getOriginal().getPosition());
             final List<HangingEntity> hangingEntities = ((ServerWorld) tickingEntity.getWorld())
-                .func_175647_a(HangingEntity.class, new AxisAlignedBB(blockPos, blockPos).func_72314_b(1.1D, 1.1D, 1.1D),
+                .getEntitiesWithinAABB(HangingEntity.class, new AxisAlignedBB(blockPos, blockPos).grow(1.1D, 1.1D, 1.1D),
                     entityIn -> {
                         if (entityIn == null) {
                             return false;
                         }
 
-                        final BlockPos entityPos = entityIn.func_180425_c();
+                        final BlockPos entityPos = entityIn.getPosition();
                         // Hanging Neighbor Entity
-                        if (entityPos.equals(blockPos.func_177982_a(0, 1, 0))) {
+                        if (entityPos.equals(blockPos.add(0, 1, 0))) {
                             return true;
                         }
 
@@ -264,23 +264,23 @@ class EntityTickPhaseState extends TickPhaseState<EntityTickContext> {
                         final Direction entityFacing = entityIn.func_174811_aO();
 
                         if (entityFacing == Direction.NORTH) {
-                            return entityPos.equals(blockPos.func_177971_a(Constants.Entity.HANGING_OFFSET_NORTH));
+                            return entityPos.equals(blockPos.add(Constants.Entity.HANGING_OFFSET_NORTH));
                         } else if (entityFacing == Direction.SOUTH) {
-                            return entityIn.func_180425_c().equals(blockPos.func_177971_a(Constants.Entity.HANGING_OFFSET_SOUTH));
+                            return entityIn.getPosition().equals(blockPos.add(Constants.Entity.HANGING_OFFSET_SOUTH));
                         } else if (entityFacing == Direction.WEST) {
-                            return entityIn.func_180425_c().equals(blockPos.func_177971_a(Constants.Entity.HANGING_OFFSET_WEST));
+                            return entityIn.getPosition().equals(blockPos.add(Constants.Entity.HANGING_OFFSET_WEST));
                         } else if (entityFacing == Direction.EAST) {
-                            return entityIn.func_180425_c().equals(blockPos.func_177971_a(Constants.Entity.HANGING_OFFSET_EAST));
+                            return entityIn.getPosition().equals(blockPos.add(Constants.Entity.HANGING_OFFSET_EAST));
                         }
                         return false;
                     });
             for (final HangingEntity entityHanging : hangingEntities) {
                 if (entityHanging instanceof ItemFrameEntity) {
                     final ItemFrameEntity itemFrame = (ItemFrameEntity) entityHanging;
-                    if (!itemFrame.field_70128_L) {
+                    if (!itemFrame.removed) {
                         itemFrame.func_146065_b((net.minecraft.entity.Entity) tickingEntity, true);
                     }
-                    itemFrame.func_70106_y();
+                    itemFrame.setDead();
                 }
             }
         }

@@ -134,11 +134,11 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
         this.genpop = Lists.newArrayList();
         this.pop = Lists.newArrayList();
         this.biomeSettings = Maps.newHashMap();
-        this.rand = new Random(world.func_72905_C());
+        this.rand = new Random(world.getSeed());
         this.noise4 = new PerlinNoiseGenerator(this.rand, 4);
         this.stoneNoise = new double[256];
 
-        ((WorldProviderAccessor) this.world.field_73011_w).accessor$setBiomeProvider(CustomBiomeProvider.of(this.biomeGenerator));
+        ((WorldProviderAccessor) this.world.dimension).accessor$setBiomeProvider(CustomBiomeProvider.of(this.biomeGenerator));
         if (this.baseGenerator instanceof ChunkGeneratorOverworldBridge) {
             ((ChunkGeneratorOverworldBridge) this.baseGenerator).bridge$setBiomeGenerator(this.biomeGenerator);
         }
@@ -203,7 +203,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
     @Override
     public void setBiomeGenerator(BiomeGenerator biomeGenerator) {
         this.biomeGenerator = biomeGenerator;
-        ((WorldProviderAccessor) this.world.field_73011_w).accessor$setBiomeProvider(CustomBiomeProvider.of(biomeGenerator));
+        ((WorldProviderAccessor) this.world.dimension).accessor$setBiomeProvider(CustomBiomeProvider.of(biomeGenerator));
         if (this.baseGenerator instanceof ChunkGeneratorOverworldBridge) {
             ((ChunkGeneratorOverworldBridge) this.baseGenerator).bridge$setBiomeGenerator(biomeGenerator);
         }
@@ -284,9 +284,9 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
             ((ChunkBridge) chunk).bridge$fill(chunkprimer);
         } else {
             chunk = new Chunk(this.world, chunkprimer, chunkX, chunkZ);
-            this.cachedBiomes.fill(chunk.func_76605_m());
+            this.cachedBiomes.fill(chunk.getBiomeArray());
         }
-        chunk.func_76603_b();
+        chunk.generateSkylightMap();
         return chunk;
     }
 
@@ -296,10 +296,10 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
         world.bridge$getTimingsHandler().chunkPopulate.startTimingIfSync();
         this.chunkGeneratorTiming.startTimingIfSync();
         final PhaseTracker phaseTracker = PhaseTracker.getInstance();
-        this.rand.setSeed(this.world.func_72905_C());
+        this.rand.setSeed(this.world.getSeed());
         long i1 = this.rand.nextLong() / 2L * 2L + 1L;
         long j1 = this.rand.nextLong() / 2L * 2L + 1L;
-        this.rand.setSeed(chunkX * i1 + chunkZ * j1 ^ this.world.func_72905_C());
+        this.rand.setSeed(chunkX * i1 + chunkZ * j1 ^ this.world.getSeed());
         FallingBlock.field_149832_M = true;
 
         // Have to regeneate the biomes so that any virtual biomes can be passed
@@ -309,9 +309,9 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
         ImmutableBiomeVolume biomeBuffer = this.cachedBiomes.getImmutableBiomeCopy();
 
         BlockPos blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-        BiomeType biome = (BiomeType) this.world.func_180494_b(blockpos.func_177982_a(16, 0, 16));
+        BiomeType biome = (BiomeType) this.world.getBiome(blockpos.add(16, 0, 16));
 
-        org.spongepowered.api.world.Chunk chunk = (org.spongepowered.api.world.Chunk) this.world.func_72964_e(chunkX, chunkZ);
+        org.spongepowered.api.world.Chunk chunk = (org.spongepowered.api.world.Chunk) this.world.getChunk(chunkX, chunkZ);
 
         BiomeGenerationSettings settings = getBiomeSettings(biome);
 
@@ -400,7 +400,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
     @SuppressWarnings("try")
     public boolean func_185933_a(Chunk chunk, int chunkX, int chunkZ) {
         boolean flag = false;
-        if (chunk.func_177416_w() < 3600L) {
+        if (chunk.getInhabitedTime() < 3600L) {
             for (Populator populator : this.pop) {
                 if (populator instanceof OceanMonumentStructure) {
                     try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame();
@@ -426,7 +426,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
             return ((SpongeGenerationPopulator) this.baseGenerator).getChunkGenerator().func_177458_a(creatureType, pos);
         }
 
-        Biome biome = this.world.func_180494_b(pos);
+        Biome biome = this.world.getBiome(pos);
         return biome.func_76747_a(creatureType);
     }
 
@@ -521,7 +521,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
 
     @Override
     public void func_180514_a(Chunk chunkIn, int x, int z) {
-        if (!this.world.func_72912_H().func_76089_r()) {
+        if (!this.world.getWorldInfo().isMapFeaturesEnabled()) {
             return;
         }
 
@@ -535,7 +535,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
 
         for (GenerationPopulator populator : this.genpop) {
             if (populator instanceof Structure) {
-                ((Structure) populator).func_186125_a(chunkIn.func_177412_p(), x, z, null);
+                ((Structure) populator).generate(chunkIn.getWorld(), x, z, null);
             }
         }
     }
@@ -558,7 +558,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
         if (groundcover.isEmpty()) {
             return;
         }
-        int seaLevel = worldIn.func_181545_F();
+        int seaLevel = worldIn.getSeaLevel();
         BlockState currentPlacement = null;
         int layerProgress = -1;
         int relativeX = x & 15;
@@ -566,7 +566,7 @@ public class SpongeChunkGenerator implements WorldGenerator, ChunkGenerator {
         int layerDepth = 0;
         for (int currentY = 255; currentY >= 0; --currentY) {
             BlockState nextBlock = chunk.func_177856_a(relativeX, currentY, relativeZ);
-            if (nextBlock.func_185904_a() == Material.field_151579_a) {
+            if (nextBlock.getMaterial() == Material.AIR) {
                 layerProgress = -1;
             } else if (nextBlock.func_177230_c() == Blocks.field_150348_b) {
                 if (layerProgress == -1) {

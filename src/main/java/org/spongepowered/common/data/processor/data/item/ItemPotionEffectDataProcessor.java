@@ -51,13 +51,13 @@ import java.util.Optional;
 public class ItemPotionEffectDataProcessor extends AbstractItemSingleDataProcessor<List<PotionEffect>, ListValue<PotionEffect>, PotionEffectData, ImmutablePotionEffectData> {
 
     public ItemPotionEffectDataProcessor() {
-        super(itemStack -> itemStack.func_77973_b() == Items.field_151068_bn || itemStack.func_77973_b() == Items.field_185155_bH ||
-                itemStack.func_77973_b() == Items.field_185156_bI || itemStack.func_77973_b() == Items.field_185167_i, Keys.POTION_EFFECTS);
+        super(itemStack -> itemStack.getItem() == Items.field_151068_bn || itemStack.getItem() == Items.field_185155_bH ||
+                itemStack.getItem() == Items.field_185156_bI || itemStack.getItem() == Items.field_185167_i, Keys.POTION_EFFECTS);
     }
 
     @Override
     protected boolean set(ItemStack dataHolder, List<PotionEffect> value) {
-        if (!dataHolder.func_77942_o()) {
+        if (!dataHolder.hasTagCompound()) {
             dataHolder.func_77982_d(new CompoundNBT());
         }
         final CompoundNBT mainCompound = dataHolder.func_77978_p();
@@ -74,7 +74,7 @@ public class ItemPotionEffectDataProcessor extends AbstractItemSingleDataProcess
     @SuppressWarnings("unchecked")
     @Override
     protected Optional<List<PotionEffect>> getVal(ItemStack dataHolder) {
-        final List<net.minecraft.potion.EffectInstance> effects = PotionUtils.func_185189_a(dataHolder);
+        final List<net.minecraft.potion.EffectInstance> effects = PotionUtils.getEffectsFromStack(dataHolder);
         if (effects.isEmpty()) {
             return Optional.empty();
         }
@@ -102,13 +102,13 @@ public class ItemPotionEffectDataProcessor extends AbstractItemSingleDataProcess
             return DataTransactionResult.failNoData();
         }
         ItemStack itemStack = (ItemStack) container;
-        Item item = itemStack.func_77973_b();
+        Item item = itemStack.getItem();
         if (item != Items.field_151068_bn) {
             return DataTransactionResult.failNoData();
         }
 
         Optional<List<PotionEffect>> currentEffects = getVal(itemStack);
-        if (!itemStack.func_77942_o()) {
+        if (!itemStack.hasTagCompound()) {
             itemStack.func_77982_d(new CompoundNBT());
         }
 

@@ -93,7 +93,7 @@ public abstract class SlotCraftingMixin extends Slot {
 
     @Inject(method = "onTake", at = @At("HEAD"))
     private void beforeTake(final PlayerEntity thePlayer, final ItemStack stack, final CallbackInfoReturnable<ItemStack> cir) {
-        this.impl$lastRecipe = ((CraftingRecipe) CraftingManager.func_192413_b(this.craftMatrix, thePlayer.field_70170_p));
+        this.impl$lastRecipe = ((CraftingRecipe) CraftingManager.func_192413_b(this.craftMatrix, thePlayer.world));
         if (((ContainerBridge) thePlayer.field_71070_bA).bridge$isShiftCrafting()) {
             ((ContainerBridge) thePlayer.field_71070_bA).bridge$detectAndSendChanges(true);
             ((ContainerBridge) thePlayer.field_71070_bA).bridge$setShiftCrafting(false);
@@ -102,21 +102,21 @@ public abstract class SlotCraftingMixin extends Slot {
 
         // When shift-crafting the crafted item was reduced to quantity 0
         // Grow the stack to copy it
-        stack.func_190917_f(1);
-        this.impl$craftedStack = stack.func_77946_l();
+        stack.grow(1);
+        this.impl$craftedStack = stack.copy();
         // set the correct amount
         if (this.amountCrafted != 0) {
             this.impl$craftedStackQuantity = this.amountCrafted;
         }
-        this.impl$craftedStack.func_190920_e(this.impl$craftedStackQuantity);
+        this.impl$craftedStack.setCount(this.impl$craftedStackQuantity);
         // shrink the stack back so we do not modify the return value
-        stack.func_190918_g(1);
+        stack.shrink(1);
     }
 
     @Redirect(method = "onTake", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/crafting/CraftingManager;getRemainingItems(Lnet/minecraft/inventory/InventoryCrafting;Lnet/minecraft/world/World;)Lnet/minecraft/util/NonNullList;"))
     private NonNullList<ItemStack> onGetRemainingItems(final net.minecraft.inventory.CraftingInventory craftMatrix, final net.minecraft.world.World worldIn) {
         if (this.impl$lastRecipe == null) {
-            return NonNullList.func_191197_a(craftMatrix.func_70302_i_(), ItemStack.field_190927_a);
+            return NonNullList.withSize(craftMatrix.getSizeInventory(), ItemStack.EMPTY);
         }
         return CraftingManager.func_180303_b(craftMatrix, worldIn);
     }
@@ -128,7 +128,7 @@ public abstract class SlotCraftingMixin extends Slot {
      */
     @Inject(method = "onTake", cancellable = true, at = @At("RETURN"))
     private void afterTake(final PlayerEntity thePlayer, final ItemStack stack, final CallbackInfoReturnable<ItemStack> cir) {
-        if (((WorldBridge) thePlayer.field_70170_p).bridge$isFake()) {
+        if (((WorldBridge) thePlayer.world).bridge$isFake()) {
             return;
         }
         ((ContainerBridge) thePlayer.field_71070_bA).bridge$detectAndSendChanges(true);
@@ -174,7 +174,7 @@ public abstract class SlotCraftingMixin extends Slot {
         this.impl$craftedStack = null;
 
         final List<SlotTransaction> previewTransactions = ((ContainerBridge) container).bridge$getPreviewTransactions();
-        if (this.craftMatrix.func_191420_l()) {
+        if (this.craftMatrix.isEmpty()) {
             return; // CraftMatrix is empty and/or no transaction present. Do not fire Preview.
         }
 
@@ -186,7 +186,7 @@ public abstract class SlotCraftingMixin extends Slot {
             last = previewTransactions.get(0);
         }
 
-        final CraftingRecipe newRecipe = (CraftingRecipe) CraftingManager.func_192413_b(this.craftMatrix, thePlayer.field_70170_p);
+        final CraftingRecipe newRecipe = (CraftingRecipe) CraftingManager.func_192413_b(this.craftMatrix, thePlayer.world);
 
         SpongeCommonEventFactory.callCraftEventPre(thePlayer, craftingInventory, last, newRecipe, container, previewTransactions);
         previewTransactions.clear();

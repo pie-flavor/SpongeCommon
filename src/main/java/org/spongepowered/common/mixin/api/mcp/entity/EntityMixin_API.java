@@ -220,7 +220,7 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
             final boolean previous = chunkProviderServer.bridge$getForceChunkRequests();
             chunkProviderServer.bridge$setForceChunkRequests(true);
             try {
-                final List<net.minecraft.entity.Entity> passengers = ((Entity) (Object) this).func_184188_bt();
+                final List<net.minecraft.entity.Entity> passengers = ((Entity) (Object) this).getPassengers();
 
                 boolean isTeleporting = true;
                 boolean isChangingDimension = false;
@@ -262,8 +262,8 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
                             .func_186028_c(location.getChunkPosition().getX(), location.getChunkPosition().getZ());
                     }
                     player.field_71135_a
-                        .func_147364_a(location.getX(), location.getY(), location.getZ(), ((Entity) (Object) this).field_70177_z,
-                            ((Entity) (Object) this).field_70125_A);
+                        .func_147364_a(location.getX(), location.getY(), location.getZ(), ((Entity) (Object) this).rotationYaw,
+                            ((Entity) (Object) this).rotationPitch);
                     ((NetHandlerPlayServerBridge) player.field_71135_a).bridge$setLastMoveLocation(null); // Set last move to teleport target
                 } else {
                     setPosition(location.getPosition().getX(), location.getPosition().getY(), location.getPosition().getZ());
@@ -272,10 +272,10 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
                 if (isTeleporting || isChangingDimension) {
                     // Re-attach passengers
                     for (net.minecraft.entity.Entity passenger : passengers) {
-                        if (((World) passenger.func_130014_f_()).getUniqueId() != ((World) this.world).getUniqueId()) {
+                        if (((World) passenger.getEntityWorld()).getUniqueId() != ((World) this.world).getUniqueId()) {
                             ((org.spongepowered.api.entity.Entity) passenger).setLocation(location);
                         }
-                        passenger.func_184205_a((Entity) (Object) this, true);
+                        passenger.startRiding((Entity) (Object) this, true);
                     }
                 }
                 return true;
@@ -406,7 +406,7 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
             ((ServerPlayerEntity) (Entity) (Object) this).field_71135_a.func_175089_a(getPosition().getX(), getPosition().getY(),
                 getPosition().getZ(), (float) rotation.getY(), (float) rotation.getX(), (Set) EnumSet.noneOf(RelativePositions.class));
         } else {
-            if (!this.world.field_72995_K) { // We can't set the rotation update on client worlds.
+            if (!this.world.isRemote) { // We can't set the rotation update on client worlds.
                 ((WorldServerBridge) getWorld()).bridge$addEntityRotationUpdate((Entity) (Object) this, rotation);
             }
 
@@ -499,7 +499,7 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
             throw new IllegalArgumentException(String.format("Cannot add entity %s as a passenger of %s, because the former already has the latter as a passenger!", entity, this));
         }
 
-        return ((net.minecraft.entity.Entity) entity).func_184205_a((net.minecraft.entity.Entity) (Object) this, true);
+        return ((net.minecraft.entity.Entity) entity).startRiding((net.minecraft.entity.Entity) (Object) this, true);
     }
 
     @Override
@@ -509,7 +509,7 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
             throw new IllegalArgumentException(String.format("Cannot remove entity %s, because it is not a passenger of %s ", entity, this));
         }
 
-        ((net.minecraft.entity.Entity) entity).func_184210_p();
+        ((net.minecraft.entity.Entity) entity).dismountRidingEntity();
     }
 
     @Override
@@ -597,8 +597,8 @@ public abstract class EntityMixin_API implements org.spongepowered.api.entity.En
         try {
             final CompoundNBT compound = new CompoundNBT();
             writeToNBT(compound);
-            final Entity entity = EntityList.func_188429_b(new ResourceLocation(this.entityType.getId()), this.world);
-            compound.func_186854_a(Constants.UUID, entity.func_110124_au());
+            final Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(this.entityType.getId()), this.world);
+            compound.func_186854_a(Constants.UUID, entity.getUniqueID());
             entity.func_70020_e(compound);
             return (org.spongepowered.api.entity.Entity) entity;
         } catch (final Exception e) {

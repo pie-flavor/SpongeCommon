@@ -87,11 +87,11 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
             return Optional.empty();
         } else if (holder instanceof ItemStack) {
             final ItemStack stack = (ItemStack) holder;
-            if (!stack.func_82837_s()) {
+            if (!stack.hasDisplayName()) {
                 return Optional.empty();
             }
 
-            if (stack.func_77973_b() == Items.field_151164_bB) {
+            if (stack.getItem() == Items.field_151164_bB) {
                 final CompoundNBT compound = stack.func_77978_p();
                 if (compound == null) {
                     return Optional.empty(); // The book wasn't initialized.
@@ -142,10 +142,10 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
                 ((EntityBridge) holder).bridge$setDisplayName(newValue);
             } else {
                 final ItemStack stack = (ItemStack) holder;
-                if (stack.func_77973_b() == Items.field_151164_bB) {
-                    stack.func_77983_a(Constants.Item.Book.ITEM_BOOK_TITLE, new StringNBT(SpongeTexts.toLegacy(newValue)));
+                if (stack.getItem() == Items.field_151164_bB) {
+                    stack.setTagInfo(Constants.Item.Book.ITEM_BOOK_TITLE, new StringNBT(SpongeTexts.toLegacy(newValue)));
                 } else {
-                    stack.func_151001_c(SpongeTexts.toLegacy(newValue));
+                    stack.setStackDisplayName(SpongeTexts.toLegacy(newValue));
                 }
             }
         } catch (final Exception e) {
@@ -187,7 +187,7 @@ public class DisplayNameDataProcessor extends AbstractSingleDataProcessor<Text, 
             final Optional<DisplayNameData> optional = this.from(holder);
             if (optional.isPresent()) {
                 try {
-                    ((ItemStack) holder).func_135074_t();
+                    ((ItemStack) holder).clearCustomName();
                     return builder.replace(optional.get().getValues()).result(DataTransactionResult.Type.SUCCESS).build();
                 } catch (final Exception e) {
                     SpongeImpl.getLogger().error("There was an issue removing the display name from an ItemStack!", e);

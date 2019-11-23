@@ -52,20 +52,20 @@ public class BeaconSecondaryEffectValueProcessor
 
     @Override
     protected boolean set(BeaconTileEntity container, Optional<PotionEffectType> value) {
-        if (container.func_174887_a_(0) != 4) {
+        if (container.getField(0) != 4) {
             return false;
         }
         ((TileEntityBeaconBridge) container).bridge$forceSetSecondaryEffect((Effect) value.orElse(null));
-        container.func_70296_d();
+        container.markDirty();
         return true;
     }
 
     @Override
     protected Optional<Optional<PotionEffectType>> getVal(BeaconTileEntity container) {
-        if (container.func_174887_a_(0) != 4) {
+        if (container.getField(0) != 4) {
             return Optional.of(Optional.empty());
         }
-        int id = container.func_174887_a_(2);
+        int id = container.getField(2);
         if (id > 0) {
             return Optional.of(Optional.of((PotionEffectType) Effect.func_188412_a(id)));
         }

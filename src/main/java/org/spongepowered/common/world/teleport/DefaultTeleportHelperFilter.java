@@ -40,7 +40,7 @@ import java.util.Set;
 public class DefaultTeleportHelperFilter implements TeleportHelperFilter {
 
     // Materials it is NOT safe to put players on top of.
-    private static final Set<Material> NOT_SAFE_FLOOR = ImmutableSet.of(Material.field_151579_a, Material.field_151570_A, Material.field_151581_o, Material.field_151587_i);
+    private static final Set<Material> NOT_SAFE_FLOOR = ImmutableSet.of(Material.AIR, Material.CACTUS, Material.FIRE, Material.LAVA);
 
     @Override
     public String getId() {
@@ -54,20 +54,20 @@ public class DefaultTeleportHelperFilter implements TeleportHelperFilter {
 
     @Override
     public boolean isSafeFloorMaterial(BlockState blockState) {
-        return !NOT_SAFE_FLOOR.contains(((net.minecraft.block.BlockState) blockState).func_185904_a());
+        return !NOT_SAFE_FLOOR.contains(((net.minecraft.block.BlockState) blockState).getMaterial());
     }
 
     @Override
     public boolean isSafeBodyMaterial(BlockState blockState) {
         net.minecraft.block.BlockState state = (net.minecraft.block.BlockState) blockState;
-        Material material = state.func_185904_a();
+        Material material = state.getMaterial();
 
         // Deny blocks that suffocate
-        if (state.func_191058_s()) {
+        if (state.causesSuffocation()) {
             return false;
         }
         // Deny dangerous lava
-        if (material == Material.field_151587_i) {
+        if (material == Material.LAVA) {
             return false;
         }
 
@@ -80,7 +80,7 @@ public class DefaultTeleportHelperFilter implements TeleportHelperFilter {
                  state.func_177230_c() instanceof FenceBlock ||
                  state.func_177230_c() instanceof ChorusPlantBlock ||
                  state.func_177230_c() instanceof SnowBlock ||
-                 material == Material.field_151592_s ||
-                 material == Material.field_151584_j);
+                 material == Material.GLASS ||
+                 material == Material.LEAVES);
     }
 }

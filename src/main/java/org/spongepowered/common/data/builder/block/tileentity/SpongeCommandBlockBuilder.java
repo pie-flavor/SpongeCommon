@@ -46,7 +46,7 @@ public class SpongeCommandBlockBuilder extends AbstractTileBuilder<CommandBlock>
         return super.buildContent(container).flatMap(commandBlock -> {
             if (!container.contains(
                 Constants.TileEntity.CommandBlock.STORED_COMMAND, Constants.TileEntity.CommandBlock.SUCCESS_COUNT, Constants.TileEntity.CommandBlock.DOES_TRACK_OUTPUT)) {
-                ((TileEntity) commandBlock).func_145843_s();
+                ((TileEntity) commandBlock).invalidate();
                 return Optional.empty();
             }
             final CommandBlockLogic cmdBlockLogic = ((CommandBlockTileEntity) commandBlock).func_145993_a();
@@ -57,7 +57,7 @@ public class SpongeCommandBlockBuilder extends AbstractTileBuilder<CommandBlock>
                 cmdBlockLogic.func_145750_b(SpongeTexts.toComponent(SpongeTexts.fromLegacy(
                         container.getString(Constants.TileEntity.CommandBlock.TRACKED_OUTPUT).get())));
             }
-            ((CommandBlockTileEntity)commandBlock).func_145829_t();
+            ((CommandBlockTileEntity)commandBlock).validate();
             return Optional.of(commandBlock);
         });
     }

@@ -66,7 +66,7 @@ public final class SpongeBlockStatistic extends StatCrafting implements BlockSta
 
     @Override
     public String getName() {
-        return func_150951_e().func_150260_c();
+        return func_150951_e().getUnformattedText();
     }
 
     @Override

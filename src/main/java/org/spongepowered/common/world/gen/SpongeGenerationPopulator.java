@@ -123,13 +123,13 @@ public final class SpongeGenerationPopulator implements GenerationPopulator, Tim
         final int zInChunkEnd = Math.min(15, maxBound.getZ() - zOffset);
 
         // Copy the right blocks in
-        final ExtendedBlockStorage[] blockStorage = chunk.func_76587_i();
+        final ExtendedBlockStorage[] blockStorage = chunk.getBlockStorageArray();
         for (final ExtendedBlockStorage miniChunk : blockStorage) {
             if (miniChunk == null) {
                 continue;
             }
 
-            final int yOffset = miniChunk.func_76662_d();
+            final int yOffset = miniChunk.getYLocation();
             final int yInChunkStart = Math.max(0, yStart);
             final int yInChunkEnd = Math.min(15, yEnd);
             for (int xInChunk = xInChunkStart; xInChunk <= xInChunkEnd; xInChunk++) {

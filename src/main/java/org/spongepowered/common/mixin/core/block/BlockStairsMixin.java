@@ -115,10 +115,10 @@ public abstract class BlockStairsMixin extends BlockMixin {
 
     @SuppressWarnings("ConstantConditions")
     private PortionType impl$convertType(final StairsBlock.EnumHalf type) {
-        return (PortionType) (Object) SlabBlock.EnumBlockHalf.valueOf(type.func_176610_l().toUpperCase());
+        return (PortionType) (Object) SlabBlock.EnumBlockHalf.valueOf(type.getName().toUpperCase());
     }
 
     private StairsBlock.EnumHalf impl$convertType(final SlabBlock.EnumBlockHalf type) {
-        return StairsBlock.EnumHalf.valueOf(type.func_176610_l().toUpperCase());
+        return StairsBlock.EnumHalf.valueOf(type.getName().toUpperCase());
     }
 }

@@ -229,13 +229,13 @@ public final class LegacyTexts {
                         if (current != null) {
                             if (reset) {
                                 parsed.add(current);
-                                current.func_150256_b().func_150221_a(component.func_150256_b());
+                                current.getStyle().setParentStyle(component.getStyle());
                                 reset = false;
                                 current = new StringTextComponent("");
                             } else {
                                 final StringTextComponent old = current;
                                 current = new StringTextComponent("");
-                                current.func_150257_a(old);
+                                current.appendSibling(old);
                             }
                         } else {
                             current = new StringTextComponent("");
@@ -246,7 +246,7 @@ public final class LegacyTexts {
                         current = new StringTextComponent("");
                     }
 
-                    reset |= applyStyle(current.func_150256_b(), format);
+                    reset |= applyStyle(current.getStyle(), format);
                     pos = next;
                 }
 
@@ -255,34 +255,34 @@ public final class LegacyTexts {
 
             if (current != null) {
                 parsed.add(current);
-                current.func_150256_b().func_150221_a(component.func_150256_b());
+                current.getStyle().setParentStyle(component.getStyle());
             }
 
             Collections.reverse(parsed);
             text = pos > 0 ? text.substring(0, pos) : "";
-            if (component.func_150253_a().isEmpty()) {
+            if (component.getSiblings().isEmpty()) {
                 final StringTextComponent newComponent = new StringTextComponent(text);
-                newComponent.func_150253_a().addAll(parsed);
-                newComponent.func_150255_a(component.func_150256_b());
+                newComponent.getSiblings().addAll(parsed);
+                newComponent.setStyle(component.getStyle());
                 return newComponent;
             }
-        } else if (component.func_150253_a().isEmpty()) {
+        } else if (component.getSiblings().isEmpty()) {
             return component;
         }
 
         final StringTextComponent newComponent = new StringTextComponent(text);
         if (parsed != null) {
-            newComponent.func_150253_a().addAll(parsed);
+            newComponent.getSiblings().addAll(parsed);
         }
 
-        newComponent.func_150255_a(component.func_150256_b());
-        for (ITextComponent child : component.func_150253_a()) {
+        newComponent.setStyle(component.getStyle());
+        for (ITextComponent child : component.getSiblings()) {
             if (child instanceof StringTextComponent) {
                 child = parseComponent((StringTextComponent) child, code);
             } else {
-                child = child.func_150259_f();
+                child = child.createCopy();
             }
-            newComponent.func_150257_a(child);
+            newComponent.appendSibling(child);
         }
 
         return newComponent;

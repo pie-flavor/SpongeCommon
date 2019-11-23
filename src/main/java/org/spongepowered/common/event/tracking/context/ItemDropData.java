@@ -255,7 +255,7 @@ public class ItemDropData {
             Random random;
 
             Builder(PlayerEntity player) {
-                this.playerName = player.func_70005_c_();
+                this.playerName = player.getName();
                 this.random = ((org.spongepowered.api.entity.Entity) player).getRandom();
             }
 

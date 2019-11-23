@@ -57,17 +57,17 @@ public class ItemDisplayNameValueProcessor extends AbstractSpongeValueProcessor<
     @Override
     protected boolean set(final ItemStack container, final Text value) {
         final String legacy = SpongeTexts.toLegacy(value);
-        if (container.func_77973_b() == Items.field_151164_bB) {
-            container.func_77983_a(Constants.Item.Book.ITEM_BOOK_TITLE, new StringNBT(legacy));
+        if (container.getItem() == Items.field_151164_bB) {
+            container.setTagInfo(Constants.Item.Book.ITEM_BOOK_TITLE, new StringNBT(legacy));
         } else {
-            container.func_151001_c(legacy);
+            container.setStackDisplayName(legacy);
         }
         return true;
     }
 
     @Override
     protected Optional<Text> getVal(final ItemStack container) {
-        if (container.func_77973_b() == Items.field_151164_bB) {
+        if (container.getItem() == Items.field_151164_bB) {
             final CompoundNBT mainCompound = container.func_77978_p();
             if (mainCompound == null) {
                 return Optional.empty(); // Basically, this book wasn't initialized properly.
@@ -95,7 +95,7 @@ public class ItemDisplayNameValueProcessor extends AbstractSpongeValueProcessor<
             final Optional<Text> optional = getValueFromContainer(container);
             if (optional.isPresent()) {
                 try {
-                    ((ItemStack) container).func_135074_t();
+                    ((ItemStack) container).clearCustomName();
                     return builder.replace(new ImmutableSpongeValue<>(Keys.DISPLAY_NAME, optional.get())).result(DataTransactionResult.Type.SUCCESS).build();
                 } catch (final Exception e) {
                     SpongeImpl.getLogger().error("There was an issue removing the displayname from an itemstack!", e);

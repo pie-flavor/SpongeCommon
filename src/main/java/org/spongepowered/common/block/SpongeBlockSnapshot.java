@@ -193,10 +193,10 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
 //            if (current.getBlock().getClass() == BlockShulkerBox.class) {
 //                world.bridge$removeTileEntity(pos);
 //            }
-            world.func_175713_t(pos);
+            world.removeTileEntity(pos);
             PhaseTracker.getInstance().setBlockState(mixinWorldServer, pos, replaced, BlockChangeFlagRegistryModule.andNotifyClients(flag));
             if (this.compound != null) {
-                TileEntity te = world.func_175625_s(pos);
+                TileEntity te = world.getTileEntity(pos);
                 if (te != null) {
                     te.func_145839_a(this.compound);
                 }
@@ -206,7 +206,7 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
                     try {
                         te = TileEntity.func_190200_a(world, this.compound);
                         if (te != null) {
-                            world.func_175726_f(pos).func_150813_a(te);
+                            world.getChunk(pos).addTileEntity(te);
                         }
                     } catch (Exception e) {
                         // Seriously? The mod should be broken then.
@@ -235,12 +235,12 @@ public class SpongeBlockSnapshot implements BlockSnapshot {
                 }
 
                 if (te != null) {
-                    te.func_70296_d();
+                    te.markDirty();
                 }
 
             }
             // Finally, mark the location as being updated.
-            world.func_184164_w().func_180244_a(pos);
+            world.func_184164_w().markBlockForUpdate(pos);
             return true;
         }
     }

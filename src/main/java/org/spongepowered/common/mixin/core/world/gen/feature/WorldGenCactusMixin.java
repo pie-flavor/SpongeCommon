@@ -63,11 +63,11 @@ public abstract class WorldGenCactusMixin extends WorldGeneratorMixin {
 //                }
 //            }
 //        }
-        if (worldIn.func_175623_d(position)) {
+        if (worldIn.isAirBlock(position)) {
             final int height = ((Cactus) this).getHeight().getFlooredAmount(rand);
             for (int k = 0; k < height; ++k) {
                 if (Blocks.field_150434_aF.func_176586_d(worldIn, position)) {
-                    worldIn.func_180501_a(position.func_177981_b(k), Blocks.field_150434_aF.func_176223_P(), 2);
+                    worldIn.func_180501_a(position.up(k), Blocks.field_150434_aF.func_176223_P(), 2);
                 } else {
                     break;
                 }

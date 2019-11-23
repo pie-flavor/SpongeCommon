@@ -84,7 +84,7 @@ public class ItemEnchantmentDataProcessor
             for (final Map.Entry<EnchantmentType, Integer> entry : valueMap.entrySet()) {
                 final CompoundNBT enchantmentCompound = new CompoundNBT();
                 enchantmentCompound.func_74777_a(Constants.Item.ITEM_ENCHANTMENT_ID,
-                    (short) net.minecraft.enchantment.Enchantment.func_185258_b((net.minecraft.enchantment.Enchantment) entry.getKey()));
+                    (short) net.minecraft.enchantment.Enchantment.getEnchantmentID((net.minecraft.enchantment.Enchantment) entry.getKey()));
                 enchantmentCompound.func_74777_a(Constants.Item.ITEM_ENCHANTMENT_LEVEL, entry.getValue().shortValue());
                 newList.func_74742_a(enchantmentCompound);
             }
@@ -96,7 +96,7 @@ public class ItemEnchantmentDataProcessor
 
     @Override
     protected Optional<List<Enchantment>> getVal(final ItemStack itemStack) {
-        if (itemStack.func_77948_v()) {
+        if (itemStack.isItemEnchanted()) {
             return Optional.of(Constants.NBT.getItemEnchantments(itemStack));
         }
         return Optional.empty();

@@ -127,7 +127,7 @@ public final class PacketPhaseUtil {
     }
 
     public static void handlePlayerSlotRestore(final ServerPlayerEntity player, final ItemStack itemStack, final Hand hand) {
-        if (itemStack.func_190926_b()) { // No need to check if it's NONE, NONE is checked by isEmpty.
+        if (itemStack.isEmpty()) { // No need to check if it's NONE, NONE is checked by isEmpty.
             return;
         }
 
@@ -178,7 +178,7 @@ public final class PacketPhaseUtil {
                     final CPlayerPacket movingPacket = ((CPlayerPacket) packetIn);
                     if (movingPacket instanceof CPlayerPacket.RotationPacket) {
                         ignoreMovementCapture = true;
-                    } else if (packetPlayer.field_70165_t == movingPacket.field_149479_a && packetPlayer.field_70163_u == movingPacket.field_149477_b && packetPlayer.field_70161_v == movingPacket.field_149478_c) {
+                    } else if (packetPlayer.posX == movingPacket.field_149479_a && packetPlayer.posY == movingPacket.field_149477_b && packetPlayer.posZ == movingPacket.field_149478_c) {
                         ignoreMovementCapture = true;
                     } else {
                         ignoreMovementCapture = false;
@@ -214,7 +214,7 @@ public final class PacketPhaseUtil {
                         // update the reference of player
                         packetPlayer = ((ServerPlayNetHandler) netHandler).field_147369_b;
                     }
-                    ((EntityPlayerMPBridge) packetPlayer).bridge$setPacketItem(ItemStack.field_190927_a);
+                    ((EntityPlayerMPBridge) packetPlayer).bridge$setPacketItem(ItemStack.EMPTY);
                 }
             }
         } else { // client
@@ -232,7 +232,7 @@ public final class PacketPhaseUtil {
      */
     @Nullable
     public static DataParameter<?> findModifiedEntityInteractDataParameter(final ItemStack stack, final Entity entity) {
-        final Item item = stack.func_77973_b();
+        final Item item = stack.getItem();
 
         if (item == Items.field_151100_aR) {
             // ItemDye.itemInteractionForEntity
@@ -250,7 +250,7 @@ public final class PacketPhaseUtil {
 
         if (item == Items.field_151057_cb) {
             // ItemNameTag.itemInteractionForEntity
-            return entity instanceof LivingEntity && !(entity instanceof PlayerEntity) && stack.func_82837_s() ? EntityAccessor.accessor$getCustomNameParameter() : null;
+            return entity instanceof LivingEntity && !(entity instanceof PlayerEntity) && stack.hasDisplayName() ? EntityAccessor.accessor$getCustomNameParameter() : null;
         }
 
         if (item == Items.field_151141_av) {

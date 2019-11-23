@@ -107,7 +107,7 @@ final class CommandState extends GeneralState<CommandPhaseContext> {
     public void associateNeighborStateNotifier(final CommandPhaseContext context, @Nullable final BlockPos sourcePos, final Block block,
         final BlockPos notifyPos, final ServerWorld minecraftWorld, final PlayerTracker.Type notifier) {
         context.getSource(Player.class)
-            .ifPresent(player -> ((ChunkBridge) minecraftWorld.func_175726_f(notifyPos))
+            .ifPresent(player -> ((ChunkBridge) minecraftWorld.getChunk(notifyPos))
                 .bridge$addTrackedBlockPosition(block, notifyPos, player, PlayerTracker.Type.NOTIFIER));
     }
 

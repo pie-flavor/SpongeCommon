@@ -34,7 +34,7 @@ import java.util.UUID;
 public class EntityTrackedUser implements IFixableData {
 
     @Override
-    public int func_188216_a() {
+    public int getFixVersion() {
         return Constants.Legacy.Entity.TRACKER_ID_VERSION;
     }
 

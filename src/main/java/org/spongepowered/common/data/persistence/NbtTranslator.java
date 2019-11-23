@@ -216,7 +216,7 @@ public final class NbtTranslator implements DataTranslator<CompoundNBT> {
                 view.set(of(key), ((ByteArrayNBT) base).func_150292_c());
                 break;
             case Constants.NBT.TAG_STRING:
-                view.set(of(key), ((StringNBT) base).func_150285_a_());
+                view.set(of(key), ((StringNBT) base).getString());
                 break;
             case Constants.NBT.TAG_LIST:
                 ListNBT list = (ListNBT) base;
@@ -233,7 +233,7 @@ public final class NbtTranslator implements DataTranslator<CompoundNBT> {
                 CompoundNBT compound = (CompoundNBT) base;
                 for (String internalKey : compound.func_150296_c()) {
                     NBTBase internalBase = compound.func_74781_a(internalKey);
-                    byte internalType = internalBase.func_74732_a();
+                    byte internalType = internalBase.getId();
                     // Basically.... more recursion.
                     // Reasoning: This avoids creating a new DataContainer which would
                     // then be copied in to the owning DataView anyways. We can internally
@@ -270,7 +270,7 @@ public final class NbtTranslator implements DataTranslator<CompoundNBT> {
             case Constants.NBT.TAG_BYTE_ARRAY:
                 return ((ByteArrayNBT) base).func_150292_c();
             case Constants.NBT.TAG_STRING:
-                return ((StringNBT) base).func_150285_a_();
+                return ((StringNBT) base).getString();
             case Constants.NBT.TAG_LIST:
                 ListNBT list = (ListNBT) base;
                 byte listType = (byte) list.func_150303_d();
@@ -322,7 +322,7 @@ public final class NbtTranslator implements DataTranslator<CompoundNBT> {
     public DataView addTo(CompoundNBT compound, DataView container) {
         for (String key : compound.func_150296_c()) {
             NBTBase base = compound.func_74781_a(key);
-            byte type = base.func_74732_a();
+            byte type = base.getId();
             setInternal(base, type, container, key); // gotta love recursion
         }
         return container;

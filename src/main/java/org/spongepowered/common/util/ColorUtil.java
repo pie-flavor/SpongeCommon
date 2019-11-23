@@ -41,7 +41,7 @@ public final class ColorUtil {
 
     public static Optional<Color> getItemStackColor(final ItemStack stack) {
         // Special case for armor: it has a special method
-        final Item item = stack.func_77973_b();
+        final Item item = stack.getItem();
         if (item instanceof ArmorItem) {
             final CompoundNBT tagCompound = stack.func_77978_p();
             if (tagCompound == null || !tagCompound.func_74764_b(Constants.Item.Armor.ARMOR_COLOR_DISPLAY_TAG)) {
@@ -107,13 +107,13 @@ public final class ColorUtil {
      * there is a color set on the display tag.
      */
     public static boolean hasColorInNbt(final ItemStack stack) {
-        return stack.func_77942_o() &&
+        return stack.hasTagCompound() &&
                stack.func_77978_p().func_74764_b(Constants.Item.ITEM_DISPLAY) &&
                stack.func_77978_p().func_74775_l(Constants.Item.ITEM_DISPLAY).func_74764_b(Constants.Item.ITEM_COLOR);
     }
 
     public static boolean hasColor(final ItemStack stack) {
-        final Item item = stack.func_77973_b();
+        final Item item = stack.getItem();
         return item instanceof ArmorItem &&
                 ((ArmorItem) item).func_82812_d() == ArmorItem.ArmorMaterial.LEATHER;
     }

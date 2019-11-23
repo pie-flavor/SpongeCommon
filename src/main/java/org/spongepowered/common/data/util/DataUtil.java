@@ -101,9 +101,9 @@ public final class DataUtil {
     private static final Supplier<InvalidDataException> INVALID_DATA_EXCEPTION_SUPPLIER = InvalidDataException::new;
 
     static {
-        spongeDataFixer.func_188256_a(FixTypes.LEVEL, new SpongeLevelFixer());
-        spongeDataFixer.func_188256_a(FixTypes.ENTITY, new EntityTrackedUser());
-        spongeDataFixer.func_188256_a(FixTypes.PLAYER, new PlayerRespawnData());
+        spongeDataFixer.registerFix(FixTypes.LEVEL, new SpongeLevelFixer());
+        spongeDataFixer.registerFix(FixTypes.ENTITY, new EntityTrackedUser());
+        spongeDataFixer.registerFix(FixTypes.PLAYER, new PlayerRespawnData());
     }
 
     public static DataView checkDataExists(final DataView dataView, final DataQuery query) throws InvalidDataException {
@@ -600,7 +600,7 @@ public final class DataUtil {
     }
 
     private static void translateTagListToView(final ImmutableList.Builder<? super DataView> builder, final ListNBT list) {
-        if (!list.func_82582_d()) {
+        if (!list.isEmpty()) {
             for (int i = 0; i < list.func_74745_c(); i++) {
                 final CompoundNBT internal = list.func_150305_b(i);
                 builder.add(NbtTranslator.getInstance().translateFrom(internal));

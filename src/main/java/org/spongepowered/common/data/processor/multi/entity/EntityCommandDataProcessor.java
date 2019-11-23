@@ -88,7 +88,7 @@ public class EntityCommandDataProcessor extends AbstractEntityDataProcessor<Mine
         ((CommandBlockBaseLogicAccessor) logic).accessor$setCommandStored((String) keyValues.get(Keys.COMMAND));
         ((CommandBlockBaseLogicAccessor) logic).accessor$setSuccessCount((int) keyValues.get(Keys.SUCCESS_COUNT));
         logic.func_175573_a((boolean) keyValues.get(Keys.TRACKS_OUTPUT));
-        entity.func_70071_h_();
+        entity.onUpdate();
         return true;
     }
 

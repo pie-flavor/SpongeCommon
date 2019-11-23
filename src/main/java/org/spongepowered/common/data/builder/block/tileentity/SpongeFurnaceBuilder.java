@@ -50,18 +50,18 @@ public class SpongeFurnaceBuilder extends SpongeLockableBuilder<Furnace> {
 
             if (!container.contains(Keys.PASSED_BURN_TIME.getQuery(), Keys.MAX_BURN_TIME.getQuery(),
                     Keys.PASSED_COOK_TIME.getQuery(), Keys.MAX_COOK_TIME.getQuery())) {
-                ((TileEntity) furnace).func_145843_s();
+                ((TileEntity) furnace).invalidate();
                 return Optional.empty();
             }
             final int burnTime = container.getInt(Keys.PASSED_BURN_TIME.getQuery()).get();
             final int maxBurnTime = container.getInt(Keys.MAX_BURN_TIME.getQuery()).get();
             final int passedCookTime = container.getInt(Keys.PASSED_COOK_TIME.getQuery()).get();
             final int maxCookTime = container.getInt(Keys.MAX_COOK_TIME.getQuery()).get();
-            tileEntityFurnace.func_174885_b(0, maxBurnTime - burnTime);
-            tileEntityFurnace.func_174885_b(1, maxBurnTime);
-            tileEntityFurnace.func_174885_b(2, passedCookTime);
-            tileEntityFurnace.func_174885_b(3, maxCookTime);
-            tileEntityFurnace.func_70296_d();
+            tileEntityFurnace.setField(0, maxBurnTime - burnTime);
+            tileEntityFurnace.setField(1, maxBurnTime);
+            tileEntityFurnace.setField(2, passedCookTime);
+            tileEntityFurnace.setField(3, maxCookTime);
+            tileEntityFurnace.markDirty();
             return Optional.of(furnace);
         });
     }

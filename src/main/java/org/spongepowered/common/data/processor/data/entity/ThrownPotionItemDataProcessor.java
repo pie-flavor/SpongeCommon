@@ -53,7 +53,7 @@ public class ThrownPotionItemDataProcessor extends
     @Override
     protected boolean set(PotionEntity container, ItemStackSnapshot value) {
         final ItemStack itemStack = ItemStackUtil.fromSnapshotToNative(value);
-        if (itemStack.func_77973_b() != Items.field_185155_bH && itemStack.func_77973_b() != Items.field_185156_bI) {
+        if (itemStack.getItem() != Items.field_185155_bH && itemStack.getItem() != Items.field_185156_bI) {
             // Minecraft will throw a hissy fit if we do allow any other type of potion
             // so, we have to return false bec≈ause the item stack is invalid.
             return false;

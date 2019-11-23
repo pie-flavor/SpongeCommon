@@ -125,8 +125,8 @@ public abstract class EntityFallingBlockMixin extends EntityMixin {
         )
     )
     private boolean spongeAttackFallingOrAnvil(final Entity entity, final DamageSource source, final float damage) {
-        if (entity.field_70170_p.field_72995_K) {
-            return entity.func_70097_a(source, damage);
+        if (entity.world.isRemote) {
+            return entity.attackEntityFrom(source, damage);
         }
         final boolean isAnvil = this.fallTile.func_177230_c() == Blocks.field_150467_bQ;
         try {
@@ -134,13 +134,13 @@ public abstract class EntityFallingBlockMixin extends EntityMixin {
                 final MinecraftFallingBlockDamageSource anvil = new MinecraftFallingBlockDamageSource("anvil", (FallingBlockEntity) (Object) this);
                 ((DamageSourceBridge) anvil).bridge$setAnvilSource();
 
-                return entity.func_70097_a(DamageSource.field_82728_o, damage);
+                return entity.attackEntityFrom(DamageSource.ANVIL, damage);
             } else {
                 final MinecraftFallingBlockDamageSource
                     fallingblock =
                     new MinecraftFallingBlockDamageSource("fallingblock", (FallingBlockEntity) (Object) this);
                 ((DamageSourceBridge) fallingblock).bridge$setFallingBlockSource();
-                return entity.func_70097_a(DamageSource.field_82729_p, damage);
+                return entity.attackEntityFrom(DamageSource.FALLING_BLOCK, damage);
             }
         } finally {
             if (isAnvil) {

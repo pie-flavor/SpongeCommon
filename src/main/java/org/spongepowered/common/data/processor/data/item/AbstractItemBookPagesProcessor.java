@@ -93,7 +93,7 @@ abstract class AbstractItemBookPagesProcessor<T, M extends DataManipulator<M, I>
         for (final T page : value) {
             list.func_74742_a(this.translateTo(page));
         }
-        itemStack.func_77983_a(Constants.Item.Book.ITEM_BOOK_PAGES, list);
+        itemStack.setTagInfo(Constants.Item.Book.ITEM_BOOK_PAGES, list);
         final CompoundNBT compound = itemStack.func_77978_p();
         if (!compound.func_74764_b(Constants.Item.Book.ITEM_BOOK_TITLE)) {
             compound.func_74778_a(Constants.Item.Book.ITEM_BOOK_TITLE, Constants.Item.Book.INVALID_TITLE);
@@ -113,7 +113,7 @@ abstract class AbstractItemBookPagesProcessor<T, M extends DataManipulator<M, I>
         }
         final ListNBT list = tagCompound.func_150295_c(Constants.Item.Book.ITEM_BOOK_PAGES, Constants.NBT.TAG_STRING);
         final List<T> stringList = new ArrayList<>();
-        if (!list.func_82582_d()) {
+        if (!list.isEmpty()) {
             for (int i = 0; i < list.func_74745_c(); i++) {
                 stringList.add(this.translateFrom(list.func_150307_f(i)));
             }

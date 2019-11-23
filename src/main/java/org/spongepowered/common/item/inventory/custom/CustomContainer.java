@@ -37,7 +37,7 @@ public class CustomContainer extends Container {
         this.inv = inventory;
 
         // TODO what significance has the x/y coord on the Slots?
-        for (int slot = 0; slot < inventory.func_70302_i_(); slot++) {
+        for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
             this.func_75146_a(new Slot(inventory, slot, 0, 0));
         }
 
@@ -64,29 +64,29 @@ public class CustomContainer extends Container {
 
     @Override
     public ItemStack func_82846_b(final PlayerEntity playerIn, final int index) {
-        ItemStack itemstack = ItemStack.field_190927_a;
+        ItemStack itemstack = ItemStack.EMPTY;
         final Slot slot = this.field_75151_b.get(index);
 
         if (slot != null && slot.func_75216_d())
         {
             final ItemStack itemstack1 = slot.func_75211_c();
-            itemstack = itemstack1.func_77946_l();
+            itemstack = itemstack1.copy();
 
-            if (index < this.inv.func_70302_i_())
+            if (index < this.inv.getSizeInventory())
             {
-                if (!this.func_75135_a(itemstack1, this.inv.func_70302_i_(), this.field_75151_b.size(), true))
+                if (!this.func_75135_a(itemstack1, this.inv.getSizeInventory(), this.field_75151_b.size(), true))
                 {
-                    return ItemStack.field_190927_a;
+                    return ItemStack.EMPTY;
                 }
             }
-            else if (!this.func_75135_a(itemstack1, 0, this.inv.func_70302_i_(), false))
+            else if (!this.func_75135_a(itemstack1, 0, this.inv.getSizeInventory(), false))
             {
-                return ItemStack.field_190927_a;
+                return ItemStack.EMPTY;
             }
 
-            if (itemstack1.func_190916_E() == 0)
+            if (itemstack1.getCount() == 0)
             {
-                slot.func_75215_d(ItemStack.field_190927_a);
+                slot.func_75215_d(ItemStack.EMPTY);
             }
             else
             {

@@ -246,13 +246,13 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
             final ItemStack itemstack = slot.func_75211_c();
             ItemStack itemstack1 = this.inventoryItemStacks.get(i);
 
-            if (!ItemStack.func_77989_b(itemstack1, itemstack)) {
+            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
 
                 // Sponge start
                 if (this.impl$captureInventory) {
-                    final ItemStackSnapshot originalItem = itemstack1.func_190926_b() ? ItemStackSnapshot.NONE
+                    final ItemStackSnapshot originalItem = itemstack1.isEmpty() ? ItemStackSnapshot.NONE
                             : ((org.spongepowered.api.item.inventory.ItemStack) itemstack1).createSnapshot();
-                    final ItemStackSnapshot newItem = itemstack.func_190926_b() ? ItemStackSnapshot.NONE
+                    final ItemStackSnapshot newItem = itemstack.isEmpty() ? ItemStackSnapshot.NONE
                             : ((org.spongepowered.api.item.inventory.ItemStack) itemstack).createSnapshot();
 
                     org.spongepowered.api.item.inventory.Slot adapter = null;
@@ -284,7 +284,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
                 }
                 // Sponge end
 
-                itemstack1 = itemstack.func_77946_l();
+                itemstack1 = itemstack.copy();
                 this.inventoryItemStacks.set(i, itemstack1);
 
                 for (final IContainerListener listener : this.listeners) {
@@ -312,10 +312,10 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         if (this.impl$captureInventory) {
             final Slot slot = shadow$getSlot(slotId);
             if (slot != null) {
-                final ItemStackSnapshot originalItem = slot.func_75211_c().func_190926_b() ? ItemStackSnapshot.NONE
+                final ItemStackSnapshot originalItem = slot.func_75211_c().isEmpty() ? ItemStackSnapshot.NONE
                                                                                  : ((org.spongepowered.api.item.inventory.ItemStack) slot.func_75211_c()).createSnapshot();
                 final ItemStackSnapshot newItem =
-                        itemstack.func_190926_b() ? ItemStackSnapshot.NONE : ((org.spongepowered.api.item.inventory.ItemStack) itemstack).createSnapshot();
+                        itemstack.isEmpty() ? ItemStackSnapshot.NONE : ((org.spongepowered.api.item.inventory.ItemStack) itemstack).createSnapshot();
 
                 final org.spongepowered.api.item.inventory.Slot adapter = this.bridge$getContainerSlot(slotId);
                 this.impl$capturedSlotTransactions.add(new SlotTransaction(adapter, originalItem, newItem));
@@ -355,10 +355,10 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         }
         if (entityItem  == null) {
             ItemStack original = null;
-            if (player.field_71071_by.func_70445_o().func_190926_b()) {
+            if (player.field_71071_by.func_70445_o().isEmpty()) {
                 original = itemStackIn;
             } else {
-                player.field_71071_by.func_70445_o().func_190917_f(1);
+                player.field_71071_by.func_70445_o().grow(1);
                 original = player.field_71071_by.func_70445_o();
             }
             player.field_71071_by.func_70437_b(original);
@@ -420,14 +420,14 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         if (!this.impl$captureInventory) {
             // Capture Inventory is true when caused by a vanilla inventory packet
             // This is to prevent infinite loops when a client mod re-requests the recipe result after we modified/cancelled it
-            output.func_70299_a(index, itemstack);
+            output.setInventorySlotContents(index, itemstack);
             return;
         }
         this.impl$capturedCraftPreviewTransactions.clear();
 
-        final ItemStackSnapshot orig = ItemStackUtil.snapshotOf(output.func_70301_a(index));
-        output.func_70299_a(index, itemstack);
-        final ItemStackSnapshot repl = ItemStackUtil.snapshotOf(output.func_70301_a(index));
+        final ItemStackSnapshot orig = ItemStackUtil.snapshotOf(output.getStackInSlot(index));
+        output.setInventorySlotContents(index, itemstack);
+        final ItemStackSnapshot repl = ItemStackUtil.snapshotOf(output.getStackInSlot(index));
 
         final SlotAdapter slot = this.impl$getAdapters().get(index);
         this.impl$capturedCraftPreviewTransactions.add(new SlotTransaction(slot, orig, repl));
@@ -463,14 +463,14 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;grow(I)V", ordinal = 1))
     private void beforeOnTakeClickWithItem(
         final int slotId, final int dragType, final ClickType clickTypeIn, final PlayerEntity player, final CallbackInfoReturnable<Integer> cir) {
-       this.impl$previousCursor = player.field_71071_by.func_70445_o().func_77946_l(); // capture previous cursor for CraftItemEvent.Craft
+       this.impl$previousCursor = player.field_71071_by.func_70445_o().copy(); // capture previous cursor for CraftItemEvent.Craft
     }
 
     @Inject(method = "slotClick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/InventoryPlayer;setItemStack(Lnet/minecraft/item/ItemStack;)V", ordinal = 3))
     private void beforeOnTakeClick(
         final int slotId, final int dragType, final ClickType clickTypeIn, final PlayerEntity player, final CallbackInfoReturnable<Integer> cir) {
-        this.impl$previousCursor = player.field_71071_by.func_70445_o().func_77946_l(); // capture previous cursor for CraftItemEvent.Craft
+        this.impl$previousCursor = player.field_71071_by.func_70445_o().copy(); // capture previous cursor for CraftItemEvent.Craft
     }
 
     @Redirect(method = "slotClick",
@@ -481,7 +481,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         if (this.impl$lastCraft != null) {
             if (slot instanceof CraftingResultSlot) {
                 if (this.impl$lastCraft.isCancelled()) {
-                    stackOnCursor.func_190920_e(0); // do not drop crafted item when cancelled
+                    stackOnCursor.setCount(0); // do not drop crafted item when cancelled
                 }
             }
         }
@@ -508,7 +508,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
         ItemStack result = thisContainer.func_82846_b(player, slotId);
         if (this.impl$lastCraft != null) {
             if (this.impl$lastCraft.isCancelled()) {
-                result = ItemStack.field_190927_a; // Return empty to stop shift-crafting
+                result = ItemStack.EMPTY; // Return empty to stop shift-crafting
             }
         }
         this.impl$shiftCraft = false;

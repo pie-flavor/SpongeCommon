@@ -52,7 +52,7 @@ public class MatterPropertyStore extends AbstractBlockPropertyStore<MatterProper
     protected Optional<MatterProperty> getForBlock(@Nullable Location<?> location, BlockState block) {
         if (block.func_177230_c() instanceof BlockLiquid) {
             return Optional.of(LIQUID);
-        } else if (block.func_185904_a() == Material.field_151579_a) {
+        } else if (block.getMaterial() == Material.AIR) {
             return Optional.of(GAS);
         } else {
             return Optional.of(SOLID);

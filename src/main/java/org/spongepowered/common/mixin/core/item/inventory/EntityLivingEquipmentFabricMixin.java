@@ -93,7 +93,7 @@ public abstract class EntityLivingEquipmentFabricMixin implements Fabric, Invent
     @Override
     public void fabric$clear() {
         for (EquipmentSlotType slot : SLOTS) {
-            this.setItemStackToSlot(slot, ItemStack.field_190927_a);
+            this.setItemStackToSlot(slot, ItemStack.EMPTY);
         }
     }
 

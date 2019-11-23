@@ -136,7 +136,7 @@ public class SpongeItemStackBuilder extends AbstractDataBuilder<ItemStack> imple
         this.type = itemStack.getType();
         this.quantity = itemStack.getQuantity();
         if (itemStack instanceof net.minecraft.item.ItemStack) {
-            this.damageValue = ((net.minecraft.item.ItemStack) itemStack).func_77952_i();
+            this.damageValue = ((net.minecraft.item.ItemStack) itemStack).getItemDamage();
             final CompoundNBT itemCompound = ((net.minecraft.item.ItemStack) itemStack).func_77978_p();
             if (itemCompound != null) {
                 this.compound = itemCompound.func_74737_b();
@@ -312,7 +312,7 @@ public class SpongeItemStackBuilder extends AbstractDataBuilder<ItemStack> imple
 
         if (this.type == ItemTypes.NONE || this.quantity <= 0) {
             // If either type is none(air) or quantity is 0 return the vanilla EMPTY item
-            return ((ItemStack) net.minecraft.item.ItemStack.field_190927_a);
+            return ((ItemStack) net.minecraft.item.ItemStack.EMPTY);
         }
 
         final ItemStack stack = (ItemStack) new net.minecraft.item.ItemStack((Item) this.type, this.quantity, this.damageValue);

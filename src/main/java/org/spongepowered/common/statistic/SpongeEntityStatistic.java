@@ -64,7 +64,7 @@ public final class SpongeEntityStatistic extends Stat implements EntityStatistic
 
     @Override
     public String getName() {
-        return func_150951_e().func_150260_c();
+        return func_150951_e().getUnformattedText();
     }
 
     @Override

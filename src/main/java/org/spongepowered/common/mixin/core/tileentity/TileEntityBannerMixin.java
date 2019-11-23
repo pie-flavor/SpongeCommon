@@ -77,8 +77,8 @@ public abstract class TileEntityBannerMixin extends TileEntityMixin implements T
 
     private void impl$markDirtyAndUpdate() {
         this.bridge$markDirty();
-        if (this.world != null && !this.world.field_72995_K) {
-            ((ServerWorld) this.world).func_184164_w().func_180244_a(this.getPos());
+        if (this.world != null && !this.world.isRemote) {
+            ((ServerWorld) this.world).func_184164_w().markBlockForUpdate(this.getPos());
         }
     }
 
@@ -92,7 +92,7 @@ public abstract class TileEntityBannerMixin extends TileEntityMixin implements T
                 final int patternColor = tagCompound.func_74762_e(Constants.TileEntity.Banner.BANNER_PATTERN_COLOR);
                 this.impl$patternLayers.add(new SpongePatternLayer(
                     registry.getType(BannerPatternShape.class, patternId).get(),
-                    registry.getType(DyeColor.class, net.minecraft.item.DyeColor.func_176766_a(patternColor).func_176610_l()).get()));
+                    registry.getType(DyeColor.class, net.minecraft.item.DyeColor.func_176766_a(patternColor).getName()).get()));
             }
         }
         this.impl$markDirtyAndUpdate();

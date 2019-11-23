@@ -60,8 +60,8 @@ public class EntityVillager_ListEnchantedItemForEmeraldsMixin_API implements Tra
         }
 
         ItemStack itemstack = new ItemStack(Items.field_151166_bC, emeraldCount, 0);
-        ItemStack itemstack1 = new ItemStack(this.enchantedItemStack.func_77973_b(), 1, this.enchantedItemStack.func_77960_j());
-        itemstack1 = EnchantmentHelper.func_77504_a(random, itemstack1, 5 + random.nextInt(15), false);
+        ItemStack itemstack1 = new ItemStack(this.enchantedItemStack.getItem(), 1, this.enchantedItemStack.getMetadata());
+        itemstack1 = EnchantmentHelper.addRandomEnchantment(random, itemstack1, 5 + random.nextInt(15), false);
         return (TradeOffer) new MerchantRecipe(itemstack, itemstack1);
     }
 

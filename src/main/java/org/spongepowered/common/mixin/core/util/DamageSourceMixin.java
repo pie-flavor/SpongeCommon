@@ -83,8 +83,8 @@ public abstract class DamageSourceMixin implements DamageSourceBridge {
             at = @At(value = "RETURN"))
     private void beforeGetDeathMessageReturn(final LivingEntity entityLivingBaseIn, final CallbackInfoReturnable<ITextComponent> cir) {
         // This prevents untranslated keys from appearing in death messages, switching out those that are untranslated with the generic message.
-        if (cir.getReturnValue().func_150260_c().equals("death.attack." + this.damageType)) {
-            cir.setReturnValue(new TranslationTextComponent("death.attack.generic", entityLivingBaseIn.func_145748_c_()));
+        if (cir.getReturnValue().getUnformattedText().equals("death.attack." + this.damageType)) {
+            cir.setReturnValue(new TranslationTextComponent("death.attack.generic", entityLivingBaseIn.getDisplayName()));
         }
     }
 
@@ -101,7 +101,7 @@ public abstract class DamageSourceMixin implements DamageSourceBridge {
                         .map(user -> (PlayerEntity) user)
                         .ifPresent(player -> {
                             final IndirectEntityDamageSource damageSource = new IndirectEntityDamageSource("explosion.player", entity, player);
-                            damageSource.func_76351_m().func_94540_d();
+                            damageSource.setDifficultyScaled().setExplosion();
                             cir.setReturnValue(damageSource);
                         });
                 }

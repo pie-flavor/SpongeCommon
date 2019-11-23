@@ -89,15 +89,15 @@ public abstract class SaveHandlerMixin implements SaveHandlerBridge {
         try {
             // If the returned NBT is empty, then we should warn the user.
             CompoundNBT spongeRootLevelNBT = ((WorldInfoBridge) worldInformation).bridge$getSpongeRootLevelNbt();
-            if (spongeRootLevelNBT.func_82582_d()) {
+            if (spongeRootLevelNBT.isEmpty()) {
                 Integer dimensionId = ((WorldInfoBridge) worldInformation).bridge$getDimensionId();
                 String dimensionIdString = dimensionId == null ? "unknown" : String.valueOf(dimensionId);
 
                 // We should warn the user about the NBT being empty, but not saving it.
-                new PrettyPrinter().add("Sponge Root Level NBT for world %s is empty!", worldInformation.func_76065_j()).centre().hr()
+                new PrettyPrinter().add("Sponge Root Level NBT for world %s is empty!", worldInformation.getWorldName()).centre().hr()
                         .add("When trying to save Sponge data for the world %s, an empty NBT compound was provided. The old Sponge data file was "
                                         + "left intact.",
-                                worldInformation.func_76065_j())
+                                worldInformation.getWorldName())
                         .add()
                         .add("The following information may be useful in debugging:")
                         .add()
@@ -124,9 +124,9 @@ public abstract class SaveHandlerMixin implements SaveHandlerBridge {
                 Integer dimensionId = ((WorldInfoBridge) worldInformation).bridge$getDimensionId();
                 String dimensionIdString = dimensionId == null ? "unknown" : String.valueOf(dimensionId);
                 // Then we just delete the file and tell the user that we didn't save properly.
-                new PrettyPrinter().add("Zero length level_sponge.dat file was created for %s!", worldInformation.func_76065_j()).centre().hr()
+                new PrettyPrinter().add("Zero length level_sponge.dat file was created for %s!", worldInformation.getWorldName()).centre().hr()
                         .add("When saving the data file for the world %s, a zero length file was written. Sponge has discarded this file.",
-                                worldInformation.func_76065_j())
+                                worldInformation.getWorldName())
                         .add()
                         .add("The following information may be useful in debugging:")
                         .add()
@@ -171,7 +171,7 @@ public abstract class SaveHandlerMixin implements SaveHandlerBridge {
             try (final FileInputStream stream = new FileInputStream(actualFile)) {
                 compound = CompressedStreamTools.func_74796_a(stream);
             } catch (Exception ex) {
-                throw new RuntimeException("Attempt failed when reading Sponge level data for [" + info.func_76065_j() + "] from file [" +
+                throw new RuntimeException("Attempt failed when reading Sponge level data for [" + info.getWorldName() + "] from file [" +
                         actualFile.getName() + "]!", ex);
             }
             ((WorldInfoBridge) info).bridge$setSpongeRootLevelNBT(compound);
@@ -250,7 +250,7 @@ public abstract class SaveHandlerMixin implements SaveHandlerBridge {
             target = "Lnet/minecraft/nbt/CompressedStreamTools;writeCompressed(Lnet/minecraft/nbt/NBTTagCompound;Ljava/io/OutputStream;)V",
             shift = At.Shift.AFTER))
     private void impl$saveSpongePlayerData(final PlayerEntity player, final CallbackInfo callbackInfo) {
-        SpongePlayerDataHandler.savePlayer(player.func_110124_au());
+        SpongePlayerDataHandler.savePlayer(player.getUniqueID());
     }
 
     @Inject(

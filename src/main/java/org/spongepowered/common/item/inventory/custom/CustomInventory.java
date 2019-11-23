@@ -166,7 +166,7 @@ public class CustomInventory implements IInventory, IInteractionObject {
     }
 
     @Override
-    public String func_174875_k() {
+    public String getGuiID() {
         final String key = AbstractInventoryProperty.getDefaultKey(GuiIdProperty.class).toString();
         final InventoryProperty<?, ?> property = this.properties.get(key);
         if (property instanceof GuiIdProperty) {
@@ -200,43 +200,43 @@ public class CustomInventory implements IInventory, IInteractionObject {
     }
 
     @Override
-    public int func_70302_i_() {
-        return this.inv.func_70302_i_();
+    public int getSizeInventory() {
+        return this.inv.getSizeInventory();
     }
 
     @Override
-    public boolean func_191420_l() {
-        return this.inv.func_191420_l();
+    public boolean isEmpty() {
+        return this.inv.isEmpty();
     }
 
     @Override
-    public ItemStack func_70301_a(final int index) {
-        return this.inv.func_70301_a(index);
+    public ItemStack getStackInSlot(final int index) {
+        return this.inv.getStackInSlot(index);
     }
 
     @Override
-    public ItemStack func_70298_a(final int index, final int count) {
-        return this.inv.func_70298_a(index, count);
+    public ItemStack decrStackSize(final int index, final int count) {
+        return this.inv.decrStackSize(index, count);
     }
 
     @Override
-    public ItemStack func_70304_b(final int index) {
-        return this.inv.func_70304_b(index);
+    public ItemStack removeStackFromSlot(final int index) {
+        return this.inv.removeStackFromSlot(index);
     }
 
     @Override
-    public void func_70299_a(final int index, final ItemStack stack) {
-        this.inv.func_70299_a(index, stack);
+    public void setInventorySlotContents(final int index, final ItemStack stack) {
+        this.inv.setInventorySlotContents(index, stack);
     }
 
     @Override
-    public int func_70297_j_() {
-        return this.inv.func_70297_j_();
+    public int getInventoryStackLimit() {
+        return this.inv.getInventoryStackLimit();
     }
 
     @Override
-    public void func_70296_d() {
-        this.inv.func_70296_d();
+    public void markDirty() {
+        this.inv.markDirty();
     }
 
     @Override
@@ -266,28 +266,28 @@ public class CustomInventory implements IInventory, IInteractionObject {
     }
 
     @Override
-    public boolean func_94041_b(final int index, final ItemStack stack) {
-        return this.inv.func_94041_b(index, stack);
+    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+        return this.inv.isItemValidForSlot(index, stack);
     }
 
     @Override
-    public int func_174887_a_(final int id) {
-        return this.inv.func_174887_a_(id);
+    public int getField(final int id) {
+        return this.inv.getField(id);
     }
 
     @Override
-    public void func_174885_b(final int id, final int value) {
-        this.inv.func_174885_b(id, value);
+    public void setField(final int id, final int value) {
+        this.inv.setField(id, value);
     }
 
     @Override
-    public int func_174890_g() {
-        return this.inv.func_174890_g();
+    public int getFieldCount() {
+        return this.inv.getFieldCount();
     }
 
     @Override
-    public void func_174888_l() {
-        this.inv.func_174888_l();
+    public void clear() {
+        this.inv.clear();
     }
 
     public Map<String, InventoryProperty<?, ?>> getProperties() {

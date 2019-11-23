@@ -78,8 +78,8 @@ public class TileEntitySignDataProcessor
             }
             sign.field_145915_a[i] = SpongeTexts.toComponent(line);
         }
-        sign.func_70296_d();
-        ((ServerWorld) sign.func_145831_w()).func_184164_w().func_180244_a(sign.func_174877_v());
+        sign.markDirty();
+        ((ServerWorld) sign.getWorld()).func_184164_w().markBlockForUpdate(sign.getPos());
         return true;
     }
 

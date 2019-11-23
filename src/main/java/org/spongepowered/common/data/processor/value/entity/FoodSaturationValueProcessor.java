@@ -61,7 +61,7 @@ public class FoodSaturationValueProcessor extends AbstractSpongeValueProcessor<P
 
     @Override
     protected Optional<Double> getVal(final PlayerEntity container) {
-        return Optional.of((double) container.func_71024_bL().func_75115_e());
+        return Optional.of((double) container.func_71024_bL().getSaturationLevel());
     }
 
     @Override

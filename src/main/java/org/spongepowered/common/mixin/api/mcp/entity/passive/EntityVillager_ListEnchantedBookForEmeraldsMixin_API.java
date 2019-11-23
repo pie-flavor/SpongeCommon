@@ -52,12 +52,12 @@ public class EntityVillager_ListEnchantedBookForEmeraldsMixin_API implements Tra
     @Override
     public TradeOffer apply(Random random) {
         checkNotNull(random, "Random cannot be null!");
-        Enchantment enchantment = Enchantment.field_185264_b.func_186801_a(random);
-        int enchantmentLevel = MathHelper.func_76136_a(random, enchantment.func_77319_d(), enchantment.func_77325_b());
+        Enchantment enchantment = Enchantment.field_185264_b.getRandomObject(random);
+        int enchantmentLevel = MathHelper.getInt(random, enchantment.getMinLevel(), enchantment.getMaxLevel());
         ItemStack itemstack = EnchantedBookItem.func_92111_a(new EnchantmentData(enchantment, enchantmentLevel));
         int emeraldCount = 2 + random.nextInt(5 + enchantmentLevel * 10) + 3 * enchantmentLevel;
 
-        if (enchantment.func_185261_e()) {
+        if (enchantment.isTreasureEnchantment()) {
             emeraldCount *= 2;
         }
 

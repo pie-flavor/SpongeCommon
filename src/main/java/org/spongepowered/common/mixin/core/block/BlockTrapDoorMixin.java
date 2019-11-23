@@ -114,10 +114,10 @@ public abstract class BlockTrapDoorMixin extends BlockMixin {
 
     @SuppressWarnings("ConstantConditions")
     private PortionType impl$convertType(final TrapDoorBlock.DoorHalf type) {
-        return (PortionType) (Object) SlabBlock.EnumBlockHalf.valueOf(type.func_176610_l().toUpperCase());
+        return (PortionType) (Object) SlabBlock.EnumBlockHalf.valueOf(type.getName().toUpperCase());
     }
 
     private TrapDoorBlock.DoorHalf impl$convertType(final SlabBlock.EnumBlockHalf type) {
-        return TrapDoorBlock.DoorHalf.valueOf(type.func_176610_l().toUpperCase());
+        return TrapDoorBlock.DoorHalf.valueOf(type.getName().toUpperCase());
     }
 }

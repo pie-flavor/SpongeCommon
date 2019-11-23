@@ -108,7 +108,7 @@ public abstract class ContainerFabricMixin implements Fabric, InventoryBridge {
     @Override
     public void fabric$clear() {
         for (Slot slot : this.inventorySlots) {
-            slot.func_75215_d(ItemStack.field_190927_a);
+            slot.func_75215_d(ItemStack.EMPTY);
         }
     }
 
@@ -126,7 +126,7 @@ public abstract class ContainerFabricMixin implements Fabric, InventoryBridge {
         {
             Slot slot = this.getSlot(0);
             return slot.field_75224_c != null && slot.field_75224_c.func_145748_c_() != null ?
-                    new FixedTranslation(slot.field_75224_c.func_145748_c_().func_150260_c()) :
+                    new FixedTranslation(slot.field_75224_c.func_145748_c_().getUnformattedText()) :
                     new FixedTranslation("UNKNOWN: " + this.getClass().getName());
         }
         catch (AbstractMethodError e)

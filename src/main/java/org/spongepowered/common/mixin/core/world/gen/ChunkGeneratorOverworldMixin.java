@@ -92,7 +92,7 @@ public abstract class ChunkGeneratorOverworldMixin implements PopulatorProviderB
     @Inject(method = "<init>", at = @At("RETURN"))
     private void impl$setSettings(final net.minecraft.world.World worldIn, final long p_i45636_2_, final boolean p_i45636_4_, final String p_i45636_5_, final CallbackInfo ci) {
         if (this.settings == null) {
-            this.settings = new ChunkGeneratorSettings.Factory().func_177864_b();
+            this.settings = new ChunkGeneratorSettings.Factory().build();
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class ChunkGeneratorOverworldMixin implements PopulatorProviderB
                     .height(VariableAmount.baseWithRandomAddition(0, 256))
                     .build();
             final FilteredPopulator filtered = new FilteredPopulator(lake, (c) -> {
-                final Biome biomegenbase = this.world.func_180494_b(VecHelper.toBlockPos(c.getBlockMin()).func_177982_a(16, 0, 16));
+                final Biome biomegenbase = this.world.getBiome(VecHelper.toBlockPos(c.getBlockMin()).add(16, 0, 16));
                 return biomegenbase != Biomes.field_76769_d && biomegenbase != Biomes.field_76786_s;
             });
             filtered.setRequiredFlags(WorldGenConstants.VILLAGE_FLAG);

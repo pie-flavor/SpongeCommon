@@ -60,7 +60,7 @@ public class TileEntitySuccessCountValueProcessor extends AbstractSpongeValuePro
     protected boolean set(final CommandBlockTileEntity container, final Integer value) {
         container.func_145993_a().func_184167_a(value);
         container.func_145993_a().func_145756_e();
-        container.func_70296_d();
+        container.markDirty();
         return true;
     }
 

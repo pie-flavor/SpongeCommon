@@ -124,7 +124,7 @@ public class BlockTypeRegistryModule implements SpongeAdditionalCatalogRegistryM
 
     private void registerBlockTrait(String id, BlockType block) {
         Block nmsBlock = (Block) block;
-        for (net.minecraft.block.BlockState state : nmsBlock.func_176194_O().func_177619_a()) {
+        for (net.minecraft.block.BlockState state : nmsBlock.getBlockState().getValidStates()) {
             BlockStateRegistryModule.getInstance().registerBlockState((BlockState) state);
         }
         for (Map.Entry<BlockTrait<?>, ?> mapEntry : block.getDefaultState().getTraitMap().entrySet()) {

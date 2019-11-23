@@ -73,7 +73,7 @@ public class WalkingSpeedValueProcessor extends AbstractSpongeValueProcessor<Pla
 
     public static void setWalkSpeed(final PlayerEntity container, final double value) {
         ((PlayerCapabilitiesAccessor) container.field_71075_bZ).accessor$setWalkSpeed((float) value);
-        final IAttributeInstance attribute = container.func_110148_a(SharedMonsterAttributes.field_111263_d);
-        attribute.func_111128_a(value);
+        final IAttributeInstance attribute = container.func_110148_a(SharedMonsterAttributes.MOVEMENT_SPEED);
+        attribute.setBaseValue(value);
     }
 }

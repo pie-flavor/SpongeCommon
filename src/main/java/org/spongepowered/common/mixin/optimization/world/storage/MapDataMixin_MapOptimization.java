@@ -113,7 +113,7 @@ public abstract class MapDataMixin_MapOptimization extends WorldSavedData implem
     }
 
     private Integer mapOptimizationImpl$getMapId() {
-        return Integer.valueOf(this.field_76190_i.split("map_")[1]);
+        return Integer.valueOf(this.name.split("map_")[1]);
     }
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
@@ -170,17 +170,17 @@ public abstract class MapDataMixin_MapOptimization extends WorldSavedData implem
                 final PlayerEntity player = entry.getKey();
                 final MapData.MapInfo mapInfo = entry.getValue();
                 final OptimizedMapInfoBridge mixinMapInfo = (OptimizedMapInfoBridge) mapInfo;
-                if (player.field_70128_L) {
+                if (player.removed) {
                     it.remove();
                     continue;
                 }
 
                 if (!mixinMapInfo.mapOptimizationBridge$isValid()) {
-                    this.mapDecorations.remove(player.func_70005_c_());
+                    this.mapDecorations.remove(player.getName());
                 } else {
-                    if (this.trackingPosition && mapOptimizationImpl$dimensionField.get(this).equals(player.field_71093_bK)) {
-                        this.updateDecorations(MapDecoration.Type.PLAYER, player.field_70170_p, player.func_70005_c_(), player.field_70165_t, player.field_70161_v,
-                                (double) player.field_70177_z);
+                    if (this.trackingPosition && mapOptimizationImpl$dimensionField.get(this).equals(player.dimension)) {
+                        this.updateDecorations(MapDecoration.Type.PLAYER, player.world, player.getName(), player.posX, player.posZ,
+                                (double) player.rotationYaw);
                     }
                     // We invalidate the player's map info every tick.
                     // If the map item is still in the player's hand, the MapInfo
@@ -274,7 +274,7 @@ public abstract class MapDataMixin_MapOptimization extends WorldSavedData implem
         }
         ((OptimizedMapInfoBridge) info).mapOptimizationBridge$setValid(true);
 
-        if (mapStack.func_77942_o() && mapStack.func_77978_p().func_150297_b("Decorations", 9))
+        if (mapStack.hasTagCompound() && mapStack.func_77978_p().func_150297_b("Decorations", 9))
         {
             final ListNBT nbttaglist = mapStack.func_77978_p().func_150295_c("Decorations", 10);
 
@@ -284,7 +284,7 @@ public abstract class MapDataMixin_MapOptimization extends WorldSavedData implem
 
                 if (!this.mapDecorations.containsKey(nbttagcompound.func_74779_i("id")))
                 {
-                    this.updateDecorations(MapDecoration.Type.func_191159_a(nbttagcompound.func_74771_c("type")), player.field_70170_p, nbttagcompound.func_74779_i("id"), nbttagcompound.func_74769_h("x"), nbttagcompound.func_74769_h("z"), nbttagcompound.func_74769_h("rot"));
+                    this.updateDecorations(MapDecoration.Type.byIcon(nbttagcompound.func_74771_c("type")), player.world, nbttagcompound.func_74779_i("id"), nbttagcompound.func_74769_h("x"), nbttagcompound.func_74769_h("z"), nbttagcompound.func_74769_h("rot"));
                 }
             }
         }
@@ -298,14 +298,14 @@ public abstract class MapDataMixin_MapOptimization extends WorldSavedData implem
             if (blockpos == null || frame.field_174860_b == null) {
                 return;
             }
-            this.updateDecorations(MapDecoration.Type.FRAME, frame.field_70170_p, "frame-" + frame.func_145782_y(), (double)blockpos.func_177958_n(), (double)blockpos.func_177952_p(), (double)(frame.field_174860_b.func_176736_b() * 90));
+            this.updateDecorations(MapDecoration.Type.FRAME, frame.world, "frame-" + frame.getEntityId(), (double)blockpos.getX(), (double)blockpos.getZ(), (double)(frame.field_174860_b.func_176736_b() * 90));
         }
     }
 
     @Override
     public void mapOptimizationBridge$removeItemFrame(final ItemFrameEntity frame) {
         this.mapOptimizationImpl$activeWorlds.remove(((Entity) frame).getWorld().getUniqueId());
-        this.mapDecorations.remove("frame-" + frame.func_145782_y());
+        this.mapDecorations.remove("frame-" + frame.getEntityId());
     }
 
 }

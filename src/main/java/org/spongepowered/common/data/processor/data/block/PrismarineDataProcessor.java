@@ -40,17 +40,17 @@ public class PrismarineDataProcessor extends
         AbstractCatalogDataProcessor<PrismarineType, Value<PrismarineType>, PrismarineData, ImmutablePrismarineData> {
 
     public PrismarineDataProcessor() {
-        super(Keys.PRISMARINE_TYPE, input -> input.func_77973_b() == ItemTypes.PRISMARINE);
+        super(Keys.PRISMARINE_TYPE, input -> input.getItem() == ItemTypes.PRISMARINE);
     }
 
     @Override
     protected int setToMeta(PrismarineType value) {
-        return ((BlockPrismarine.EnumType) (Object) value).func_176807_a();
+        return ((BlockPrismarine.EnumType) (Object) value).getMetadata();
     }
 
     @Override
     protected PrismarineType getFromMeta(int meta) {
-        return (PrismarineType) (Object) BlockPrismarine.EnumType.func_176810_a(meta);
+        return (PrismarineType) (Object) BlockPrismarine.EnumType.byMetadata(meta);
     }
 
     @Override

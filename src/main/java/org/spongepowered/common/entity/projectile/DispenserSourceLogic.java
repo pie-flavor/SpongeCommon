@@ -61,16 +61,16 @@ public class DispenserSourceLogic implements ProjectileSourceLogic<Dispenser> {
     }
 
     public static Direction getFacing(DispenserTileEntity dispenser) {
-        BlockState state = dispenser.func_145831_w().func_180495_p(dispenser.func_174877_v());
+        BlockState state = dispenser.getWorld().func_180495_p(dispenser.getPos());
         return state.func_177229_b(DispenserBlock.field_176441_a);
     }
 
     @SuppressWarnings("unchecked")
     private <P extends Projectile> Optional<P> launch(DispenserTileEntity dispenser, Class<P> projectileClass, Item item) {
-        DefaultDispenseItemBehavior behavior = (DefaultDispenseItemBehavior) DispenserBlock.field_149943_a.func_82594_a(item);
-        List<Entity> entityList = dispenser.func_145831_w().field_72996_f;
+        DefaultDispenseItemBehavior behavior = (DefaultDispenseItemBehavior) DispenserBlock.field_149943_a.getObject(item);
+        List<Entity> entityList = dispenser.getWorld().field_72996_f;
         int numEntities = entityList.size();
-        behavior.func_82482_a(new ProxyBlockSource(dispenser.func_145831_w(), dispenser.func_174877_v()), new ItemStack(item));
+        behavior.func_82482_a(new ProxyBlockSource(dispenser.getWorld(), dispenser.getPos()), new ItemStack(item));
         // Hack - get the projectile that was spawned from dispense()
         for (int i = entityList.size() - 1; i >= numEntities; i--) {
             if (projectileClass.isInstance(entityList.get(i))) {

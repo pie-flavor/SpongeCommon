@@ -97,7 +97,7 @@ public class SpongeIPBanList extends IPBanList {
     }
 
     @Override
-    public String[] func_152685_a() {
+    public String[] getKeys() {
         List<String> ips = new ArrayList<>();
         for (Ban.Ip ban : getService().getIpBans()) {
             ips.add(this.func_152707_c(new InetSocketAddress(ban.getAddress(), 0)));
@@ -111,7 +111,7 @@ public class SpongeIPBanList extends IPBanList {
     }
 
     @Override
-    public boolean func_152690_d() {
+    public boolean isEmpty() {
         return getService().getIpBans().isEmpty();
     }
 

@@ -80,10 +80,10 @@ public abstract class BlockRedSandstoneMixin extends BlockMixin {
     
     @SuppressWarnings("ConstantConditions")
     private SandstoneType impl$convertType(final BlockRedSandstone.EnumType type){
-        return (SandstoneType) (Object) BlockSandStone.EnumType.func_176673_a(type.func_176827_a());
+        return (SandstoneType) (Object) BlockSandStone.EnumType.byMetadata(type.getMetadata());
     }
     
     private BlockRedSandstone.EnumType impl$convertType(final BlockSandStone.EnumType type){
-        return BlockRedSandstone.EnumType.func_176825_a(type.func_176675_a());
+        return BlockRedSandstone.EnumType.byMetadata(type.getMetadata());
     }
 }

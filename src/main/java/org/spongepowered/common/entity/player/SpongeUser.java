@@ -367,7 +367,7 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
 
         // extra data
 
-        if (!spongeCompound.func_82582_d()) {
+        if (!spongeCompound.isEmpty()) {
             this.isVanished = spongeCompound.func_74767_n(Constants.Sponge.Entity.IS_VANISHED);
             this.isInvisible = spongeCompound.func_74767_n(Constants.Sponge.Entity.IS_INVISIBLE);
             if (this.isVanished) {
@@ -460,7 +460,7 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
             spawnList.func_74742_a(spawnCompound);
         }
 
-        if (!spawnList.func_82582_d()) {
+        if (!spawnList.isEmpty()) {
             spongeCompound.func_74782_a(Constants.Sponge.User.USER_SPAWN_LIST, spawnList);
         }
         if (this.isVanished) {
@@ -636,7 +636,7 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
             final EquipmentSlotType[] slots = ((SpongeEquipmentType) type).getSlots();
             if (slots.length == 1) {
                 final net.minecraft.item.ItemStack nmsItem = this.getItemStackFromSlot(slots[0]);
-                if (!nmsItem.func_190926_b()) {
+                if (!nmsItem.isEmpty()) {
                     return Optional.of(ItemStackUtil.fromNative(nmsItem));
                 }
             }
@@ -663,7 +663,7 @@ public class SpongeUser implements ArmorEquipable, Tamer, DataSerializable, Carr
             return this.inventory.offHandInventory.get(0);
         } else {
             return slotIn.func_188453_a() == EquipmentSlotType.Group.ARMOR ? this.inventory.armorInventory.get(slotIn.func_188454_b()) :
-                    net.minecraft.item.ItemStack.field_190927_a;
+                    net.minecraft.item.ItemStack.EMPTY;
         }
     }
 

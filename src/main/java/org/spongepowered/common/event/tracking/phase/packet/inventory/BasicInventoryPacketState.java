@@ -186,7 +186,7 @@ public class BasicInventoryPacketState extends PacketState<InventoryPacketContex
                     if (entiy instanceof OwnershipTrackedBridge) {
                         ((OwnershipTrackedBridge) entiy).tracked$setOwnerReference((Player) player);
                     } else {
-                        entiy.setCreator(player.func_110124_au());
+                        entiy.setCreator(player.getUniqueID());
                     }
                 }
                 try (final CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {

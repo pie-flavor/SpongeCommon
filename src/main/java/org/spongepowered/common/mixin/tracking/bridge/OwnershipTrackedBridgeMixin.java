@@ -177,10 +177,10 @@ public class OwnershipTrackedBridgeMixin implements OwnershipTrackedBridge {
         }
         if (this instanceof IEntityOwnable) {
             final IEntityOwnable ownable = (IEntityOwnable) this;
-            final Entity owner = ownable.func_70902_q();
+            final Entity owner = ownable.getOwner();
             if (owner instanceof PlayerEntity) {
-                this.tracked$setTrackedUUID(PlayerTracker.Type.OWNER, owner.func_110124_au());
-                return owner.func_110124_au();
+                this.tracked$setTrackedUUID(PlayerTracker.Type.OWNER, owner.getUniqueID());
+                return owner.getUniqueID();
             }
         } else if (this.tracked$notifier != null && PlayerTracker.Type.NOTIFIER == nbtKey) {
             return this.tracked$notifier;

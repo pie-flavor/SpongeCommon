@@ -168,7 +168,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
     @Shadow public abstract ServerWorld getServerWorld();
 
     // Used to restore original item received in a packet after canceling an event
-    private ItemStack impl$packetItem = ItemStack.field_190927_a;
+    private ItemStack impl$packetItem = ItemStack.EMPTY;
     private final User impl$user = bridge$getUserObject();
     private ImmutableSet<SkinPart> impl$skinParts = ImmutableSet.of();
     private int impl$viewDistance;
@@ -231,7 +231,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
 
         // Double check that the PhaseTracker is already capturing the Death phase
         final boolean tracksEntityDeaths;
-        if (isMainThread && !this.world.field_72995_K) {
+        if (isMainThread && !this.world.isRemote) {
             tracksEntityDeaths = PhaseTracker.getInstance().getCurrentState().tracksEntityDeaths();
         } else {
             tracksEntityDeaths = false;
@@ -242,22 +242,22 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
             }
             // Sponge end
 
-            final boolean flag = this.world.func_82736_K().func_82766_b(Constants.GameRule.SHOW_DEATH_MESSAGES);
+            final boolean flag = this.world.getGameRules().getBoolean(Constants.GameRule.SHOW_DEATH_MESSAGES);
             this.connection.func_147359_a(new SCombatPacket(this.getCombatTracker(), SCombatPacket.Event.ENTITY_DIED, flag));
 
             if (flag) {
                 final Team team = this.getTeam();
 
-                if (team != null && team.func_178771_j() != Team.Visible.ALWAYS) {
-                    if (team.func_178771_j() == Team.Visible.HIDE_FOR_OTHER_TEAMS) {
-                        this.server.func_184103_al()
-                            .func_177453_a((ServerPlayerEntity) (Object) this, this.getCombatTracker().func_151521_b());
-                    } else if (team.func_178771_j() == Team.Visible.HIDE_FOR_OWN_TEAM) {
-                        this.server.func_184103_al()
-                            .func_177452_b((ServerPlayerEntity) (Object) this, this.getCombatTracker().func_151521_b());
+                if (team != null && team.getDeathMessageVisibility() != Team.Visible.ALWAYS) {
+                    if (team.getDeathMessageVisibility() == Team.Visible.HIDE_FOR_OTHER_TEAMS) {
+                        this.server.getPlayerList()
+                            .func_177453_a((ServerPlayerEntity) (Object) this, this.getCombatTracker().getDeathMessage());
+                    } else if (team.getDeathMessageVisibility() == Team.Visible.HIDE_FOR_OWN_TEAM) {
+                        this.server.getPlayerList()
+                            .func_177452_b((ServerPlayerEntity) (Object) this, this.getCombatTracker().getDeathMessage());
                     }
                 } else {
-                    this.server.func_184103_al().func_148539_a(this.getCombatTracker().func_151521_b());
+                    this.server.getPlayerList().sendMessage(this.getCombatTracker().getDeathMessage());
                 }
             }
 
@@ -270,27 +270,27 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
             }
 
             for (final ScoreObjective scoreobjective : this.getWorldScoreboard().func_96520_a(ScoreCriteria.field_96642_c)) {
-                final Score score = this.getWorldScoreboard().func_96529_a(this.shadow$getName(), scoreobjective);
-                score.func_96648_a();
+                final Score score = this.getWorldScoreboard().getOrCreateScore(this.shadow$getName(), scoreobjective);
+                score.incrementScore();
             }
 
             final LivingEntity entitylivingbase = this.getAttackingEntity();
 
             if (entitylivingbase != null) {
-                final EntityList.EntityEggInfo entitylist$entityegginfo = EntityList.field_75627_a.get(EntityList.func_191301_a(entitylivingbase));
+                final EntityList.EntityEggInfo entitylist$entityegginfo = EntityList.field_75627_a.get(EntityList.getKey(entitylivingbase));
 
                 if (entitylist$entityegginfo != null) {
                     this.addStat(entitylist$entityegginfo.field_151513_e);
                 }
 
-                entitylivingbase.func_191956_a((ServerPlayerEntity) (Object) this, this.scoreValue, cause);
+                entitylivingbase.awardKillScore((ServerPlayerEntity) (Object) this, this.scoreValue, cause);
             }
 
             this.addStat(Stats.field_188069_A);
             this.takeStat(Stats.field_188098_h);
             this.extinguish();
             this.setFlag(0, false);
-            this.getCombatTracker().func_94549_h();
+            this.getCombatTracker().reset();
 
             this.impl$keepInventory = event.getKeepInventory();
         } // Sponge - brackets
@@ -326,7 +326,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
             // Copy corpse inventory to respawned player
             this.inventory.func_70455_b(corpse.field_71071_by);
             // Clear corpse so that mods do not copy from it again
-            corpse.field_71071_by.func_174888_l();
+            corpse.field_71071_by.clear();
         }
         return keep;
     }
@@ -437,7 +437,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
      */
     @Overwrite
     public String getPlayerIP() {
-        return NetworkUtil.getHostString(this.connection.field_147371_a.func_74430_c());
+        return NetworkUtil.getHostString(this.connection.field_147371_a.getRemoteAddress());
     }
 
     @Override
@@ -467,7 +467,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
 
     @Override
     public void bridge$restorePacketItem(final Hand hand) {
-        if (this.impl$packetItem.func_190926_b()) {
+        if (this.impl$packetItem.isEmpty()) {
             return;
         }
 
@@ -515,13 +515,13 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
     @Override
     public MessageChannel bridge$getDeathMessageChannel() {
         final ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        if (player.field_70170_p.func_82736_K().func_82766_b(Constants.GameRule.SHOW_DEATH_MESSAGES)) {
-            @Nullable final Team team = player.func_96124_cp();
+        if (player.world.getGameRules().getBoolean(Constants.GameRule.SHOW_DEATH_MESSAGES)) {
+            @Nullable final Team team = player.getTeam();
 
-            if (team != null && team.func_178771_j() != Team.Visible.ALWAYS) {
-                if (team.func_178771_j() == Team.Visible.HIDE_FOR_OTHER_TEAMS) {
+            if (team != null && team.getDeathMessageVisibility() != Team.Visible.ALWAYS) {
+                if (team.getDeathMessageVisibility() == Team.Visible.HIDE_FOR_OTHER_TEAMS) {
                     return ((ScorePlayerTeamBridge) team).bridge$getTeamChannel(player);
-                } else if (team.func_178771_j() == Team.Visible.HIDE_FOR_OWN_TEAM) {
+                } else if (team.getDeathMessageVisibility() == Team.Visible.HIDE_FOR_OWN_TEAM) {
                     return ((ScorePlayerTeamBridge) team).bridge$getNonTeamChannel();
                 }
             } else {
@@ -594,7 +594,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
                 frame.pushCause(this);
                 final ChangeGameModeEvent.TargetPlayer event =
                     SpongeEventFactory.createChangeGameModeEventTargetPlayer(frame.getCurrentCause(),
-                        (GameMode) (Object) this.interactionManager.func_73081_b(), (GameMode) (Object) gameType, (Player) this);
+                        (GameMode) (Object) this.interactionManager.getGameType(), (GameMode) (Object) gameType, (Player) this);
                 SpongeImpl.postEvent(event);
                 if (event.isCancelled()) {
                     ci.cancel();
@@ -658,7 +658,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
     @Nullable
     public ItemEntity dropItem(final boolean dropAll) {
         final ItemStack currentItem = this.inventory.func_70448_g();
-        if (currentItem.func_190926_b()) {
+        if (currentItem.isEmpty()) {
             return null;
         }
 
@@ -667,8 +667,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
                 .query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class))
                 .query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(this.inventory.field_70461_c)));
         final ItemStackSnapshot originalItem = ItemStackUtil.snapshotOf(currentItem);
-        final int count = dropAll && !currentItem.func_190926_b() ? currentItem.func_190916_E() : 1;
-        final ItemStack itemToDrop = this.inventory.func_70298_a(this.inventory.field_70461_c, count);
+        final int count = dropAll && !currentItem.isEmpty() ? currentItem.getCount() : 1;
+        final ItemStack itemToDrop = this.inventory.decrStackSize(this.inventory.field_70461_c, count);
         final SlotTransaction transaction = new SlotTransaction(slot, originalItem, ItemStackUtil.snapshotOf(this.inventory.func_70448_g()));
         ((TrackedInventoryBridge) this.inventoryContainer).bridge$getCapturedSlotTransactions().add(transaction);
 
@@ -680,7 +680,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
         // Our using item state is probably desynced from the client (e.g. from the initial air interaction of a bow being cancelled).
         // We need to re-send the player's inventory to overwrite any client-side inventory changes that may have occured as a result
         // of the client (but not the server) calling Item#onPlayerStoppedUsing (which in the case of a bow, removes one arrow from the inventory).
-        if (this.activeItemStack.func_190926_b()) {
+        if (this.activeItemStack.isEmpty()) {
             ((ServerPlayerEntity) (Object) this).func_71120_a(((ServerPlayerEntity) (Object) this).field_71069_bz);
         }
         super.stopActiveHand();
@@ -776,11 +776,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
         // We need to use the dirty instances to signify that the player needs to ahve it updated, instead
         // of modifying the attribute instances themselves, we bypass other potentially detrimental logi
         // that would otherwise break the actual health scaling.
-        final Set<IAttributeInstance> dirtyInstances = ((AttributeMap) this.getAttributeMap()).func_111161_b();
+        final Set<IAttributeInstance> dirtyInstances = ((AttributeMap) this.getAttributeMap()).getDirtyInstances();
         bridge$injectScaledHealth(dirtyInstances);
 
         // Send the new information to the client.
-        this.connection.func_147359_a(new SUpdateHealthPacket(bridge$getInternalScaledHealth(), getFoodStats().func_75116_a(), getFoodStats().func_75115_e()));
+        this.connection.func_147359_a(new SUpdateHealthPacket(bridge$getInternalScaledHealth(), getFoodStats().getFoodLevel(), getFoodStats().getSaturationLevel()));
         this.connection.func_147359_a(new SEntityPropertiesPacket(this.getEntityId(), dirtyInstances));
         // Reset the dirty instances since they've now been manually updated on the client.
         dirtyInstances.clear();
@@ -795,9 +795,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
         boolean foundMax = false; // Sometimes the max health isn't modified and no longer dirty
         for (final Iterator<IAttributeInstance> iter = set.iterator(); iter.hasNext(); ) {
             final IAttributeInstance dirtyInstance = iter.next();
-            if ("generic.maxHealth".equals(dirtyInstance.func_111123_a().func_111108_a())) {
+            if ("generic.maxHealth".equals(dirtyInstance.getAttribute().getName())) {
                 foundMax = true;
-                modifiers = dirtyInstance.func_111122_c();
+                modifiers = dirtyInstance.getModifiers();
                 iter.remove();
                 break;
             }
@@ -805,21 +805,21 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
         if (!foundMax) {
             // Means we didn't find the max health attribute and need to fetch the modifiers from
             // the cached map because it wasn't marked dirty for some reason
-            modifiers = this.getEntityAttribute(SharedMonsterAttributes.field_111267_a).func_111122_c();
+            modifiers = this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getModifiers();
         }
 
         // We now re-create a new ranged attribute for our desired max health
-        final double defaultt = bridge$isHealthScaled() ? this.impl$healthScale : this.getEntityAttribute(SharedMonsterAttributes.field_111267_a).func_111125_b();
+        final double defaultt = bridge$isHealthScaled() ? this.impl$healthScale : this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue();
 
         final RangedAttribute maxHealth =
             new RangedAttribute(null, "generic.maxHealth", defaultt, 0.0D, Float.MAX_VALUE);
-        maxHealth.func_111117_a("Max Health");
+        maxHealth.setDescription("Max Health");
         maxHealth.func_111112_a(true); // needs to be watched
 
         final ModifiableAttributeInstance attribute = new ModifiableAttributeInstance(this.getAttributeMap(), maxHealth);
 
         if (!modifiers.isEmpty()) {
-            modifiers.forEach(attribute::func_111121_a);
+            modifiers.forEach(attribute::applyModifier);
         }
         set.add(attribute);
     }
@@ -838,19 +838,19 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
             // Because attribute modifiers from mods can add onto health and multiply health, we
             // need to replicate what the mod may be trying to represent, regardless whether the health scale
             // says to show only x hearts.
-            final IAttributeInstance maxAttribute = this.getEntityAttribute(SharedMonsterAttributes.field_111267_a);
+            final IAttributeInstance maxAttribute = this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
             double modifiedScale = this.impl$healthScale;
             // Apply additive modifiers
-            for (final AttributeModifier attributemodifier : maxAttribute.func_111130_a(0)) {
-                modifiedScale += attributemodifier.func_111164_d();
+            for (final AttributeModifier attributemodifier : maxAttribute.getModifiersByOperation(0)) {
+                modifiedScale += attributemodifier.getAmount();
             }
 
-            for (final AttributeModifier attributemodifier1 : maxAttribute.func_111130_a(1)) {
-                modifiedScale += modifiedScale * attributemodifier1.func_111164_d();
+            for (final AttributeModifier attributemodifier1 : maxAttribute.getModifiersByOperation(1)) {
+                modifiedScale += modifiedScale * attributemodifier1.getAmount();
             }
 
-            for (final AttributeModifier attributemodifier2 : maxAttribute.func_111130_a(2)) {
-                modifiedScale *= 1.0D + attributemodifier2.func_111164_d();
+            for (final AttributeModifier attributemodifier2 : maxAttribute.getModifiersByOperation(2)) {
+                modifiedScale *= 1.0D + attributemodifier2.getAmount();
             }
 
             this.impl$cachedModifiedHealth = (float) modifiedScale;
@@ -865,7 +865,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
 
     @Redirect(method = "readEntityFromNBT", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getForceGamemode()Z"))
     private boolean onCheckForcedGameMode(final MinecraftServer minecraftServer) {
-        return minecraftServer.func_104056_am() && !bridge$hasForcedGamemodeOverridePermission();
+        return minecraftServer.getForceGamemode() && !bridge$hasForcedGamemodeOverridePermission();
     }
 
     @Override
@@ -919,7 +919,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayerMixin implements S
     @SuppressWarnings("BoundedWildcard")
     @Inject(method = "canAttackPlayer", at = @At("HEAD"), cancellable = true)
     private void impl$useWorldBasedAttackRules(final PlayerEntity other, final CallbackInfoReturnable<Boolean> cir) {
-        final boolean worldPVP = ((WorldProperties) other.field_70170_p.func_72912_H()).isPVPEnabled();
+        final boolean worldPVP = ((WorldProperties) other.world.getWorldInfo()).isPVPEnabled();
 
         if (!worldPVP) {
             cir.setReturnValue(false);

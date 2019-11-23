@@ -67,7 +67,7 @@ public interface CustomDataHolderBridge {
             final CompoundNBT spongeData = ((DataCompoundHolder) this).data$getSpongeCompound();
             if (spongeData.func_150297_b(Constants.Sponge.CUSTOM_MANIPULATOR_TAG_LIST, Constants.NBT.TAG_LIST)) {
                 final ListNBT tagList = spongeData.func_150295_c(Constants.Sponge.CUSTOM_MANIPULATOR_TAG_LIST, Constants.NBT.TAG_COMPOUND);
-                if (!tagList.func_82582_d()) {
+                if (!tagList.isEmpty()) {
                     String id = DataUtil.getRegistrationFor(manipulator).getId();
                     for (int i = 0; i < tagList.func_74745_c(); i++) {
                         final CompoundNBT tag = tagList.func_150305_b(i);

@@ -71,7 +71,7 @@ public abstract class EntityLightningBoltMixin extends EntityMixin {
     }
 
     private boolean spongeImpl$strikeBlockAndAddSnapshot(final net.minecraft.world.World world, final BlockPos pos, final BlockState blockState) {
-        if (!this.effect && ((World) world).containsBlock(pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p())) {
+        if (!this.effect && ((World) world).containsBlock(pos.getX(), pos.getY(), pos.getZ())) {
             final Vector3i pos3i = VecHelper.toVector3i(pos);
             final Transaction<BlockSnapshot> transaction = new Transaction<>(
                 SpongeBlockSnapshotBuilder.pooled()
@@ -105,7 +105,7 @@ public abstract class EntityLightningBoltMixin extends EntityMixin {
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/EntityLightningBolt;setDead()V"))
     private void spongeImpl$ThrowEventAndProcess(final CallbackInfo ci) {
-        if (this.isDead || this.world.field_72995_K) {
+        if (this.isDead || this.world.isRemote) {
             return;
         }
         try (final CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {

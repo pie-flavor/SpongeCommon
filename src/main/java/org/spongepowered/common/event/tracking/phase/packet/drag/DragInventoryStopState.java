@@ -67,7 +67,7 @@ public abstract class DragInventoryStopState extends NamedInventoryState {
             List<SlotTransaction> previewTransactions = ((ContainerBridge) player.field_71070_bA).bridge$getPreviewTransactions();
             if (!previewTransactions.isEmpty()) {
                 CraftingRecipe recipe = SpongeCraftingRecipeRegistry
-                        .getInstance().findMatchingRecipe(((CraftingInventory) craftInv).getCraftingGrid(), ((World) player.field_70170_p)).orElse(null);
+                        .getInstance().findMatchingRecipe(((CraftingInventory) craftInv).getCraftingGrid(), ((World) player.world)).orElse(null);
                 SpongeCommonEventFactory.callCraftEventPre(player, ((CraftingInventory) craftInv), previewTransactions.get(0),
                         recipe, player.field_71070_bA, previewTransactions);
                 previewTransactions.clear();

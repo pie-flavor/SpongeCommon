@@ -53,35 +53,35 @@ public class WrapperICommandSender implements ICommandSender {
     }
 
     @Override
-    public String func_70005_c_() {
+    public String getName() {
         return this.source.getName();
     }
 
     @Override
-    public ITextComponent func_145748_c_() {
+    public ITextComponent getDisplayName() {
         return new StringTextComponent(this.source.getName());
     }
 
     @Override
-    public void func_145747_a(ITextComponent component) {
+    public void sendMessage(ITextComponent component) {
         this.source.sendMessage(SpongeTexts.toText(component));
     }
 
     @Override
-    public boolean func_70003_b(int permLevel, String commandName) {
+    public boolean canUseCommand(int permLevel, String commandName) {
         return CommandPermissions.testPermission(this.source, commandName);
     }
 
     @Override
-    public BlockPos func_180425_c() {
+    public BlockPos getPosition() {
         if (this.source instanceof Locatable) {
             return VecHelper.toBlockPos(((Locatable) this.source).getLocation());
         }
-        return BlockPos.field_177992_a;
+        return BlockPos.ZERO;
     }
 
     @Override
-    public Vec3d func_174791_d() {
+    public Vec3d getPositionVector() {
         if (this.source instanceof Locatable) {
             return VecHelper.toVec3d(((Locatable) this.source).getLocation().getPosition());
         }
@@ -89,15 +89,15 @@ public class WrapperICommandSender implements ICommandSender {
     }
 
     @Override
-    public World func_130014_f_() {
+    public World getEntityWorld() {
         if (this.source instanceof Locatable) {
             return (World) ((Locatable) this.source).getWorld();
         }
-        return SpongeImpl.getServer().func_130014_f_(); // Use overworld as default
+        return SpongeImpl.getServer().getEntityWorld(); // Use overworld as default
     }
 
     @Override
-    public Entity func_174793_f() {
+    public Entity getCommandSenderEntity() {
         if (this.source instanceof Entity) {
             return (Entity) this.source;
         }
@@ -105,18 +105,18 @@ public class WrapperICommandSender implements ICommandSender {
     }
 
     @Override
-    public boolean func_174792_t_() {
+    public boolean sendCommandFeedback() {
         return true;
     }
 
     @Override
-    public void func_174794_a(CommandResultStats.Type type, int amount) {
+    public void setCommandStat(CommandResultStats.Type type, int amount) {
 
     }
 
     @Override
-    public MinecraftServer func_184102_h() {
-        return func_130014_f_().func_73046_m();
+    public MinecraftServer getServer() {
+        return getEntityWorld().getMinecraftServer();
     }
 
     public static ICommandSender of(CommandSource source) {

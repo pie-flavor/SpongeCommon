@@ -39,17 +39,17 @@ import org.spongepowered.common.data.value.mutable.SpongeValue;
 public class StoneDataProcessor extends AbstractCatalogDataProcessor<StoneType, Value<StoneType>, StoneData, ImmutableStoneData> {
 
     public StoneDataProcessor() {
-        super(Keys.STONE_TYPE, input -> input.func_77973_b() == ItemTypes.STONE || input.func_77973_b() == ItemTypes.STONE_STAIRS);
+        super(Keys.STONE_TYPE, input -> input.getItem() == ItemTypes.STONE || input.getItem() == ItemTypes.STONE_STAIRS);
     }
 
     @Override
     protected int setToMeta(StoneType value) {
-        return ((BlockStone.EnumType) (Object) value).func_176642_a();
+        return ((BlockStone.EnumType) (Object) value).getMetadata();
     }
 
     @Override
     protected StoneType getFromMeta(int meta) {
-        return (StoneType) (Object) BlockStone.EnumType.func_176643_a(meta);
+        return (StoneType) (Object) BlockStone.EnumType.byMetadata(meta);
     }
 
     @Override

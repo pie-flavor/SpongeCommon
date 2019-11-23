@@ -92,7 +92,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
             for (final Direction facing2 : facings) {
                 final Vec3i v2 = ((EnumFacingBridge) (Object) facing2).bridge$getDirectionVec();
                 // TODO Adding an add-method to Vec3i would be nicer of course
-                set.add(new Vec3i(v1.func_177958_n() + v2.func_177958_n(), v1.func_177956_o() + v2.func_177956_o(), v1.func_177952_p() + v2.func_177952_p()));
+                set.add(new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ()));
             }
         }
         set.remove(new Vec3i(0, 0, 0));
@@ -105,7 +105,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
 
     @Inject(method = "updateSurroundingRedstone", at = @At("HEAD"), cancellable = true)
     private void onUpdateSurroundingRedstone(final World worldIn, final BlockPos pos, final BlockState state, final CallbackInfoReturnable<BlockState> cir) {
-        if (!worldIn.field_72995_K) {
+        if (!worldIn.isRemote) {
             this.updateSurroundingRedstone(worldIn, pos);
             cir.setReturnValue(state);
         }
@@ -114,7 +114,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
     @Inject(method = "calculateCurrentChanges", at = @At("HEAD"), cancellable = true)
     private void onCalculateCurrentChanges(
         final World worldIn, final BlockPos pos1, final BlockPos pos2, final BlockState state, final CallbackInfoReturnable<BlockState> cir) {
-        if (!worldIn.field_72995_K) {
+        if (!worldIn.isRemote) {
             this.calculateCurrentChanges(worldIn, pos1);
             cir.setReturnValue(state);
         }
@@ -156,7 +156,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
 
         // Execute updates
         for (final BlockPos posi : blocksNeedingUpdate) {
-            worldIn.func_175685_c(posi, (RedstoneWireBlock) (Object) this, false);
+            worldIn.notifyNeighborsOfStateChange(posi, (RedstoneWireBlock) (Object) this, false);
         }
     }
 
@@ -181,7 +181,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
             final BlockState state = worldIn.func_180495_p(pos);
             final int oldPower = state.func_177229_b(RedstoneWireBlock.field_176351_O);
             this.canProvidePower = false;
-            final int blockPower = worldIn.func_175687_A(pos);
+            final int blockPower = worldIn.getRedstonePowerFromNeighbors(pos);
             this.canProvidePower = true;
             int wirePower = this.getSurroundingWirePower(worldIn, pos);
             // Lower the strength as it moved a block
@@ -210,7 +210,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
             final BlockState state = worldIn.func_180495_p(pos);
             final int oldPower = state.func_177229_b(RedstoneWireBlock.field_176351_O);
             this.canProvidePower = false;
-            final int blockPower = worldIn.func_175687_A(pos);
+            final int blockPower = worldIn.getRedstonePowerFromNeighbors(pos);
             this.canProvidePower = true;
             int wirePower = this.getSurroundingWirePower(worldIn, pos);
             // Lower the strength as it moved a block
@@ -280,11 +280,11 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
         }
         for (final Direction facingVertical : facingsVertical) {
             final BlockPos offsetPos = pos.func_177972_a(facingVertical);
-            final boolean solidBlock = worldIn.func_180495_p(offsetPos).func_185898_k();
+            final boolean solidBlock = worldIn.func_180495_p(offsetPos).isBlockNormalCube();
             for (final Direction facingHorizontal : facingsHorizontal) {
                 // wire can travel upwards if the block on top doesn't cut the wire (is non-solid)
                 // it can travel down if the block below is solid and the block "diagonal" doesn't cut off the wire (is non-solid) 
-                if ((facingVertical == Direction.UP && !solidBlock) || (facingVertical == Direction.DOWN && solidBlock && !worldIn.func_180495_p(offsetPos.func_177972_a(facingHorizontal)).func_185898_k())) {
+                if ((facingVertical == Direction.UP && !solidBlock) || (facingVertical == Direction.DOWN && solidBlock && !worldIn.func_180495_p(offsetPos.func_177972_a(facingHorizontal)).isBlockNormalCube())) {
                     this.addWireToList(worldIn, offsetPos.func_177972_a(facingHorizontal), ownPower);
                 }
             }
@@ -308,11 +308,11 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
             wirePower = this.getMaxCurrentStrength(worldIn, offsetPos, wirePower);
             
             // Block below the wire need to be solid (Upwards diode of slabs/stairs/glowstone) and no block should cut the wire
-            if(worldIn.func_180495_p(offsetPos).func_185915_l() && !worldIn.func_180495_p(pos.func_177984_a()).func_185915_l()) {
-                wirePower = this.getMaxCurrentStrength(worldIn, offsetPos.func_177984_a(), wirePower);
+            if(worldIn.func_180495_p(offsetPos).isNormalCube() && !worldIn.func_180495_p(pos.up()).isNormalCube()) {
+                wirePower = this.getMaxCurrentStrength(worldIn, offsetPos.up(), wirePower);
                 // Only get from power below if no block is cutting the wire
-            } else if (!worldIn.func_180495_p(offsetPos).func_185915_l()) {
-                wirePower = this.getMaxCurrentStrength(worldIn, offsetPos.func_177977_b(), wirePower);
+            } else if (!worldIn.func_180495_p(offsetPos).isNormalCube()) {
+                wirePower = this.getMaxCurrentStrength(worldIn, offsetPos.down(), wirePower);
             }
         }
         return wirePower;
@@ -345,7 +345,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
         for (final Direction facing : facings) {
             final BlockPos offsetPos = pos.func_177972_a(facing);
             if (connectedSides.contains(facing.func_176734_d()) || facing == Direction.DOWN) {
-                if (worldIn.func_180495_p(offsetPos).func_185915_l()) {
+                if (worldIn.func_180495_p(offsetPos).isNormalCube()) {
                     for (final Direction facing1 : facings) {
                         if (this.canBlockBePoweredFromSide(worldIn.func_180495_p(offsetPos.func_177972_a(facing1)), facing1, false))
                             set.add(offsetPos.func_177972_a(facing1));
@@ -430,7 +430,7 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
      */
     private void addAllSurroundingBlocks(final BlockPos pos, final Set<BlockPos> set) {
         for (final Vec3i vect : surroundingBlocksOffset) {
-            set.add(pos.func_177971_a(vect));
+            set.add(pos.add(vect));
         }
     }
 
@@ -461,10 +461,10 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
     @Override
     @Overwrite
     public void func_176213_c(final World worldIn, final BlockPos pos, final BlockState state) {
-        if (!worldIn.field_72995_K) {
+        if (!worldIn.isRemote) {
             this.updateSurroundingRedstone(worldIn, pos);
             for (final Vec3i vec : surroundingBlocksOffset) {
-                worldIn.func_175685_c(pos.func_177971_a(vec), this, false);
+                worldIn.notifyNeighborsOfStateChange(pos.add(vec), this, false);
             }
         }
     }
@@ -480,10 +480,10 @@ public abstract class BlockRedstoneWireMixin_Panda extends Block {
     @Overwrite
     public void func_180663_b(final World worldIn, final BlockPos pos, final BlockState state) {
         super.func_180663_b(worldIn, pos, state);
-        if (!worldIn.field_72995_K) {
+        if (!worldIn.isRemote) {
             this.updateSurroundingRedstone(worldIn, pos);
             for (final Vec3i vec : surroundingBlocksOffset) {
-                worldIn.func_175685_c(pos.func_177971_a(vec), this, false);
+                worldIn.notifyNeighborsOfStateChange(pos.add(vec), this, false);
             }
         }
     }

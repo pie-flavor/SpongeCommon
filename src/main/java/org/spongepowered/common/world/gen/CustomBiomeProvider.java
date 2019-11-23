@@ -130,7 +130,7 @@ public final class CustomBiomeProvider extends BiomeProvider {
 
     @Override
     public boolean func_76940_a(int xCenter, int zCenter, int range, @SuppressWarnings("rawtypes") List searchingForBiomes) {
-        IntCache.func_76446_a();
+        IntCache.resetIntCache();
         int xStartSegment = xCenter - range;
         int zStartSegment = zCenter - range;
         int xMaxSegment = xCenter + range;
@@ -155,7 +155,7 @@ public final class CustomBiomeProvider extends BiomeProvider {
 
     @Override
     public BlockPos func_180630_a(int xCenter, int zCenter, int range, List<Biome> biomes, Random random) {
-        IntCache.func_76446_a();
+        IntCache.resetIntCache();
         int xStartSegment = xCenter - range;
         int zStartSegment = zCenter - range;
         int xMaxSegment = xCenter + range;

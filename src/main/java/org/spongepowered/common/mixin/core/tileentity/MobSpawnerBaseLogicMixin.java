@@ -142,9 +142,9 @@ public abstract class MobSpawnerBaseLogicMixin implements MobSpawnerBaseLogicBri
             return null;
         }
 
-        entity.func_70012_b(x, y, z, entity.field_70177_z, entity.field_70125_A);
+        entity.setLocationAndAngles(x, y, z, entity.rotationYaw, entity.rotationPitch);
 
-        if (doesNotForceSpawn && !world.func_72838_d(entity)) {
+        if (doesNotForceSpawn && !world.spawnEntity(entity)) {
             return null;
         }
 
@@ -155,7 +155,7 @@ public abstract class MobSpawnerBaseLogicMixin implements MobSpawnerBaseLogicBri
             for (int i = 0; i < passengerList.func_74745_c(); i++) {
                 final Entity passenger = impl$ThrowEventAndConstruct(passengerList.func_150305_b(i), world, x, y, z, doesNotForceSpawn);
                 if (passenger != null) {
-                    passenger.func_184205_a(entity, true);
+                    passenger.startRiding(entity, true);
                 }
             }
         }

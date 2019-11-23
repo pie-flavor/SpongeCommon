@@ -50,7 +50,7 @@ public abstract class DedicatedPlayerListMixin extends PlayerList {
 
     @Inject(method = "canJoin", at = @At("HEAD"), cancellable = true)
     private void onCanJoin(final GameProfile profile, final CallbackInfoReturnable<Boolean> ci) {
-        if (!func_72383_n() || func_152599_k().isWhitelisted(profile)) {
+        if (!isWhiteListEnabled() || func_152599_k().isWhitelisted(profile)) {
             ci.setReturnValue(true);
             return;
         }

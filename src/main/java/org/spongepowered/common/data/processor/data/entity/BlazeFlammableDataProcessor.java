@@ -64,7 +64,7 @@ public final class BlazeFlammableDataProcessor
 
     @Override
     protected Optional<Boolean> getVal(BlazeEntity dataHolder) {
-        return Optional.of(dataHolder.func_70027_ad());
+        return Optional.of(dataHolder.isBurning());
     }
 
     @Override

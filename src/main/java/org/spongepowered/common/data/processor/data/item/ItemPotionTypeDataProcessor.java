@@ -48,13 +48,13 @@ import java.util.Optional;
 public class ItemPotionTypeDataProcessor extends AbstractItemSingleDataProcessor<PotionType, Value<PotionType>, PotionTypeData, ImmutablePotionTypeData> {
 
     public ItemPotionTypeDataProcessor() {
-        super(itemStack -> itemStack.func_77973_b() == Items.field_151068_bn || itemStack.func_77973_b() == Items.field_185155_bH ||
-                itemStack.func_77973_b() == Items.field_185156_bI || itemStack.func_77973_b() == Items.field_185167_i, Keys.POTION_TYPE);
+        super(itemStack -> itemStack.getItem() == Items.field_151068_bn || itemStack.getItem() == Items.field_185155_bH ||
+                itemStack.getItem() == Items.field_185156_bI || itemStack.getItem() == Items.field_185167_i, Keys.POTION_TYPE);
     }
 
     @Override
     protected boolean set(ItemStack dataHolder, PotionType value) {
-        if (!dataHolder.func_77942_o()) {
+        if (!dataHolder.hasTagCompound()) {
             dataHolder.func_77982_d(new CompoundNBT());
         }
 
@@ -90,7 +90,7 @@ public class ItemPotionTypeDataProcessor extends AbstractItemSingleDataProcessor
         }
 
         ItemStack itemStack = (ItemStack) container;
-        Item item = itemStack.func_77973_b();
+        Item item = itemStack.getItem();
         // TODO check if this is correct - also for the PotionEffect Processors
         if (item != Items.field_151068_bn) {
             return DataTransactionResult.failNoData();

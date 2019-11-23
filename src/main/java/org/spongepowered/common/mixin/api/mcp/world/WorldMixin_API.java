@@ -253,7 +253,7 @@ public abstract class WorldMixin_API implements World {
 
     @Override
     public int getPrecipitationLevelAt(int x, int z) {
-        return this.getPrecipitationHeight(new BlockPos(x, 0, z)).func_177956_o();
+        return this.getPrecipitationHeight(new BlockPos(x, 0, z)).getY();
     }
 
     @Override
@@ -332,7 +332,7 @@ public abstract class WorldMixin_API implements World {
             entity = (Entity) new LightningBoltEntity(world, x, y, z, false);
         } else if (entityClass.isAssignableFrom(EnderPearlEntity.class)) {
             ArmorStandEntity tempEntity = new ArmorStandEntity(world, x, y, z);
-            tempEntity.field_70163_u -= tempEntity.func_70047_e();
+            tempEntity.posY -= tempEntity.getEyeHeight();
             entity = (Entity) new EnderPearlEntity(world, tempEntity);
             ((EnderPearl) entity).setShooter(ProjectileSource.UNKNOWN);
         }
@@ -348,7 +348,7 @@ public abstract class WorldMixin_API implements World {
         if (entity == null) {
             try {
                 entity = ConstructorUtils.invokeConstructor(entityClass, this);
-                ((net.minecraft.entity.Entity) entity).func_70107_b(x, y, z);
+                ((net.minecraft.entity.Entity) entity).setPosition(x, y, z);
             } catch (Exception e) {
                 throw new RuntimeException("There was an issue attempting to construct " + type.getId(), e);
             }
@@ -369,7 +369,7 @@ public abstract class WorldMixin_API implements World {
 
         if (naturally && entity instanceof MobEntity) {
             // Adding the default equipment
-            ((MobEntity)entity).func_180482_a(world.func_175649_E(new BlockPos(x, y, z)), null);
+            ((MobEntity)entity).func_180482_a(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
         }
 
         if (entity instanceof PaintingEntity) {
@@ -422,7 +422,7 @@ public abstract class WorldMixin_API implements World {
     public Optional<Entity> getEntity(UUID uuid) {
         // Note that WorldServerMixin is properly overriding this to use it's own mapping.
         for (net.minecraft.entity.Entity entity : this.loadedEntityList) {
-            if (entity.func_110124_au().equals(uuid)) {
+            if (entity.getUniqueID().equals(uuid)) {
                 return Optional.of((Entity) entity);
             }
         }
@@ -456,9 +456,9 @@ public abstract class WorldMixin_API implements World {
             if (worldInfo == null) {
                 // We still have to consider some mods are making dummy worlds that
                 // override getWorldInfo with a null, or submit a null value.
-                worldInfo = new WorldInfo(new WorldSettings(0, GameType.NOT_SET, false, false, WorldType.field_77137_b), "sponge$dummy_World");
+                worldInfo = new WorldInfo(new WorldSettings(0, GameType.NOT_SET, false, false, WorldType.DEFAULT), "sponge$dummy_World");
             }
-            this.worldContext = new Context(Context.WORLD_KEY, worldInfo.func_76065_j());
+            this.worldContext = new Context(Context.WORLD_KEY, worldInfo.getWorldName());
         }
         return this.worldContext;
     }
@@ -569,8 +569,8 @@ public abstract class WorldMixin_API implements World {
     @Override
     public void triggerExplosion(Explosion explosion) {
         checkNotNull(explosion, "explosion");
-        ((net.minecraft.world.Explosion) explosion).func_77278_a();
-        ((net.minecraft.world.Explosion) explosion).func_77279_a(true);
+        ((net.minecraft.world.Explosion) explosion).doExplosionA();
+        ((net.minecraft.world.Explosion) explosion).doExplosionB(true);
     }
 
     @Override
@@ -653,7 +653,7 @@ public abstract class WorldMixin_API implements World {
     public Optional<AABB> getBlockSelectionBox(int x, int y, int z) {
         final BlockPos pos = new BlockPos(x, y, z);
         final net.minecraft.block.BlockState state = getBlockState(pos);
-        final AxisAlignedBB box = state.func_185900_c((IBlockAccess) this, pos);
+        final AxisAlignedBB box = state.getBoundingBox((IBlockAccess) this, pos);
         try {
             return Optional.of(VecHelper.toSpongeAABB(box).offset(x, y, z));
         } catch (IllegalArgumentException exception) {

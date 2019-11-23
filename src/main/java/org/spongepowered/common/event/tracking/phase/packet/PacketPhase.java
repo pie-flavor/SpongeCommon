@@ -312,7 +312,7 @@ public final class PacketPhase {
             final BlockPos blockPos = blockPlace.func_187023_a();
             final Direction front = blockPlace.func_187024_b();
             final MinecraftServer server = SpongeImpl.getServer();
-            if (blockPos.func_177956_o() < server.func_71207_Z() - 1 || front != Direction.UP && blockPos.func_177956_o() < server.func_71207_Z()) {
+            if (blockPos.getY() < server.getBuildLimit() - 1 || front != Direction.UP && blockPos.getY() < server.getBuildLimit()) {
                 return PacketPhase.General.PLACE_BLOCK;
             }
             return PacketPhase.General.INVALID;

@@ -65,7 +65,7 @@ public class PotionEntityPotionDataProcessor extends AbstractSingleDataSingleTar
         if (potionItem == null) {
             return Optional.empty();
         }
-        Collection<net.minecraft.potion.EffectInstance> effects = PotionUtils.func_185189_a(potionItem);
+        Collection<net.minecraft.potion.EffectInstance> effects = PotionUtils.getEffectsFromStack(potionItem);
         if (effects == null || effects.isEmpty()) {
             return Optional.empty();
         }

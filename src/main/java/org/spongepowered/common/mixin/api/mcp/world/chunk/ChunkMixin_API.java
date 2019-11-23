@@ -184,11 +184,11 @@ public abstract class ChunkMixin_API implements Chunk {
     @Override
     public double getRegionalDifficultyFactor() {
         final boolean flag = this.world.func_175659_aa() == Difficulty.HARD;
-        final float moon = this.world.func_130001_d();
-        final float f2 = MathHelper.func_76131_a((this.world.func_72820_D() - 72000.0F) / 1440000.0F, 0.0F, 1.0F) * 0.25F;
+        final float moon = this.world.getCurrentMoonPhaseFactor();
+        final float f2 = MathHelper.clamp((this.world.getWorldTime() - 72000.0F) / 1440000.0F, 0.0F, 1.0F) * 0.25F;
         float f3 = 0.0F;
-        f3 += MathHelper.func_76131_a(this.inhabitedTime / 3600000.0F, 0.0F, 1.0F) * (flag ? 1.0F : 0.75F);
-        f3 += MathHelper.func_76131_a(moon * 0.25F, 0.0F, f2);
+        f3 += MathHelper.clamp(this.inhabitedTime / 3600000.0F, 0.0F, 1.0F) * (flag ? 1.0F : 0.75F);
+        f3 += MathHelper.clamp(moon * 0.25F, 0.0F, f2);
         return f3;
     }
 
@@ -222,11 +222,11 @@ public abstract class ChunkMixin_API implements Chunk {
         final byte[] biomeArray = getBiomeArray();
         final int i = x & 15;
         final int j = z & 15;
-        biomeArray[j << 4 | i] = (byte) (Biome.func_185362_a((Biome) biome) & 255);
+        biomeArray[j << 4 | i] = (byte) (Biome.getIdForBiome((Biome) biome) & 255);
         setBiomeArray(biomeArray);
 
         if (this.world instanceof ServerWorld) {
-            final PlayerChunkMapEntry entry = ((ServerWorld) this.world).func_184164_w().func_187301_b(this.x, this.z);
+            final PlayerChunkMapEntry entry = ((ServerWorld) this.world).func_184164_w().getEntry(this.x, this.z);
             if (entry != null) {
                 ((PlayerChunkMapEntryBridge) entry).bridge$markBiomesForUpdate();
             }
@@ -279,7 +279,7 @@ public abstract class ChunkMixin_API implements Chunk {
 
     @Override
     public int getPrecipitationLevelAt(final int x, final int z) {
-        return this.getPrecipitationHeight(new BlockPos(x, 0, z)).func_177956_o();
+        return this.getPrecipitationHeight(new BlockPos(x, 0, z)).getY();
     }
 
     @Override

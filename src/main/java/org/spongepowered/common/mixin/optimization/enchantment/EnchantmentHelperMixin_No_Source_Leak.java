@@ -79,7 +79,7 @@ public abstract class EnchantmentHelperMixin_No_Source_Leak {
         ENCHANTMENT_ITERATOR_HURT.field_151364_a = p_151384_0_;
 
         if (p_151384_0_ != null) {
-            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_HURT, p_151384_0_.func_184209_aF());
+            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_HURT, p_151384_0_.getEquipmentAndArmor());
         }
 
         if (p_151384_1_ instanceof PlayerEntity) {
@@ -103,7 +103,7 @@ public abstract class EnchantmentHelperMixin_No_Source_Leak {
         ENCHANTMENT_ITERATOR_DAMAGE.field_151365_b = p_151385_1_;
 
         if (p_151385_0_ != null) {
-            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_DAMAGE, p_151385_0_.func_184209_aF());
+            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_DAMAGE, p_151385_0_.getEquipmentAndArmor());
         }
 
         if (p_151385_0_ instanceof PlayerEntity) {

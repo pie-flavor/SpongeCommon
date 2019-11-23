@@ -87,11 +87,11 @@ public final class InventoryUtil {
     public static Optional<Inventory> getDoubleChestInventory(ChestTileEntity chest) {
         // BlockChest#getContainer(World, BlockPos, boolean) without isBlocked() check
         for (Direction enumfacing : Direction.Plane.HORIZONTAL) {
-            BlockPos blockpos = chest.func_174877_v().func_177972_a(enumfacing);
+            BlockPos blockpos = chest.getPos().func_177972_a(enumfacing);
 
-            TileEntity tileentity1 = chest.func_145831_w().func_175625_s(blockpos);
+            TileEntity tileentity1 = chest.getWorld().getTileEntity(blockpos);
 
-            if (tileentity1 instanceof ChestTileEntity && tileentity1.func_145838_q() == chest.func_145838_q()) {
+            if (tileentity1 instanceof ChestTileEntity && tileentity1.getBlockType() == chest.getBlockType()) {
 
                 DoubleSidedInventory inventory;
 

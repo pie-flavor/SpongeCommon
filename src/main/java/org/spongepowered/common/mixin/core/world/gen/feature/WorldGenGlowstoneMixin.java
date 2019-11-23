@@ -48,9 +48,9 @@ public abstract class WorldGenGlowstoneMixin extends WorldGeneratorMixin {
     @Override
     @Overwrite
     public boolean generate(final World worldIn, final Random rand, final BlockPos position) {
-        if (!worldIn.func_175623_d(position)) {
+        if (!worldIn.isAirBlock(position)) {
             return false;
-        } else if (worldIn.func_180495_p(position.func_177984_a()).func_177230_c() != Blocks.field_150424_aL) {
+        } else if (worldIn.func_180495_p(position.up()).func_177230_c() != Blocks.field_150424_aL) {
             return false;
         } else {
             worldIn.func_180501_a(position, Blocks.field_150426_aN.func_176223_P(), 2);
@@ -59,7 +59,7 @@ public abstract class WorldGenGlowstoneMixin extends WorldGeneratorMixin {
             for (int i = 0; i < a; ++i) {
                 final int xAdd = rand.nextInt(8) - rand.nextInt(8);
                 final int zAdd = rand.nextInt(8) - rand.nextInt(8);
-                final BlockPos blockpos1 = position.func_177982_a(xAdd, ((Glowstone) this).getClusterHeight().getFlooredAmount(rand), zAdd);
+                final BlockPos blockpos1 = position.add(xAdd, ((Glowstone) this).getClusterHeight().getFlooredAmount(rand), zAdd);
 //                if (worldIn.getBlockState(blockpos1).getBlock().getMaterial() == Material.air) {
                 if (bridge$isAir(worldIn.func_180495_p(blockpos1), worldIn, blockpos1)) {
                     // Sponge end

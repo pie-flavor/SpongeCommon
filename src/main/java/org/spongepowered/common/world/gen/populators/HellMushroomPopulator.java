@@ -83,7 +83,7 @@ public class HellMushroomPopulator implements Mushroom {
             x = random.nextInt(size.getX());
             z = random.nextInt(size.getZ());
             y = random.nextInt(128);
-            final BlockPos height = chunkPos.func_177982_a(x, y, z);
+            final BlockPos height = chunkPos.add(x, y, z);
             if (this.featureM.getSupplierOverride().isPresent()) {
                 final Location<Extent> pos2 = new Location<>(extent, VecHelper.toVector3i(height));
                 type = this.featureM.getSupplierOverride().get().apply(pos2);

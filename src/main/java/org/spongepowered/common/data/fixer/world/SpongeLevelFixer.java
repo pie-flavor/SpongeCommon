@@ -34,7 +34,7 @@ import java.util.UUID;
 public class SpongeLevelFixer implements IFixableData {
 
     @Override
-    public int func_188216_a() {
+    public int getFixVersion() {
         return Constants.Legacy.World.WORLD_UUID_1_9_VERSION;
     }
 

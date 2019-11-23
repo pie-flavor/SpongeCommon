@@ -45,7 +45,7 @@ public final class BreakablePlaceableUtils {
         if (value.isEmpty()) {
             if (stackTag != null) {
                 stackTag.func_82580_o(nbtKey);
-                if (stackTag.func_82582_d()) {
+                if (stackTag.isEmpty()) {
                     stack.func_77982_d(null);
                 }
             }
@@ -74,7 +74,7 @@ public final class BreakablePlaceableUtils {
             return Optional.empty();
         }
         final ListNBT blockIds = tag.func_150295_c(nbtKey, Constants.NBT.TAG_STRING);
-        if (blockIds.func_82582_d()) {
+        if (blockIds.isEmpty()) {
             return Optional.empty();
         }
         final Set<BlockType> blockTypes = Sets.newHashSetWithExpectedSize(blockIds.func_74745_c());

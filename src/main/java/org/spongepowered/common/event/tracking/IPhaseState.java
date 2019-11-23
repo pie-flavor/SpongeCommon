@@ -723,9 +723,9 @@ public interface IPhaseState<C extends PhaseContext<C>> {
      * @param phaseContext the block tick context being entered
      */
     default void appendNotifierPreBlockTick(final WorldServerBridge mixinWorld, final BlockPos pos, final C context, final BlockTickContext phaseContext) {
-        final Chunk chunk = ((ServerWorld) mixinWorld).func_175726_f(pos);
+        final Chunk chunk = ((ServerWorld) mixinWorld).getChunk(pos);
         final ChunkBridge mixinChunk = (ChunkBridge) chunk;
-        if (chunk != null && !chunk.func_76621_g()) {
+        if (chunk != null && !chunk.isEmpty()) {
             mixinChunk.bridge$getBlockOwner(pos).ifPresent(phaseContext::owner);
             mixinChunk.bridge$getBlockNotifier(pos).ifPresent(phaseContext::notifier);
         }
@@ -842,8 +842,8 @@ public interface IPhaseState<C extends PhaseContext<C>> {
         if (this.hasSpecificBlockProcess(context)) {
             context.getCapturedBlockSupplier().cancelTransaction(original);
             ((SpongeBlockSnapshot) original).getWorldServer().ifPresent(worldServer -> {
-                final Chunk chunk = worldServer.func_175726_f(((SpongeBlockSnapshot) original).getBlockPos());
-                final PlayerChunkMapEntry entry = worldServer.func_184164_w().func_187301_b(chunk.field_76635_g, chunk.field_76647_h);
+                final Chunk chunk = worldServer.getChunk(((SpongeBlockSnapshot) original).getBlockPos());
+                final PlayerChunkMapEntry entry = worldServer.func_184164_w().getEntry(chunk.field_76635_g, chunk.field_76647_h);
                 if (entry != null) {
                     ((PlayerChunkMapEntryBridge) entry).bridge$markBiomesForUpdate();
                 }

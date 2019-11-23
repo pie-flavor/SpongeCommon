@@ -81,11 +81,11 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
 
     @ModifyConstant(method = "searchForOtherItemsNearby", constant = @Constant(doubleValue = 0.5D))
     private double impl$changeSearchRadiusFromConfig(final double originalRadius) {
-        if (this.world.field_72995_K || ((WorldBridge) this.world).bridge$isFake()) {
+        if (this.world.isRemote || ((WorldBridge) this.world).bridge$isFake()) {
             return originalRadius;
         }
         if (this.cachedRadius == -1) {
-            final double configRadius = ((WorldInfoBridge) this.world.func_72912_H()).bridge$getConfigAdapter().getConfig().getWorld().getItemMergeRadius();
+            final double configRadius = ((WorldInfoBridge) this.world.getWorldInfo()).bridge$getConfigAdapter().getConfig().getWorld().getItemMergeRadius();
             this.cachedRadius = configRadius < 0 ? 0 : configRadius;
         }
         return this.cachedRadius;
@@ -210,7 +210,7 @@ public abstract class EntityItemMixin extends EntityMixin implements EntityItemB
         )
     )
     private void impl$fireExpireEntityEventTargetItem(final CallbackInfo ci) {
-        if (!SpongeImplHooks.isMainThread() || this.getItem().func_190926_b()) {
+        if (!SpongeImplHooks.isMainThread() || this.getItem().isEmpty()) {
             // In the rare case the first if block is actually at the end of the method instruction list, we don't want to 
             // erroneously be calling this twice.
             return;

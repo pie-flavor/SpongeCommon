@@ -217,7 +217,7 @@ class BlockTickPhaseState extends LocationBasedTickPhaseState<BlockTickContext> 
             if (newBlock == Blocks.field_150350_a) {
                 return BlockChange.BREAK;
             }
-            if (newBlock instanceof IGrowable || newState.func_185904_a().func_76217_h()) {
+            if (newBlock instanceof IGrowable || newState.getMaterial().getCanBurn()) {
                 return BlockChange.GROW;
             }
         }

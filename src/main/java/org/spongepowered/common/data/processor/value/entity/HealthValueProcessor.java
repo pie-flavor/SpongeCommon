@@ -115,7 +115,7 @@ public class HealthValueProcessor extends AbstractSpongeValueProcessor<LivingEnt
                 return DataTransactionResult.errorResult(newHealthValue);
             }
             if (value.floatValue() <= 0.0F) {
-                livingbase.func_70097_a(DamageSourceRegistryModule.IGNORED_DAMAGE_SOURCE, 1000F);
+                livingbase.attackEntityFrom(DamageSourceRegistryModule.IGNORED_DAMAGE_SOURCE, 1000F);
             } else {
                 ((LivingEntityBaseBridge) livingbase).bridge$resetDeathEventsPosted();
             }

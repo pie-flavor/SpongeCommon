@@ -123,7 +123,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
     {
         if (this.asyncLighting$isServerChunk) {
             final List<Chunk> neighbors = this.asyncLighting$getSurroundingChunks();
-            if (this.isGapLightingUpdated && this.world.field_73011_w.func_191066_m() && !skipRecheckGaps && !neighbors.isEmpty())
+            if (this.isGapLightingUpdated && this.world.dimension.func_191066_m() && !skipRecheckGaps && !neighbors.isEmpty())
             {
                 this.asyncLighting$lightExecutorService.execute(() -> {
                     this.asyncLighting$recheckGapsAsync(neighbors);
@@ -146,11 +146,11 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             {
                 final BlockPos blockpos = this.tileEntityPosQueue.poll();
 
-                if (this.getTileEntity(blockpos, Chunk.CreateEntityType.CHECK) == null && this.getBlockState(blockpos).func_177230_c().func_149716_u())
+                if (this.getTileEntity(blockpos, Chunk.CreateEntityType.CHECK) == null && this.getBlockState(blockpos).func_177230_c().hasTileEntity())
                 {
                     final TileEntity tileentity = this.createNewTileEntity(blockpos);
-                    this.world.func_175690_a(blockpos, tileentity);
-                    this.world.func_175704_b(blockpos, blockpos);
+                    this.world.setTileEntity(blockpos, tileentity);
+                    this.world.markBlockRangeForRenderUpdate(blockpos, blockpos);
                 }
             }
             ci.cancel();
@@ -159,12 +159,12 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
 
     @Redirect(method = "checkSkylightNeighborHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getHeight(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/BlockPos;"))
     private BlockPos asyncLighting$onCheckSkylightGetHeight(final World world, final BlockPos pos) {
-        final Chunk chunk = this.asyncLighting$getLightChunk(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4, null);
+        final Chunk chunk = this.asyncLighting$getLightChunk(pos.getX() >> 4, pos.getZ() >> 4, null);
         if (chunk == null) {
             return Constants.DUMMY_POS;
         }
 
-        return new BlockPos(pos.func_177958_n(), chunk.func_76611_b(pos.func_177958_n() & 15, pos.func_177952_p() & 15), pos.func_177952_p());
+        return new BlockPos(pos.getX(), chunk.getHeightValue(pos.getX() & 15, pos.getZ() & 15), pos.getZ());
     }
 
     @Redirect(method = "updateSkylightNeighborHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isAreaLoaded(Lnet/minecraft/util/math/BlockPos;I)Z"))
@@ -207,7 +207,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                         if (chunk == null || chunk.field_189550_d) {
                             continue;
                         }
-                        j1 = Math.min(j1, chunk.func_177442_v());
+                        j1 = Math.min(j1, chunk.getLowestHeight());
                     }
 
                     this.checkSkylightNeighborHeight(l, i1, j1);
@@ -228,7 +228,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
     @Redirect(method = "enqueueRelightChecks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/state/IBlockState;"))
     private BlockState asyncLighting$onRelightChecksGetBlockState(final World world, final BlockPos pos) {
         final Chunk chunk = ((ChunkProviderBridge) world.func_72863_F())
-            .bridge$getLoadedChunkWithoutMarkingActive(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4);
+            .bridge$getLoadedChunkWithoutMarkingActive(pos.getX() >> 4, pos.getZ() >> 4);
 
         final ChunkBridge spongeChunk = (ChunkBridge) chunk;
         if (chunk == null || chunk.field_189550_d || !spongeChunk.bridge$areNeighborsLoaded()) {
@@ -244,7 +244,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             return this.asyncLighting$checkWorldLight(pos);
         }
 
-        return world.func_175664_x(pos);
+        return world.checkLight(pos);
     }
 
     // Avoids grabbing chunk async during light check
@@ -253,13 +253,13 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
         if (this.asyncLighting$isServerChunk) {
             return this.asyncLighting$checkWorldLight(pos);
         }
-        return world.func_175664_x(pos);
+        return world.checkLight(pos);
     }
 
     @Inject(method = "checkLight()V", at = @At("HEAD"), cancellable = true)
     private void asyncLighting$checkLightHead(final CallbackInfo ci) {
         if (this.asyncLighting$isServerChunk) {
-            if (this.world.func_73046_m().func_71241_aa() || this.asyncLighting$lightExecutorService.isShutdown()) {
+            if (this.world.getMinecraftServer().isServerStopped() || this.asyncLighting$lightExecutorService.isShutdown()) {
                 return;
             }
 
@@ -272,7 +272,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                 return;
             }
 
-            if (SpongeImpl.getServer().func_152345_ab()) {
+            if (SpongeImpl.getServer().isCallingFromMinecraftThread()) {
                 try {
                     this.asyncLighting$lightExecutorService.execute(() -> {
                         this.asyncLighting$checkLightAsync(neighborChunks);
@@ -280,7 +280,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                 } catch (RejectedExecutionException e) {
                     // This could happen if ServerHangWatchdog kills the server
                     // between the start of the method and the execute() call.
-                    if (!this.world.func_73046_m().func_71241_aa() && !this.asyncLighting$lightExecutorService.isShutdown()) {
+                    if (!this.world.getMinecraftServer().isServerStopped() && !this.asyncLighting$lightExecutorService.isShutdown()) {
                         throw e;
                     }
                 }
@@ -303,7 +303,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
         this.isLightPopulated = true;
         final BlockPos blockpos = new BlockPos(this.x << 4, 0, this.z << 4);
 
-        if (this.world.field_73011_w.func_191066_m())
+        if (this.world.dimension.func_191066_m())
         {
             label44:
 
@@ -325,7 +325,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                 {
                     final int k = enumfacing.func_176743_c() == Direction.AxisDirection.POSITIVE ? 16 : 1;
                     final BlockPos pos = blockpos.func_177967_a(enumfacing, k);
-                    final Chunk chunk = this.asyncLighting$getLightChunk(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4, neighbors);
+                    final Chunk chunk = this.asyncLighting$getLightChunk(pos.getX() >> 4, pos.getZ() >> 4, neighbors);
                     if (chunk == null) {
                         continue;
                     }
@@ -357,12 +357,12 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
         boolean flag1 = false;
         final BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos((this.x << 4) + x, 0, (this.z << 4) + z);
 
-        for (int j = i + 16 - 1; j > this.world.func_181545_F() || j > 0 && !flag1; --j)
+        for (int j = i + 16 - 1; j > this.world.getSeaLevel() || j > 0 && !flag1; --j)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.func_177958_n(), j, blockpos$mutableblockpos.func_177952_p());
-            final int k = this.getBlockState(blockpos$mutableblockpos).func_185891_c();
+            blockpos$mutableblockpos.setPos(blockpos$mutableblockpos.getX(), j, blockpos$mutableblockpos.getZ());
+            final int k = this.getBlockState(blockpos$mutableblockpos).getLightOpacity();
 
-            if (k == 255 && blockpos$mutableblockpos.func_177956_o() < this.world.func_181545_F())
+            if (k == 255 && blockpos$mutableblockpos.getY() < this.world.getSeaLevel())
             {
                 flag1 = true;
             }
@@ -377,11 +377,11 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             }
         }
 
-        for (int l = blockpos$mutableblockpos.func_177956_o(); l > 0; --l)
+        for (int l = blockpos$mutableblockpos.getY(); l > 0; --l)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.func_177958_n(), l, blockpos$mutableblockpos.func_177952_p());
+            blockpos$mutableblockpos.setPos(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
 
-            if (this.getBlockState(blockpos$mutableblockpos).func_185906_d() > 0)
+            if (this.getBlockState(blockpos$mutableblockpos).getLightValue() > 0)
             {
                 this.asyncLighting$checkWorldLight(blockpos$mutableblockpos, neighbors);
             }
@@ -401,7 +401,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
     @Nullable
     private Chunk asyncLighting$getLightChunk(final int chunkX, final int chunkZ, @Nullable List<Chunk> neighbors) {
         final Chunk currentChunk = (Chunk)(Object) this;
-        if (currentChunk.func_76600_a(chunkX, chunkZ)) {
+        if (currentChunk.isAtLocation(chunkX, chunkZ)) {
             if (currentChunk.field_189550_d) {
                 return null;
             }
@@ -414,7 +414,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             }
         }
         for (final net.minecraft.world.chunk.Chunk neighbor : neighbors) {
-            if (neighbor.func_76600_a(chunkX, chunkZ)) {
+            if (neighbor.isAtLocation(chunkX, chunkZ)) {
                 if (neighbor.field_189550_d) {
                     return null;
                 }
@@ -538,7 +538,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             final int k = this.x * 16 + x;
             final int l = this.z * 16 + z;
 
-            if (this.world.field_73011_w.func_191066_m())
+            if (this.world.dimension.func_191066_m())
             {
                 if (j < i)
                 {
@@ -546,10 +546,10 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                     {
                         final ExtendedBlockStorage extendedblockstorage2 = this.storageArrays[j1 >> 4];
 
-                        if (extendedblockstorage2 != Chunk.field_186036_a)
+                        if (extendedblockstorage2 != Chunk.EMPTY_SECTION)
                         {
-                            extendedblockstorage2.func_76657_c(x, j1 & 15, z, 15);
-                            this.world.func_175679_n(new BlockPos((this.x << 4) + x, j1, (this.z << 4) + z));
+                            extendedblockstorage2.setSkyLight(x, j1 & 15, z, 15);
+                            this.world.notifyLightSet(new BlockPos((this.x << 4) + x, j1, (this.z << 4) + z));
                         }
                     }
                 }
@@ -559,10 +559,10 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                     {
                         final ExtendedBlockStorage extendedblockstorage = this.storageArrays[i1 >> 4];
 
-                        if (extendedblockstorage != Chunk.field_186036_a)
+                        if (extendedblockstorage != Chunk.EMPTY_SECTION)
                         {
-                            extendedblockstorage.func_76657_c(x, i1 & 15, z, 0);
-                            this.world.func_175679_n(new BlockPos((this.x << 4) + x, i1, (this.z << 4) + z));
+                            extendedblockstorage.setSkyLight(x, i1 & 15, z, 0);
+                            this.world.notifyLightSet(new BlockPos((this.x << 4) + x, i1, (this.z << 4) + z));
                         }
                     }
                 }
@@ -588,9 +588,9 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
 
                     final ExtendedBlockStorage extendedblockstorage1 = this.storageArrays[j >> 4];
 
-                    if (extendedblockstorage1 != Chunk.field_186036_a)
+                    if (extendedblockstorage1 != Chunk.EMPTY_SECTION)
                     {
-                        extendedblockstorage1.func_76657_c(x, j & 15, z, k1);
+                        extendedblockstorage1.setSkyLight(x, j & 15, z, k1);
                     }
                 }
             }
@@ -610,7 +610,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
                 this.heightMapMinimum = l1;
             }
 
-            if (this.world.field_73011_w.func_191066_m())
+            if (this.world.dimension.func_191066_m())
             {
                 for (final Direction enumfacing : Direction.Plane.HORIZONTAL)
                 {
@@ -642,12 +642,12 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             x2 = i;
         }
 
-        if (this.world.field_73011_w.func_191066_m())
+        if (this.world.dimension.func_191066_m())
         {
             for (int j = x2; j <= z2; ++j)
             {
                 final BlockPos pos = new BlockPos(x1, j, z1);
-                final Chunk chunk = this.asyncLighting$getLightChunk(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4, null);
+                final Chunk chunk = this.asyncLighting$getLightChunk(pos.getX() >> 4, pos.getZ() >> 4, null);
                 if (chunk == null) {
                     continue;
                 }
@@ -655,7 +655,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
             }
         }
 
-        this.world.func_147458_c(x1, x2, z1, x1, z2, z1);
+        this.world.markBlockRangeForRenderUpdate(x1, x2, z1, x1, z2, z1);
     }
 
     /**
@@ -666,7 +666,7 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
      * @return True if light update was successful, false if not
      */
     private boolean asyncLighting$checkWorldLightFor(final LightType lightType, final BlockPos pos) {
-        final Chunk chunk = this.asyncLighting$getLightChunk(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4, null);
+        final Chunk chunk = this.asyncLighting$getLightChunk(pos.getX() >> 4, pos.getZ() >> 4, null);
         if (chunk == null) {
             return false;
         }
@@ -687,12 +687,12 @@ public abstract class ChunkMixin_Async_Lighting implements ChunkBridge_AsyncLigh
      */
     private boolean asyncLighting$checkWorldLight(final BlockPos pos, final List<Chunk> neighbors) {
         boolean flag = false;
-        final Chunk chunk = this.asyncLighting$getLightChunk(pos.func_177958_n() >> 4, pos.func_177952_p() >> 4, neighbors);
+        final Chunk chunk = this.asyncLighting$getLightChunk(pos.getX() >> 4, pos.getZ() >> 4, neighbors);
         if (chunk == null) {
             return false;
         }
 
-        if (this.world.field_73011_w.func_191066_m())
+        if (this.world.dimension.func_191066_m())
         {
             flag = ((WorldServerBridge_AsyncLighting) this.world).asyncLightingBridge$updateLightAsync(LightType.SKY, pos, (Chunk) (Object) chunk);
         }

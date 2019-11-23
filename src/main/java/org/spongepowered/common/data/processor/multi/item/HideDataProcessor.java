@@ -49,12 +49,12 @@ public class HideDataProcessor extends AbstractMultiDataSingleTargetProcessor<It
 
     @Override
     protected boolean doesDataExist(ItemStack dataHolder) {
-        return dataHolder.func_77942_o();
+        return dataHolder.hasTagCompound();
     }
 
     @Override
     protected boolean set(ItemStack dataHolder, Map<Key<?>, Object> keyValues) {
-        if (!dataHolder.func_77942_o()) {
+        if (!dataHolder.hasTagCompound()) {
             dataHolder.func_77982_d(new CompoundNBT());
         }
         int flag = 0;
@@ -82,7 +82,7 @@ public class HideDataProcessor extends AbstractMultiDataSingleTargetProcessor<It
 
     @Override
     protected Map<Key<?>, ?> getValues(ItemStack dataHolder) {
-        if (!dataHolder.func_77942_o()) {
+        if (!dataHolder.hasTagCompound()) {
             return Maps.newHashMap();
         }
         Map<Key<?>, Boolean> map = Maps.newHashMap();
@@ -123,7 +123,7 @@ public class HideDataProcessor extends AbstractMultiDataSingleTargetProcessor<It
     public DataTransactionResult remove(DataHolder dataHolder) {
         if (supports(dataHolder)) {
             ItemStack data = (ItemStack) dataHolder;
-            if (data.func_77942_o() && data.func_77978_p().func_150297_b(Constants.Item.ITEM_HIDE_FLAGS, Constants.NBT.TAG_INT)) {
+            if (data.hasTagCompound() && data.func_77978_p().func_150297_b(Constants.Item.ITEM_HIDE_FLAGS, Constants.NBT.TAG_INT)) {
                 data.func_77978_p().func_82580_o(Constants.Item.ITEM_HIDE_FLAGS);
             }
             return DataTransactionResult.successNoData();

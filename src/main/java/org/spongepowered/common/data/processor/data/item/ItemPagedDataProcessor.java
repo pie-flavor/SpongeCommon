@@ -38,7 +38,7 @@ import org.spongepowered.common.text.SpongeTexts;
 public class ItemPagedDataProcessor extends AbstractItemBookPagesProcessor<Text, PagedData, ImmutablePagedData> {
 
     public ItemPagedDataProcessor() {
-        super(input -> input.func_77973_b() == Items.field_151099_bA || input.func_77973_b() == Items.field_151164_bB, Keys.BOOK_PAGES);
+        super(input -> input.getItem() == Items.field_151099_bA || input.getItem() == Items.field_151164_bB, Keys.BOOK_PAGES);
     }
 
     @Override

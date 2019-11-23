@@ -174,7 +174,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
 
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayerMP;onUpdateEntity()V"))
     private void impl$onPlayerTick(final ServerPlayerEntity player) {
-        if (player.field_70170_p.field_72995_K) {
+        if (player.world.isRemote) {
             player.func_71127_g();
             return;
         }
@@ -271,8 +271,8 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
             ((Sign) tileentitysign).offer(existingSignData.get());
         }
         Sponge.getCauseStackManager().popCause();
-        tileentitysign.func_70296_d();
-        worldserver.func_184164_w().func_180244_a(blockpos);
+        tileentitysign.markDirty();
+        worldserver.func_184164_w().markBlockForUpdate(blockpos);
     }
 
     /**
@@ -288,18 +288,18 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     public void processCreativeInventoryAction(final CCreativeInventoryActionPacket packetIn) {
         PacketThreadUtil.func_180031_a(packetIn, (ServerPlayNetHandler) (Object) this, this.player.func_71121_q());
 
-        if (this.player.field_71134_c.func_73083_d()) {
+        if (this.player.field_71134_c.isCreative()) {
             final PacketContext<?> context = (PacketContext<?>) PhaseTracker.getInstance().getCurrentContext();
             final boolean ignoresCreative = context.getIgnoringCreative();
             final boolean clickedOutside = packetIn.func_149627_c() < 0;
             final ItemStack itemstack = packetIn.func_149625_d();
 
-            if (!itemstack.func_190926_b() && itemstack.func_77942_o() && itemstack.func_77978_p().func_150297_b(Constants.Item.BLOCK_ENTITY_TAG, 10)) {
+            if (!itemstack.isEmpty() && itemstack.hasTagCompound() && itemstack.func_77978_p().func_150297_b(Constants.Item.BLOCK_ENTITY_TAG, 10)) {
                 final CompoundNBT nbttagcompound = itemstack.func_77978_p().func_74775_l(Constants.Item.BLOCK_ENTITY_TAG);
 
                 if (nbttagcompound.func_74764_b("x") && nbttagcompound.func_74764_b("y") && nbttagcompound.func_74764_b("z")) {
                     final BlockPos blockpos = new BlockPos(nbttagcompound.func_74762_e("x"), nbttagcompound.func_74762_e("y"), nbttagcompound.func_74762_e("z"));
-                    final TileEntity tileentity = this.player.field_70170_p.func_175625_s(blockpos);
+                    final TileEntity tileentity = this.player.world.getTileEntity(blockpos);
 
                     if (tileentity != null) {
                         final CompoundNBT nbttagcompound1 = new CompoundNBT();
@@ -307,13 +307,13 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                         nbttagcompound1.func_82580_o("x");
                         nbttagcompound1.func_82580_o("y");
                         nbttagcompound1.func_82580_o("z");
-                        itemstack.func_77983_a(Constants.Item.BLOCK_ENTITY_TAG, nbttagcompound1);
+                        itemstack.setTagInfo(Constants.Item.BLOCK_ENTITY_TAG, nbttagcompound1);
                     }
                 }
             }
 
             final boolean clickedInsideNotOutput = packetIn.func_149627_c() >= 1 && packetIn.func_149627_c() <= 45;
-            final boolean itemValidCheck = itemstack.func_190926_b() || itemstack.func_77960_j() >= 0 && itemstack.func_190916_E() <= itemstack.func_77976_d() && !itemstack.func_190926_b();
+            final boolean itemValidCheck = itemstack.isEmpty() || itemstack.getMetadata() >= 0 && itemstack.getCount() <= itemstack.getMaxStackSize() && !itemstack.isEmpty();
 
             // Sponge start - handle CreativeInventoryEvent
             if (itemValidCheck) {
@@ -325,15 +325,15 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                             this.player.field_71135_a.func_147359_a(
                                     new SSetSlotPacket(this.player.field_71069_bz.field_75152_c, packetIn.func_149627_c(),
                                             this.player.field_71069_bz.func_75139_a(packetIn.func_149627_c()).func_75211_c()));
-                            this.player.field_71135_a.func_147359_a(new SSetSlotPacket(-1, -1, ItemStack.field_190927_a));
+                            this.player.field_71135_a.func_147359_a(new SSetSlotPacket(-1, -1, ItemStack.EMPTY));
                         }
                         return;
                     }
                 }
 
                 if (clickedInsideNotOutput) {
-                    if (itemstack.func_190926_b()) {
-                        this.player.field_71069_bz.func_75141_a(packetIn.func_149627_c(), ItemStack.field_190927_a);
+                    if (itemstack.isEmpty()) {
+                        this.player.field_71069_bz.func_75141_a(packetIn.func_149627_c(), ItemStack.EMPTY);
                     } else {
                         this.player.field_71069_bz.func_75141_a(packetIn.func_149627_c(), itemstack);
                     }
@@ -516,11 +516,11 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     private void impl$onSpectateTeleportCallMoveEvent(CSpectatePacket packetIn, CallbackInfo ci, Entity spectatingEntity) {
         final MoveEntityEvent.Teleport event = EntityUtil.handleDisplaceEntityTeleportEvent(
                 this.player,
-                spectatingEntity.field_70165_t,
-                spectatingEntity.field_70163_u,
-                spectatingEntity.field_70161_v,
-                spectatingEntity.field_70177_z,
-                spectatingEntity.field_70125_A);
+                spectatingEntity.posX,
+                spectatingEntity.posY,
+                spectatingEntity.posZ,
+                spectatingEntity.rotationYaw,
+                spectatingEntity.rotationPitch);
         if (event.isCancelled()) {
             ci.cancel();
         } else {
@@ -539,7 +539,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
         if (this.player.func_71121_q() == (ServerWorld) this.impl$spectatingTeleportLocation.getExtent()) {
             final Vector3d position = this.impl$spectatingTeleportLocation.getPosition();
             this.impl$spectatingTeleportLocation = null;
-            player.func_70634_a(position.getX(), position.getY(), position.getZ());
+            player.setPositionAndUpdate(position.getX(), position.getY(), position.getZ());
             ci.cancel();
         }
     }
@@ -547,9 +547,9 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     @Redirect(method = "handleSpectate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayerMP;setLocationAndAngles(DDDFF)V"))
     private void impl$onSpectateLocationAndAnglesUpdate(ServerPlayerEntity player, double x, double y, double z, float yaw, float pitch) {
         //noinspection ConstantConditions
-        player.field_71093_bK = ((ServerWorld) this.impl$spectatingTeleportLocation.getExtent()).field_73011_w.func_186058_p().func_186068_a();
+        player.dimension = ((ServerWorld) this.impl$spectatingTeleportLocation.getExtent()).dimension.func_186058_p().func_186068_a();
         final Vector3d position = this.impl$spectatingTeleportLocation.getPosition();
-        player.func_70012_b(
+        player.setLocationAndAngles(
                 position.getX(), position.getY(), position.getZ(),
                 (float) this.impl$spectatingTeleportLocation.getYaw(),
                 (float) this.impl$spectatingTeleportLocation.getPitch()
@@ -560,7 +560,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     private void impl$onSpectatePositionUpdate(ServerPlayerEntity player, double x, double y, double z) {
         //noinspection ConstantConditions
         final Vector3d position = this.impl$spectatingTeleportLocation.getPosition();
-        player.func_70634_a(position.getX(), position.getY(), position.getZ());
+        player.setPositionAndUpdate(position.getX(), position.getY(), position.getZ());
         this.impl$spectatingTeleportLocation = null;
     }
 
@@ -580,8 +580,8 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
      */
     @Redirect(method = "processVehicleMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayerMP;getLowestRidingEntity()Lnet/minecraft/entity/Entity;"))
     private Entity processVehicleMoveEvent(final ServerPlayerEntity playerMP, final CMoveVehiclePacket packetIn) {
-        final Entity ridingEntity = this.player.func_184208_bv();
-        if (ridingEntity == this.player || ridingEntity.func_184179_bs() != this.player || ridingEntity != this.lowestRiddenEnt) {
+        final Entity ridingEntity = this.player.getLowestRidingEntity();
+        if (ridingEntity == this.player || ridingEntity.getControllingPassenger() != this.player || ridingEntity != this.lowestRiddenEnt) {
             return ridingEntity;
         }
 
@@ -646,7 +646,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
             // Only do a restore if something actually changed. The client does an identity check ('==')
             // to determine if it should continue using an itemstack. If we always resend the itemstack, we end up
             // cancelling item usage (e.g. eating food) that occurs while targeting a block
-            if (!ItemStack.func_77989_b(itemStack, player.func_184586_b(hand)) && ((PlayerInteractionManagerBridge) this.player.field_71134_c).bridge$isInteractBlockRightClickCancelled()) {
+            if (!ItemStack.areItemStacksEqual(itemStack, player.func_184586_b(hand)) && ((PlayerInteractionManagerBridge) this.player.field_71134_c).bridge$isInteractBlockRightClickCancelled()) {
                 PacketPhaseUtil.handlePlayerSlotRestore((ServerPlayerEntity) player, itemStack, hand);
             }
         }
@@ -671,7 +671,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
             // Only do a restore if something actually changed. The client does an identity check ('==')
             // to determine if it should continue using an itemstack. If we always resend the itemstack, we end up
             // cancelling item usage (e.g. eating food) that occurs while targeting a block
-            if (!ItemStack.func_77989_b(itemStack, player.func_184586_b(hand))  && ((PlayerInteractionManagerBridge) this.player.field_71134_c).bridge$isInteractBlockRightClickCancelled()) {
+            if (!ItemStack.areItemStacksEqual(itemStack, player.func_184586_b(hand))  && ((PlayerInteractionManagerBridge) this.player.field_71134_c).bridge$isInteractBlockRightClickCancelled()) {
                 PacketPhaseUtil.handlePlayerSlotRestore((ServerPlayerEntity) player, itemStack, hand);
             }
         }
@@ -685,14 +685,14 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     private ItemEntity impl$performDropThroughPhase(final ServerPlayerEntity player, final boolean dropAll) {
         ItemEntity item = null;
         final ItemStack stack = this.player.field_71071_by.func_70448_g();
-        if (!stack.func_190926_b()) {
-            final int size = stack.func_190916_E();
+        if (!stack.isEmpty()) {
+            final int size = stack.getCount();
             item = this.player.func_71040_bB(dropAll);
             // force client itemstack update if drop event was cancelled
             if (item == null && ((EntityPlayerBridge) player).bridge$shouldRestoreInventory()) {
                 final Slot slot = this.player.field_71070_bA.func_75147_a(this.player.field_71071_by, this.player.field_71071_by.field_70461_c);
                 final int windowId = this.player.field_71070_bA.field_75152_c;
-                stack.func_190920_e(size);
+                stack.setCount(size);
                 this.sendPacket(new SSetSlotPacket(windowId, slot.field_75222_d, stack));
             }
         }
@@ -706,7 +706,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
         if (PhaseTracker.getInstance().getCurrentContext().isEmpty()) {
             return;
         }
-        SpongeCommonEventFactory.lastAnimationPacketTick = SpongeImpl.getServer().func_71259_af();
+        SpongeCommonEventFactory.lastAnimationPacketTick = SpongeImpl.getServer().getTickCounter();
         SpongeCommonEventFactory.lastAnimationPlayer = new WeakReference<>(this.player);
         if (ShouldFire.ANIMATE_HAND_EVENT) {
             final HandType handType = (HandType) (Object) packetIn.func_187018_a();
@@ -726,20 +726,20 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
         if (PhaseTracker.getInstance().getCurrentContext().isEmpty()) {
             return;
         }
-        SpongeCommonEventFactory.lastPrimaryPacketTick = SpongeImpl.getServer().func_71259_af();
+        SpongeCommonEventFactory.lastPrimaryPacketTick = SpongeImpl.getServer().getTickCounter();
     }
 
     @Inject(method = "processPlayerDigging", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayerMP;dropItem(Z)Lnet/minecraft/entity/item/EntityItem;"))
     private void onProcessPlayerDiggingDropItem(final CPlayerDiggingPacket packetIn, final CallbackInfo ci) {
         final ItemStack stack = this.player.func_184614_ca();
-        if (!stack.func_190926_b()) {
-            ((EntityPlayerMPBridge) this.player).bridge$setPacketItem(stack.func_77946_l());
+        if (!stack.isEmpty()) {
+            ((EntityPlayerMPBridge) this.player).bridge$setPacketItem(stack.copy());
         }
     }
 
     @Inject(method = "processTryUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorld(I)Lnet/minecraft/world/WorldServer;"), cancellable = true)
     private void onProcessTryUseItem(final CPlayerTryUseItemPacket packetIn, final CallbackInfo ci) {
-        SpongeCommonEventFactory.lastSecondaryPacketTick = SpongeImpl.getServer().func_71259_af();
+        SpongeCommonEventFactory.lastSecondaryPacketTick = SpongeImpl.getServer().getTickCounter();
         final long packetDiff = System.currentTimeMillis() - this.impl$lastTryBlockPacketTimeStamp;
         // If the time between packets is small enough, use the last result.
         if (packetDiff < 100) {
@@ -755,7 +755,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
         // InteractItemEvent on block must be handled in PlayerInteractionManager to support item/block results.
         // Only track the timestamps to support our block animation events
         this.impl$lastTryBlockPacketTimeStamp = System.currentTimeMillis();
-        SpongeCommonEventFactory.lastSecondaryPacketTick = SpongeImpl.getServer().func_71259_af();
+        SpongeCommonEventFactory.lastSecondaryPacketTick = SpongeImpl.getServer().getTickCounter();
 
     }
 
@@ -772,7 +772,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
     public void processUseEntity(final CUseEntityPacket packetIn) {
         // Sponge start
         // All packets received by server are handled first on the Netty Thread
-        if (!SpongeImpl.getServer().func_152345_ab()) {
+        if (!SpongeImpl.getServer().isCallingFromMinecraftThread()) {
             if (packetIn.func_149565_c() == CUseEntityPacket.Action.INTERACT) {
                 // This packet is only sent by client when CPacketUseEntity.Action.INTERACT_AT is
                 // not successful. We can safely ignore this packet as we handle the INTERACT logic
@@ -785,7 +785,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
         }
         // Sponge end
 
-        final ServerWorld worldserver = this.server.func_71218_a(this.player.field_71093_bK);
+        final ServerWorld worldserver = this.server.func_71218_a(this.player.dimension);
         final Entity entity = packetIn.func_149564_a(worldserver);
         this.player.func_143004_u();
 
@@ -797,7 +797,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                 d0 = 9.0D; // 1.5 blocks
             }
 
-            if (this.player.func_70068_e(entity) < d0) {
+            if (this.player.getDistanceSq(entity) < d0) {
                 // Sponge start - Ignore CPacketUseEntity.Action.INTERACT
                 /*if (packetIn.getAction() == CPacketUseEntity.Action.INTERACT) {
                     // The client will only send this packet if INTERACT_AT is not successful.
@@ -812,13 +812,13 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                     // Sponge start - Fire interact events
                     try (final CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
                         final Hand hand = packetIn.func_186994_b();
-                        final ItemStack itemstack = hand != null ? this.player.func_184586_b(hand) : ItemStack.field_190927_a;
+                        final ItemStack itemstack = hand != null ? this.player.func_184586_b(hand) : ItemStack.EMPTY;
 
-                        SpongeCommonEventFactory.lastSecondaryPacketTick = this.server.func_71259_af();
+                        SpongeCommonEventFactory.lastSecondaryPacketTick = this.server.getTickCounter();
 
                         // Is interaction allowed with item in hand
                         if (SpongeCommonEventFactory.callInteractEntityEventSecondary(this.player, itemstack,
-                            entity, hand, VecHelper.toVector3d(entity.func_174791_d().func_178787_e(packetIn.func_179712_b()))).isCancelled()) {
+                            entity, hand, VecHelper.toVector3d(entity.getPositionVector().add(packetIn.func_179712_b()))).isCancelled()) {
 
                             // Restore held item in hand
                             final int index = ((InventoryPlayerBridge) this.player.field_71071_by).bridge$getHeldItemIndex(hand);
@@ -834,7 +834,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
 
                             // Handle a few special cases where the client assumes that the interaction is successful,
                             // which means that we need to force an update
-                            if (itemstack.func_77973_b() == Items.field_151058_ca) {
+                            if (itemstack.getItem() == Items.field_151058_ca) {
                                 // Detach entity again
                                 sendPacket(new SMountEntityPacket(entity, null));
                             } else {
@@ -842,7 +842,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                                 // We fix the client state by marking it as dirty so it will be updated on the client the next tick
                                 final DataParameter<?> parameter = PacketPhaseUtil.findModifiedEntityInteractDataParameter(itemstack, entity);
                                 if (parameter != null) {
-                                    entity.func_184212_Q().func_187217_b(parameter);
+                                    entity.getDataManager().setDirty(parameter);
                                 }
                             }
 
@@ -859,13 +859,13 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
                     // Sponge start - Call interact event
                     final Hand hand = Hand.MAIN_HAND; // Will be null in the packet during ATTACK
                     final ItemStack itemstack = this.player.func_184586_b(hand);
-                    SpongeCommonEventFactory.lastPrimaryPacketTick = this.server.func_71259_af();
+                    SpongeCommonEventFactory.lastPrimaryPacketTick = this.server.getTickCounter();
 
                     Vector3d hitVec = null;
 
                     if (packetIn.func_179712_b() == null) {
                         final RayTraceResult result = SpongeImplHooks.rayTraceEyes(this.player, SpongeImplHooks.getBlockReachDistance(this.player));
-                        hitVec = result == null ? null : VecHelper.toVector3d(result.field_72307_f);
+                        hitVec = result == null ? null : VecHelper.toVector3d(result.hitResult);
                     }
 
                     if (SpongeCommonEventFactory.callInteractItemEventPrimary(this.player, itemstack, hand, hitVec, entity).isCancelled()) {
@@ -876,7 +876,7 @@ public abstract class NetHandlerPlayServerMixin implements NetHandlerPlayServerB
 
                     if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof AbstractArrowEntity || entity == this.player) {
                         this.disconnect(new TranslationTextComponent("multiplayer.disconnect.invalid_entity_attacked"));
-                        this.server.func_71236_h("Player " + this.player.func_70005_c_() + " tried to attack an invalid entity");
+                        this.server.logWarning("Player " + this.player.getName() + " tried to attack an invalid entity");
                         return;
                     }
 

@@ -53,13 +53,13 @@ public class BeaconPrimaryEffectValueProcessor
     @Override
     protected boolean set(BeaconTileEntity container, Optional<PotionEffectType> value) {
         ((TileEntityBeaconBridge) container).bridge$forceSetPrimaryEffect((Effect) value.orElse(null));
-        container.func_70296_d();
+        container.markDirty();
         return true;
     }
 
     @Override
     protected Optional<Optional<PotionEffectType>> getVal(BeaconTileEntity container) {
-        int id = container.func_174887_a_(1);
+        int id = container.getField(1);
         if (id > 0) {
             return Optional.of(Optional.of((PotionEffectType) Effect.func_188412_a(id)));
         }

@@ -60,34 +60,34 @@ public class FlowerPotDataProcessor extends
         if (!old.isPresent()) {
             return DataTransactionResult.successNoData();
         }
-        flowerPot.func_190614_a(ItemStack.field_190927_a);
-        flowerPot.func_70296_d();
+        flowerPot.setItemStack(ItemStack.EMPTY);
+        flowerPot.markDirty();
         return DataTransactionResult.successRemove(constructImmutableValue(old.get()));
     }
 
     @Override
     protected boolean set(TileEntityFlowerPot flowerPot, ItemStackSnapshot stackSnapshot) {
         if (stackSnapshot == ItemStackSnapshot.NONE) {
-            flowerPot.func_190614_a(ItemStack.field_190927_a);
+            flowerPot.setItemStack(ItemStack.EMPTY);
         } else {
             ItemStack stack = (ItemStack) stackSnapshot.createStack();
             if (!((BlockFlowerPotAccessor) Blocks.field_150457_bL).accessor$canItemBePotted(stack)) {
                 return false;
             }
-            flowerPot.func_190614_a(stack);
+            flowerPot.setItemStack(stack);
         }
-        flowerPot.func_70296_d();
-        flowerPot.func_145831_w().func_184138_a(flowerPot.func_174877_v(), flowerPot.func_145831_w().func_180495_p(flowerPot.func_174877_v()), flowerPot.func_145831_w()
-                .func_180495_p(flowerPot.func_174877_v()), 3);
+        flowerPot.markDirty();
+        flowerPot.getWorld().func_184138_a(flowerPot.getPos(), flowerPot.getWorld().func_180495_p(flowerPot.getPos()), flowerPot.getWorld()
+                .func_180495_p(flowerPot.getPos()), 3);
         return true;
     }
 
     @Override
     protected Optional<ItemStackSnapshot> getVal(TileEntityFlowerPot flowerPot) {
-        if (flowerPot.func_145965_a() == null) {
+        if (flowerPot.getFlowerPotItem() == null) {
             return Optional.empty();
         }
-        ItemStack stack = new ItemStack(flowerPot.func_145965_a(), 1, flowerPot.func_145966_b());
+        ItemStack stack = new ItemStack(flowerPot.getFlowerPotItem(), 1, flowerPot.getFlowerPotData());
         return Optional.of(((org.spongepowered.api.item.inventory.ItemStack) stack).createSnapshot());
     }
 

@@ -61,7 +61,7 @@ public abstract class WorldGenSwampMixin_API extends AbstractTreeFeature impleme
         final net.minecraft.world.World worldIn = (net.minecraft.world.World) world;
         final int i;
         BlockPos position = new BlockPos(x, y, z);
-        for (i = 5; worldIn.func_180495_p(position.func_177977_b()).func_185904_a() == Material.field_151586_h; position = position.func_177977_b());
+        for (i = 5; worldIn.func_180495_p(position.down()).getMaterial() == Material.WATER; position = position.down());
 
         boolean flag = true;
 

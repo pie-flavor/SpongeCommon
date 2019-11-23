@@ -59,7 +59,7 @@ public abstract class NetHandlerHandshakeTCPMixin_Bungee {
             if (split.length == 3 || split.length == 4) {
                 packetIn.field_149598_b = split[0];
                 ((NetworkManagerBridge_Bungee) this.networkManager).bungeeBridge$setRemoteAddress(new InetSocketAddress(split[1],
-                        ((InetSocketAddress) this.networkManager.func_74430_c()).getPort()));
+                        ((InetSocketAddress) this.networkManager.getRemoteAddress()).getPort()));
                 ((NetworkManagerBridge_Bungee) this.networkManager).bungeeBridge$setSpoofedUUID(UUIDTypeAdapter.fromString(split[2]));
 
                 if (split.length == 4) {
@@ -69,7 +69,7 @@ public abstract class NetHandlerHandshakeTCPMixin_Bungee {
                 final StringTextComponent chatcomponenttext =
                         new StringTextComponent("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
                 this.networkManager.func_179290_a(new SPacketDisconnect(chatcomponenttext));
-                this.networkManager.func_150718_a(chatcomponenttext);
+                this.networkManager.closeChannel(chatcomponenttext);
             }
         }
     }

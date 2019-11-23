@@ -63,10 +63,10 @@ public class EntityVillager_ListItemForEmeraldsMixin_API implements TradeOfferGe
 
         if (amount < 0) {
             itemstack = new ItemStack(Items.field_151166_bC, 1, 0);
-            itemstack1 = new ItemStack(this.itemToBuy.func_77973_b(), -amount, this.itemToBuy.func_77960_j());
+            itemstack1 = new ItemStack(this.itemToBuy.getItem(), -amount, this.itemToBuy.getMetadata());
         } else {
             itemstack = new ItemStack(Items.field_151166_bC, amount, 0);
-            itemstack1 = new ItemStack(this.itemToBuy.func_77973_b(), 1, this.itemToBuy.func_77960_j());
+            itemstack1 = new ItemStack(this.itemToBuy.getItem(), 1, this.itemToBuy.getMetadata());
         }
 
         return (TradeOffer) new MerchantRecipe(itemstack, itemstack1);

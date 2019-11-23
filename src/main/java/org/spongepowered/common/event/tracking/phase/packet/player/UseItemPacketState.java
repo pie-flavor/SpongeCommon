@@ -96,7 +96,7 @@ public final class UseItemPacketState extends BasicPacketState {
         BasicPacketContext context) {
         Player player = context.getSpongePlayer();
         BlockPos pos = VecHelper.toBlockPos(transaction.getFinal().getLocation().get());
-        ChunkBridge spongeChunk = (ChunkBridge) ((ServerWorld) player.getWorld()).func_175726_f(pos);
+        ChunkBridge spongeChunk = (ChunkBridge) ((ServerWorld) player.getWorld()).getChunk(pos);
         if (blockChange == BlockChange.PLACE) {
             spongeChunk.bridge$addTrackedBlockPosition((Block) transaction.getFinal().getState().getType(), pos, player, PlayerTracker.Type.OWNER);
         }

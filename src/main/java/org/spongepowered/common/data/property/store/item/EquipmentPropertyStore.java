@@ -36,8 +36,8 @@ public class EquipmentPropertyStore extends AbstractItemStackPropertyStore<Equip
 
     @Override
     protected Optional<EquipmentProperty> getFor(ItemStack itemStack) {
-        if (itemStack.func_77973_b() instanceof ArmorItem) {
-            final ArmorItem armor = (ArmorItem) itemStack.func_77973_b();
+        if (itemStack.getItem() instanceof ArmorItem) {
+            final ArmorItem armor = (ArmorItem) itemStack.getItem();
             switch (armor.field_77881_a) {
                 case FEET: {
                     return Optional.of(new EquipmentProperty(EquipmentTypes.HEADWEAR));

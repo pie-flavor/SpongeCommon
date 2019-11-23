@@ -258,11 +258,11 @@ public abstract class WorldInfoMixin implements WorldInfoBridge {
     public void bridge$updatePlayersForDifficulty() {
         WorldManager.getWorlds()
                 .stream()
-                .filter(world -> world.func_72912_H() == (WorldInfo) (Object) this)
+                .filter(world -> world.getWorldInfo() == (WorldInfo) (Object) this)
                 .flatMap(world -> world.field_73010_i.stream())
                 .filter(player -> player instanceof ServerPlayerEntity)
                 .map(player -> (ServerPlayerEntity) player)
-                .forEach(player -> player.field_71135_a.func_147359_a(new SServerDifficultyPacket(this.difficulty, ((WorldInfo) (Object) this).func_176123_z
+                .forEach(player -> player.field_71135_a.func_147359_a(new SServerDifficultyPacket(this.difficulty, ((WorldInfo) (Object) this).isDifficultyLocked
                         ())));
     }
 

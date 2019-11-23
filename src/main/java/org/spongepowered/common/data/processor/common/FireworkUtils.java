@@ -60,23 +60,23 @@ public class FireworkUtils {
             .build();
 
     public static ItemStack getItem(final FireworkRocketEntity firework) {
-        ItemStack item = firework.func_184212_Q().func_187225_a(EntityFireworkRocketAccessor.accessor$getFireworkItemParameter());
-        if (item.func_190926_b()) {
+        ItemStack item = firework.getDataManager().get(EntityFireworkRocketAccessor.accessor$getFireworkItemParameter());
+        if (item.isEmpty()) {
             item = (ItemStack) new SpongeItemStackBuilder().itemType(ItemTypes.FIREWORKS).build();
-            firework.func_184212_Q().func_187227_b(EntityFireworkRocketAccessor.accessor$getFireworkItemParameter(), item);
+            firework.getDataManager().set(EntityFireworkRocketAccessor.accessor$getFireworkItemParameter(), item);
         }
         return item;
     }
 
     @Nullable
     public static FireworkEffect getChargeEffect(final ItemStack item) {
-        Preconditions.checkArgument(item.func_77973_b() == Items.field_151154_bQ, "Item is not a firework!"); // FIREWORK_CHARGE
+        Preconditions.checkArgument(item.getItem() == Items.field_151154_bQ, "Item is not a firework!"); // FIREWORK_CHARGE
         final CompoundNBT tag = item.func_77978_p();
         if (tag == null) {
             return null;
         }
         final CompoundNBT firework = tag.func_74775_l(Constants.Entity.Firework.EXPLOSION);
-        if(firework.func_82582_d()) {
+        if(firework.isEmpty()) {
             return null;
         }
 
@@ -146,16 +146,16 @@ public class FireworkUtils {
     }
 
     public static boolean setFireworkEffects(final Object object, final List<? extends FireworkEffect> effects) {
-        ItemStack item = ItemStack.field_190927_a;
+        ItemStack item = ItemStack.EMPTY;
         if(object instanceof ItemStack) {
             item = (ItemStack) object;
         }
         if(object instanceof FireworkRocketEntity) {
             item = getItem((FireworkRocketEntity) object);
         }
-        if(item.func_190926_b()) return false;
+        if(item.isEmpty()) return false;
 
-        if(item.func_77973_b() == Items.field_151154_bQ) {
+        if(item.getItem() == Items.field_151154_bQ) {
             final CompoundNBT tag = item.func_77978_p();
             if (tag == null) {
                 return true;
@@ -166,7 +166,7 @@ public class FireworkUtils {
                 tag.func_82580_o(Constants.Entity.Firework.EXPLOSION);
             }
             return true;
-        } else if(item.func_77973_b() == Items.field_151152_bP) {
+        } else if(item.getItem() == Items.field_151152_bP) {
             final ListNBT nbtEffects = new ListNBT();
             effects.stream().map(FireworkUtils::toNbt).forEach(nbtEffects::func_74742_a);
 
@@ -178,17 +178,17 @@ public class FireworkUtils {
     }
 
     public static Optional<List<FireworkEffect>> getFireworkEffects(final Object object) {
-        ItemStack item = ItemStack.field_190927_a;
+        ItemStack item = ItemStack.EMPTY;
         if(object instanceof ItemStack) {
             item = (ItemStack) object;
         }
         if(object instanceof FireworkRocketEntity) {
             item = FireworkUtils.getItem((FireworkRocketEntity) object);
         }
-        if(item.func_190926_b()) return Optional.empty();
+        if(item.isEmpty()) return Optional.empty();
 
         final List<FireworkEffect> effects;
-        if(item.func_77973_b() == Items.field_151152_bP) {
+        if(item.getItem() == Items.field_151152_bP) {
             final CompoundNBT fireworks = item.func_179543_a(Constants.Item.Fireworks.FIREWORKS);
             if(fireworks == null || !fireworks.func_74764_b(Constants.Item.Fireworks.EXPLOSIONS)) return Optional.empty();
 
@@ -208,23 +208,23 @@ public class FireworkUtils {
     }
 
     public static boolean removeFireworkEffects(final Object object) {
-        ItemStack item = ItemStack.field_190927_a;
+        ItemStack item = ItemStack.EMPTY;
         if(object instanceof ItemStack) {
             item = (ItemStack) object;
         }
         if(object instanceof FireworkRocketEntity) {
             item = FireworkUtils.getItem((FireworkRocketEntity) object);
         }
-        if(item.func_190926_b()) return false;
+        if(item.isEmpty()) return false;
 
-        if(item.func_77973_b() == Items.field_151154_bQ) {
+        if(item.getItem() == Items.field_151154_bQ) {
             final CompoundNBT tag = item.func_77978_p();
             if (tag == null) {
                 return true;
             }
             tag.func_82580_o(Constants.Entity.Firework.EXPLOSION);
             return true;
-        } else if(item.func_77973_b() == Items.field_151152_bP) {
+        } else if(item.getItem() == Items.field_151152_bP) {
             final CompoundNBT fireworks = item.func_190925_c(Constants.Item.Fireworks.FIREWORKS);
             fireworks.func_82580_o(Constants.Item.Fireworks.EXPLOSIONS);
             return true;

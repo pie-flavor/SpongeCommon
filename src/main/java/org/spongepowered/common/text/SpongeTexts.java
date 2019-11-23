@@ -102,15 +102,15 @@ public final class SpongeTexts {
     }
 
     public static ITextComponent fixActionBarFormatting(ITextComponent component) {
-        if (!component.func_150253_a().isEmpty()) {
-            List<ITextComponent> children = component.func_150253_a();
+        if (!component.getSiblings().isEmpty()) {
+            List<ITextComponent> children = component.getSiblings();
             for (int i = 0; i < children.size(); i++) {
                 children.set(i, fixActionBarFormatting(children.get(i)));
             }
         }
 
         StringTextComponent result = new StringTextComponent(((ITextComponentBridge) component).bridge$getLegacyFormatting());
-        result.func_150257_a(component);
+        result.appendSibling(component);
         return result;
     }
 

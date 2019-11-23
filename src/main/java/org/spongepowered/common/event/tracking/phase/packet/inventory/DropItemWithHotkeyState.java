@@ -147,7 +147,7 @@ public final class DropItemWithHotkeyState extends BasicInventoryPacketState {
                 if (currentEntity instanceof OwnershipTrackedBridge) {
                     ((OwnershipTrackedBridge) currentEntity).tracked$setOwnerReference((Player) playerMP);
                 } else {
-                    currentEntity.setCreator(playerMP.func_110124_au());
+                    currentEntity.setCreator(playerMP.getUniqueID());
                 }            }
 
             // A 'primary click' is used by the game to indicate a single drop (e.g. pressing 'q' without holding 'control')

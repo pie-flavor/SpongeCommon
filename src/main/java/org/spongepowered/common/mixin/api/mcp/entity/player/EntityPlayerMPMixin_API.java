@@ -282,7 +282,7 @@ public abstract class EntityPlayerMPMixin_API extends EntityPlayerMixin_API impl
      */
     @Overwrite
     public String getPlayerIP() {
-        return NetworkUtil.getHostString(this.connection.field_147371_a.func_74430_c());
+        return NetworkUtil.getHostString(this.connection.field_147371_a.getRemoteAddress());
     }
 
     @Override
@@ -510,13 +510,13 @@ public abstract class EntityPlayerMPMixin_API extends EntityPlayerMixin_API impl
 
     @Override
     public GameModeData getGameModeData() {
-        return new SpongeGameModeData((GameMode) (Object) this.interactionManager.func_73081_b());
+        return new SpongeGameModeData((GameMode) (Object) this.interactionManager.getGameType());
     }
 
     @Override
     public Value<GameMode> gameMode() {
         return new SpongeValue<>(Keys.GAME_MODE, Constants.Catalog.DEFAULT_GAMEMODE,
-                (GameMode) (Object) this.interactionManager.func_73081_b());
+                (GameMode) (Object) this.interactionManager.getGameType());
     }
 
     @Override
@@ -555,7 +555,7 @@ public abstract class EntityPlayerMPMixin_API extends EntityPlayerMixin_API impl
         if (this.getHealth() > 0.0F) {
             return false;
         }
-        this.connection.field_147369_b = this.server.func_184103_al().func_72368_a((ServerPlayerEntity) (Object) this, this.dimension, false);
+        this.connection.field_147369_b = this.server.getPlayerList().func_72368_a((ServerPlayerEntity) (Object) this, this.dimension, false);
         return true;
     }
 
@@ -606,10 +606,10 @@ public abstract class EntityPlayerMPMixin_API extends EntityPlayerMixin_API impl
             }
             this.api$worldBorder = border;
             if (this.api$worldBorder != null) {
-                ((net.minecraft.world.border.WorldBorder) this.api$worldBorder).func_177737_a(((EntityPlayerMPBridge) this).bridge$getWorldBorderListener());
+                ((net.minecraft.world.border.WorldBorder) this.api$worldBorder).addListener(((EntityPlayerMPBridge) this).bridge$getWorldBorderListener());
                 this.connection.func_147359_a(new SWorldBorderPacket((net.minecraft.world.border.WorldBorder) this.api$worldBorder, SWorldBorderPacket.Action.INITIALIZE));
             } else { //unset the border if null
-                this.connection.func_147359_a(new SWorldBorderPacket(this.world.func_175723_af(), SWorldBorderPacket.Action.INITIALIZE));
+                this.connection.func_147359_a(new SWorldBorderPacket(this.world.getWorldBorder(), SWorldBorderPacket.Action.INITIALIZE));
             }
         }
     }
@@ -623,7 +623,7 @@ public abstract class EntityPlayerMPMixin_API extends EntityPlayerMixin_API impl
     public AdvancementProgress getProgress(final Advancement advancement) {
         checkNotNull(advancement, "advancement");
         checkState(((AdvancementBridge) advancement).bridge$isRegistered(), "The advancement must be registered");
-        return (AdvancementProgress) this.advancements.func_192747_a((net.minecraft.advancements.Advancement) advancement);
+        return (AdvancementProgress) this.advancements.getProgress((net.minecraft.advancements.Advancement) advancement);
     }
 
     @Override

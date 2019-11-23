@@ -35,8 +35,8 @@ public class DamageAbsorptionPropertyStore extends AbstractItemStackPropertyStor
 
     @Override
     protected Optional<DamageAbsorptionProperty> getFor(ItemStack itemStack) {
-        if (itemStack.func_77973_b() instanceof ArmorItem) {
-            final ArmorItem armor = (ArmorItem) itemStack.func_77973_b();
+        if (itemStack.getItem() instanceof ArmorItem) {
+            final ArmorItem armor = (ArmorItem) itemStack.getItem();
             final int reduction = armor.field_77879_b;
             return Optional.of(new DamageAbsorptionProperty(reduction));
         }

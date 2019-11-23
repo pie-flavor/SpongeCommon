@@ -78,16 +78,16 @@ public class BlockPropertyIdProvider implements TypeProvider<IProperty<?>, Strin
         }
         final String lowerCasedBlockId = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, blockId);
         final String modId = lowerCasedBlockId.split(":")[0];
-        final String propertyName = property.func_177701_a();
-        final String lastAttemptId = lowerCasedBlockId + "_" + property.func_177701_a();
+        final String propertyName = property.getName();
+        final String lastAttemptId = lowerCasedBlockId + "_" + property.getName();
         try { // Seriously, don't look past this try state. just continue on with your day...
               // I warned you...
             final String originalClass = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, block.getClass().getSimpleName());
             Class<?> blockClass = block.getClass();
             while (true) {
                 if (blockClass == Object.class) {
-                    final String propertyId = modId + ":" + originalClass + "_" + property.func_177701_a();
-                    LogManager.getLogger("Sponge").warn("Could not find {} owning class, assigning fallback id: {}", property.func_177701_a(),
+                    final String propertyId = modId + ":" + originalClass + "_" + property.getName();
+                    LogManager.getLogger("Sponge").warn("Could not find {} owning class, assigning fallback id: {}", property.getName(),
                             propertyId);
                     instance.register(property, propertyId);
                     return propertyId;
@@ -124,7 +124,7 @@ public class BlockPropertyIdProvider implements TypeProvider<IProperty<?>, Strin
 
         } catch (Exception e) {
             LogManager.getLogger("Sponge").warn("An exception was thrown while trying to resolve the property "
-                                                + property.func_177701_a() +"'s owning class, assigning "
+                                                + property.getName() +"'s owning class, assigning "
                                                 + "fallback id: " + lastAttemptId, e);
             instance.register(property, lastAttemptId);
             return lastAttemptId;
@@ -132,7 +132,7 @@ public class BlockPropertyIdProvider implements TypeProvider<IProperty<?>, Strin
     }
 
     private void register(IProperty<?> property, String id) {
-        checkArgument(!this.propertyIdMap.containsKey(property), "Property is already registered! Property: " + property.func_177701_a()
+        checkArgument(!this.propertyIdMap.containsKey(property), "Property is already registered! Property: " + property.getName()
                                                                  + " is registered as : " + this.propertyIdMap.get(property));
         this.propertyIdMap.put(property, id.toLowerCase(Locale.ENGLISH));
         this.idPropertyMap.put(id.toLowerCase(Locale.ENGLISH), property);
@@ -153,7 +153,7 @@ public class BlockPropertyIdProvider implements TypeProvider<IProperty<?>, Strin
         register(VineBlock.field_176280_O, "minecraft:vine_west");
         register(VineBlock.field_176277_a, "minecraft:vine_up");
         register(BlockRedSandstone.field_176336_a, "minecraft:red_sandstone_type");
-        register(BlockLiquid.field_176367_b, "minecraft:liquid_level");
+        register(BlockLiquid.LEVEL, "minecraft:liquid_level");
         register(SugarCaneBlock.field_176355_a, "minecraft:reed_age");
         register(MyceliumBlock.field_176384_a, "minecraft:mycelium_snowy");
         register(BlockColored.field_176581_a, "minecraft:dyed_color");

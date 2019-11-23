@@ -505,7 +505,7 @@ public class SpongeGameRegistry implements GameRegistry {
 
     @Override
     public SmeltingRecipeRegistry getSmeltingRecipeRegistry() {
-        return (SmeltingRecipeRegistry) FurnaceRecipes.func_77602_a();
+        return (SmeltingRecipeRegistry) FurnaceRecipes.instance();
     }
 
     @Override

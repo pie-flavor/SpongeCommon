@@ -78,7 +78,7 @@ public abstract class BlockRailBaseMixin extends BlockMixin {
             for (final Map.Entry<IProperty<?>, Comparable<?>> entry :  blockState.func_177228_b().entrySet
                     ()) {
                 if (entry.getValue() instanceof AbstractRailBlock.EnumRailDirection) {
-                    if (entry.getKey().func_177700_c().contains(railDirection)) {
+                    if (entry.getKey().getAllowedValues().contains(railDirection)) {
                         final PropertyEnum<AbstractRailBlock.EnumRailDirection> property = (PropertyEnum<AbstractRailBlock.EnumRailDirection>) entry.getKey();
                         final net.minecraft.block.BlockState newState = blockState.func_177226_a(property, railDirection);
                         return Optional.of((BlockState) newState);
@@ -107,13 +107,13 @@ public abstract class BlockRailBaseMixin extends BlockMixin {
             return Optional.of((BlockState) blockState.func_177226_a(RailBlock.field_176565_b, railDirection));
         }
         if (blockState.func_177230_c() instanceof PoweredRailBlock) {
-            if (!PoweredRailBlock.field_176568_b.func_177700_c().contains(railDirection)) {
+            if (!PoweredRailBlock.field_176568_b.getAllowedValues().contains(railDirection)) {
                 return Optional.empty();
             }
             return Optional.of((BlockState) blockState.func_177226_a(PoweredRailBlock.field_176568_b, railDirection));
         }
         if (blockState.func_177230_c() instanceof DetectorRailBlock) {
-            if (!DetectorRailBlock.field_176573_b.func_177700_c().contains(railDirection)) {
+            if (!DetectorRailBlock.field_176573_b.getAllowedValues().contains(railDirection)) {
                 return Optional.empty();
             }
             return Optional.of((BlockState) blockState.func_177226_a(DetectorRailBlock.field_176573_b, railDirection));

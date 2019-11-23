@@ -104,19 +104,19 @@ public abstract class DragonFightManagerMixin implements DragonFightManagerBridg
                     this.generatePortal(false);
                 }
 
-                final List<EnderDragonEntity> list = this.world.func_175644_a(EnderDragonEntity.class, EntityPredicates.field_94557_a);
+                final List<EnderDragonEntity> list = this.world.getEntities(EnderDragonEntity.class, EntityPredicates.field_94557_a);
 
                 if (list.isEmpty()) {
                     this.dragonKilled = true;
                 } else {
                     final EnderDragonEntity entitydragon = list.get(0);
-                    this.dragonUniqueId = entitydragon.func_110124_au();
+                    this.dragonUniqueId = entitydragon.getUniqueID();
                     LOGGER.info("Found that there\'s a dragon still alive ({})", entitydragon);
                     this.dragonKilled = false;
 
                     if (!flag) {
                         LOGGER.info("But we didn\'t have a portal, let\'s remove it.");
-                        entitydragon.func_70106_y();
+                        entitydragon.setDead();
                         this.dragonUniqueId = null;
                     }
                 }
@@ -144,14 +144,14 @@ public abstract class DragonFightManagerMixin implements DragonFightManagerBridg
             if (!this.dragonKilled) {
                 if (this.dragonUniqueId == null || ++this.ticksSinceDragonSeen >= 1200) {
                     this.loadChunks();
-                    final List<EnderDragonEntity> list1 = this.world.func_175644_a(EnderDragonEntity.class, EntityPredicates.field_94557_a);
+                    final List<EnderDragonEntity> list1 = this.world.getEntities(EnderDragonEntity.class, EntityPredicates.field_94557_a);
 
                     if (list1.isEmpty()) {
                         LOGGER.debug("Haven\'t seen the dragon, respawning it");
                         this.createNewDragon();
                     } else {
                         LOGGER.debug("Haven\'t seen our dragon, but found another one to use.");
-                        this.dragonUniqueId = list1.get(0).func_110124_au();
+                        this.dragonUniqueId = list1.get(0).getUniqueID();
                     }
 
                     this.ticksSinceDragonSeen = 0;

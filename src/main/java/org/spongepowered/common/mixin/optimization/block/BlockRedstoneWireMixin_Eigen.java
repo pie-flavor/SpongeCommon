@@ -74,7 +74,7 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
 
     @Inject(method = "updateSurroundingRedstone", at = @At("HEAD"), cancellable = true)
     private void onUpdateSurroundingRedstone(World worldIn, BlockPos pos, BlockState state, CallbackInfoReturnable<BlockState> cir) {
-        if (!worldIn.field_72995_K) {
+        if (!worldIn.isRemote) {
             this.updateSurroundingRedstone(worldIn, pos, state, null);
             cir.setReturnValue(state);
         }
@@ -89,9 +89,9 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
     @Overwrite
     public void func_189540_a(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-        if (!worldIn.field_72995_K)
+        if (!worldIn.isRemote)
         {
-            if (this.func_176196_c(worldIn, pos))
+            if (this.canPlaceBlockAt(worldIn, pos))
             {
                 // [theosib] Added fourth argument: fromPos is the block position that updated the redstone
                 // wire block.  We use this to help determine the direction of information flow.
@@ -100,7 +100,7 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
             else
             {
                 this.func_176226_b(worldIn, pos, state, 0);
-                worldIn.func_175698_g(pos);
+                worldIn.setBlockToAir(pos);
             }
         }
     }
@@ -123,7 +123,7 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
     
             for (BlockPos blockpos : list)
             {   
-                worldIn.func_175685_c(blockpos, this, false);
+                worldIn.notifyNeighborsOfStateChange(blockpos, this, false);
             }
     
             return state;
@@ -152,7 +152,7 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
         int j = 0;
         j = this.getMaxCurrentStrength(worldIn, pos2, j);
         this.canProvidePower = false;
-        int k = worldIn.func_175687_A(pos1);
+        int k = worldIn.getRedstonePowerFromNeighbors(pos1);
         this.canProvidePower = true;
 
         if (this.old_decrement) {
@@ -174,23 +174,23 @@ public abstract class BlockRedstoneWireMixin_Eigen extends Block {
         for (Direction enumfacing : Direction.Plane.HORIZONTAL)
         {
             BlockPos blockpos = pos1.func_177972_a(enumfacing);
-            boolean flag = blockpos.func_177958_n() != pos2.func_177958_n() || blockpos.func_177952_p() != pos2.func_177952_p();
+            boolean flag = blockpos.getX() != pos2.getX() || blockpos.getZ() != pos2.getZ();
 
             if (flag)
             {
                 l = this.getMaxCurrentStrength(worldIn, blockpos, l);
             }
 
-            if (worldIn.func_180495_p(blockpos).func_185915_l() && !worldIn.func_180495_p(pos1.func_177984_a()).func_185915_l())
+            if (worldIn.func_180495_p(blockpos).isNormalCube() && !worldIn.func_180495_p(pos1.up()).isNormalCube())
             {
-                if (flag && pos1.func_177956_o() >= pos2.func_177956_o())
+                if (flag && pos1.getY() >= pos2.getY())
                 {
-                    l = this.getMaxCurrentStrength(worldIn, blockpos.func_177984_a(), l);
+                    l = this.getMaxCurrentStrength(worldIn, blockpos.up(), l);
                 }
             }
-            else if (!worldIn.func_180495_p(blockpos).func_185915_l() && flag && pos1.func_177956_o() <= pos2.func_177956_o())
+            else if (!worldIn.func_180495_p(blockpos).isNormalCube() && flag && pos1.getY() <= pos2.getY())
             {
-                l = this.getMaxCurrentStrength(worldIn, blockpos.func_177977_b(), l);
+                l = this.getMaxCurrentStrength(worldIn, blockpos.down(), l);
             }
         }
 

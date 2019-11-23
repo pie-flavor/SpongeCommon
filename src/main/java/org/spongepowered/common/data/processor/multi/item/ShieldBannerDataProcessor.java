@@ -51,7 +51,7 @@ import java.util.Optional;
 public class ShieldBannerDataProcessor extends AbstractItemDataProcessor<BannerData, ImmutableBannerData> {
 
     public ShieldBannerDataProcessor() {
-        super(input -> input.func_77973_b() == Items.field_185159_cQ);
+        super(input -> input.getItem() == Items.field_185159_cQ);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ShieldBannerDataProcessor extends AbstractItemDataProcessor<BannerD
 
             for (final PatternLayer layer : patternLayers) {
                 final CompoundNBT compound = new CompoundNBT();
-                compound.func_74778_a(Constants.TileEntity.Banner.BANNER_PATTERN_ID, ((BannerPattern) (Object) layer.getShape()).func_190993_b());
+                compound.func_74778_a(Constants.TileEntity.Banner.BANNER_PATTERN_ID, ((BannerPattern) (Object) layer.getShape()).getHashname());
                 compound.func_74768_a(Constants.TileEntity.Banner.BANNER_PATTERN_COLOR, ((net.minecraft.item.DyeColor) (Object) layer.getColor()).func_176767_b());
                 patterns.func_74742_a(compound);
             }
@@ -85,11 +85,11 @@ public class ShieldBannerDataProcessor extends AbstractItemDataProcessor<BannerD
 
     @Override
     public Map<Key<?>, ?> getValues(final ItemStack itemStack) {
-        if (itemStack.func_77942_o() && itemStack.func_77978_p().func_74764_b(Constants.Item.ITEM_UNBREAKABLE)) {
-            return ImmutableMap.of(Keys.ITEM_DURABILITY, itemStack.func_77958_k() - itemStack.func_77952_i(),
+        if (itemStack.hasTagCompound() && itemStack.func_77978_p().func_74764_b(Constants.Item.ITEM_UNBREAKABLE)) {
+            return ImmutableMap.of(Keys.ITEM_DURABILITY, itemStack.getMaxDamage() - itemStack.getItemDamage(),
                     Keys.UNBREAKABLE, itemStack.func_77978_p().func_74767_n(Constants.Item.ITEM_UNBREAKABLE));
         }
-        return ImmutableMap.of(Keys.ITEM_DURABILITY, itemStack.func_77958_k() - itemStack.func_77952_i(), Keys.UNBREAKABLE, false);
+        return ImmutableMap.of(Keys.ITEM_DURABILITY, itemStack.getMaxDamage() - itemStack.getItemDamage(), Keys.UNBREAKABLE, false);
     }
 
     @Override

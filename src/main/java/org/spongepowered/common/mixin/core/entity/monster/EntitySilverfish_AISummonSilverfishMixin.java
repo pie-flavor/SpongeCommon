@@ -62,7 +62,7 @@ public abstract class EntitySilverfish_AISummonSilverfishMixin extends Goal {
     private boolean onCanGrief(final World world, final BlockPos pos, final boolean dropBlock) {
         final BlockState blockState = world.func_180495_p(pos);
         return ((GrieferBridge) this.silverfish).bridge$CanGrief()
-               ? world.func_175655_b(pos, dropBlock)
+               ? world.destroyBlock(pos, dropBlock)
                : world.func_180501_a(pos, blockState.func_177229_b(SilverfishBlock.field_176378_a).func_176883_d(), 3);
     }
 }

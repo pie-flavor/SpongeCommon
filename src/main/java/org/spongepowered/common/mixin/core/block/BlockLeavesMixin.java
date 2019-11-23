@@ -78,7 +78,7 @@ public abstract class BlockLeavesMixin extends BlockMixin {
         try (final PhaseContext<?> context = currentState.includesDecays() ? null : BlockPhase.State.BLOCK_DECAY.createPhaseContext()
                                            .source(new SpongeLocatableBlockBuilder()
                                                .world((World) worldIn)
-                                               .position(pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p())
+                                               .position(pos.getX(), pos.getY(), pos.getZ())
                                                .state((BlockState) state)
                                                .build())) {
             if (context != null) {
@@ -110,20 +110,20 @@ public abstract class BlockLeavesMixin extends BlockMixin {
             try (final PhaseContext<?> context = currentState.includesDecays() ? null : BlockPhase.State.BLOCK_DECAY.createPhaseContext()
                 .source(new SpongeLocatableBlockBuilder()
                     .world((World) worldIn)
-                    .position(pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p())
+                    .position(pos.getX(), pos.getY(), pos.getZ())
                     .state((BlockState) state)
                     .build())) {
                 if (context != null) {
                     context.buildAndSwitch();
                 }
                 this.dropBlockAsItem(worldIn, pos, state, 0);
-                worldIn.func_175698_g(pos);
+                worldIn.setBlockToAir(pos);
             }
             return;
         }
         // Sponge End
         this.dropBlockAsItem(worldIn, pos, state , 0);
-        worldIn.func_175698_g(pos);
+        worldIn.setBlockToAir(pos);
 
     }
 

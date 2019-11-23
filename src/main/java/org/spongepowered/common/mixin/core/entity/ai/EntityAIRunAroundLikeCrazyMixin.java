@@ -54,7 +54,7 @@ public abstract class EntityAIRunAroundLikeCrazyMixin extends EntityAIBaseMixin 
     @Overwrite
     public void updateTask() {
         if (this.horseHost.func_70681_au().nextInt(50) == 0) {
-            Entity entity = this.horseHost.func_184188_bt().get(0);
+            Entity entity = this.horseHost.getPassengers().get(0);
 
             if (entity == null) {
                 return;
@@ -72,7 +72,7 @@ public abstract class EntityAIRunAroundLikeCrazyMixin extends EntityAIBaseMixin 
                         }
                     }
                     this.horseHost.func_110263_g((PlayerEntity)entity);
-                    this.horseHost.field_70170_p.func_72960_a(this.horseHost, (byte)7);
+                    this.horseHost.world.setEntityState(this.horseHost, (byte)7);
                     return;
                 }
 
@@ -84,7 +84,7 @@ public abstract class EntityAIRunAroundLikeCrazyMixin extends EntityAIBaseMixin 
             if (((EntityBridge) this.horseHost).bridge$removePassengers(DismountTypes.DERAIL)) {
                 // Sponge end
                 this.horseHost.func_190687_dF();
-                this.horseHost.field_70170_p.func_72960_a(this.horseHost, (byte)6);
+                this.horseHost.world.setEntityState(this.horseHost, (byte)6);
             }
         }
     }

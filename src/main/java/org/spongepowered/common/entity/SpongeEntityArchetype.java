@@ -150,12 +150,12 @@ public class SpongeEntityArchetype extends AbstractArchetype<EntityType, EntityS
         final SpawnEntityEvent.Custom event = SpongeEventFactory.createSpawnEntityEventCustom(Sponge.getCauseStackManager().getCurrentCause(), entities);
         if (!event.isCancelled()) {
             final WorldServerBridge mixinWorldServer = (WorldServerBridge) worldServer;
-            entity.func_70080_a(x, y, z, entity.field_70177_z, entity.field_70125_A);
+            entity.setPositionAndRotation(x, y, z, entity.rotationYaw, entity.rotationPitch);
             mixinWorldServer.bridge$forceSpawnEntity(entity);
             if (entity instanceof MobEntity) {
                 // This is ok to force spawn since we aren't considering custom items.
                 if (requiresInitialSpawn) {
-                    ((MobEntity) entity).func_180482_a(worldServer.func_175649_E(blockPos), null);
+                    ((MobEntity) entity).func_180482_a(worldServer.getDifficultyForLocation(blockPos), null);
                 }
                 ((MobEntity) entity).func_70656_aK();
             }

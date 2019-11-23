@@ -55,7 +55,7 @@ import java.util.Optional;
 public class ItemSignDataProcessor extends AbstractItemSingleDataProcessor<List<Text>, ListValue<Text>, SignData, ImmutableSignData> {
 
     public ItemSignDataProcessor() {
-        super(stack -> stack.func_77973_b().equals(Items.field_151155_ap), Keys.SIGN_LINES);
+        super(stack -> stack.getItem().equals(Items.field_151155_ap), Keys.SIGN_LINES);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ItemSignDataProcessor extends AbstractItemSingleDataProcessor<List<
             return DataTransactionResult.successNoData();
         }
         try {
-            if (itemStack.func_77942_o()) {
+            if (itemStack.hasTagCompound()) {
                 itemStack.func_77978_p().func_82580_o(Constants.Item.BLOCK_ENTITY_TAG);
             }
             return DataTransactionResult.successRemove(constructImmutableValue(old.get()));

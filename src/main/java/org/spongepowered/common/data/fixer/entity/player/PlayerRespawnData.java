@@ -38,7 +38,7 @@ import java.util.UUID;
 public class PlayerRespawnData implements IFixableData {
 
     @Override
-    public int func_188216_a() {
+    public int getFixVersion() {
         return Constants.Sponge.PlayerData.RESPAWN_DATA_1_9_VERSION;
     }
 

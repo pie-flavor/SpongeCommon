@@ -101,16 +101,16 @@ public abstract class BlockRedstoneWireMixin extends BlockMixin {
         final IStringSerializable east = blockState.func_177229_b(RedstoneWireBlock.field_176347_b);
         final IStringSerializable west = blockState.func_177229_b(RedstoneWireBlock.field_176350_N);
         final IStringSerializable south = blockState.func_177229_b(RedstoneWireBlock.field_176349_M);
-        if (!north.func_176610_l().matches("none")) {
+        if (!north.getName().matches("none")) {
             directions.add(Direction.NORTH);
         }
-        if (!east.func_176610_l().matches("none")) {
+        if (!east.getName().matches("none")) {
             directions.add(Direction.EAST);
         }
-        if (!west.func_176610_l().matches("none")) {
+        if (!west.getName().matches("none")) {
             directions.add(Direction.WEST);
         }
-        if (!south.func_176610_l().matches("none")) {
+        if (!south.getName().matches("none")) {
             directions.add(Direction.SOUTH);
         }
         return ImmutableDataCachingUtil.getManipulator(ImmutableSpongeConnectedDirectionData.class, directions);

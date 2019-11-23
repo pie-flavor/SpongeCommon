@@ -126,7 +126,7 @@ public class MesaBiomeGenerationPopulator implements GenerationPopulator {
         boolean flag2 = false;
 
         for (int k1 = 255; k1 >= 0; --k1) {
-            if (((net.minecraft.block.BlockState) p_180622_3_.getBlock(l, k1, k)).func_185904_a() == Material.field_151579_a && k1 < (int) d5) {
+            if (((net.minecraft.block.BlockState) p_180622_3_.getBlock(l, k1, k)).getMaterial() == Material.AIR && k1 < (int) d5) {
                 p_180622_3_.setBlock(l, k1, k, (BlockState) Blocks.field_150348_b.func_176223_P());
             }
 
@@ -135,7 +135,7 @@ public class MesaBiomeGenerationPopulator implements GenerationPopulator {
             } else {
                 net.minecraft.block.BlockState iblockstate1 = (net.minecraft.block.BlockState) p_180622_3_.getBlock(l, k1, k);
 
-                if (iblockstate1.func_185904_a() == Material.field_151579_a) {
+                if (iblockstate1.getMaterial() == Material.AIR) {
                     j1 = -1;
                 } else if (iblockstate1.func_177230_c() == Blocks.field_150348_b) {
                     net.minecraft.block.BlockState iblockstate2;
@@ -151,7 +151,7 @@ public class MesaBiomeGenerationPopulator implements GenerationPopulator {
                             iblockstate3 = Blocks.field_150406_ce.func_176223_P();
                         }
 
-                        if (k1 < seaLevel && (iblockstate == null || iblockstate.func_185904_a() == Material.field_151579_a)) {
+                        if (k1 < seaLevel && (iblockstate == null || iblockstate.getMaterial() == Material.AIR)) {
                             iblockstate = Blocks.field_150355_j.func_176223_P();
                         }
 

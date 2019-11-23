@@ -63,7 +63,7 @@ public class FlyingDataProcessor extends AbstractEntitySingleDataProcessor<Entit
             entityPlayer.field_71075_bZ.field_75100_b = value;
             entityPlayer.func_71016_p();
         } else {
-            entity.field_70160_al = value;
+            entity.isAirBorne = value;
         }
         return true;
     }
@@ -73,7 +73,7 @@ public class FlyingDataProcessor extends AbstractEntitySingleDataProcessor<Entit
         if (entity instanceof PlayerEntity) {
             return Optional.of(((PlayerEntity) entity).field_71075_bZ.field_75100_b);
         }
-        return Optional.of(entity.field_70160_al);
+        return Optional.of(entity.isAirBorne);
     }
 
     @Override

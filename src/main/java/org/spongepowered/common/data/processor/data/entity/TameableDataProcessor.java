@@ -50,7 +50,7 @@ public class TameableDataProcessor
 
     @Override
     protected Optional<Optional<UUID>> getVal(TameableEntity tameable) {
-        return Optional.of(Optional.ofNullable(tameable.func_184753_b()));
+        return Optional.of(Optional.ofNullable(tameable.getOwnerId()));
     }
 
     @Override

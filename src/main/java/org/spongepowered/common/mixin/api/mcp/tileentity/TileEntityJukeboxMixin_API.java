@@ -49,15 +49,15 @@ public abstract class TileEntityJukeboxMixin_API extends TileEntityMixin_API imp
 
     @Override
     public void playRecord() {
-        if (!getRecord().func_190926_b()) {
-            this.world.func_180498_a(null, Constants.WorldEvents.PLAY_RECORD_EVENT, this.pos, Item.func_150891_b(getRecord().func_77973_b()));
+        if (!getRecord().isEmpty()) {
+            this.world.func_180498_a(null, Constants.WorldEvents.PLAY_RECORD_EVENT, this.pos, Item.getIdFromItem(getRecord().getItem()));
         }
     }
 
     @Override
     public void stopRecord() {
-        this.world.func_175718_b(Constants.WorldEvents.PLAY_RECORD_EVENT, this.pos, 0);
-        this.world.func_184149_a(this.pos, null);
+        this.world.playEvent(Constants.WorldEvents.PLAY_RECORD_EVENT, this.pos, 0);
+        this.world.playRecord(this.pos, null);
     }
 
     @SuppressWarnings("deprecation")
@@ -74,7 +74,7 @@ public abstract class TileEntityJukeboxMixin_API extends TileEntityMixin_API imp
     @Override
     public void insertRecord(final ItemStack record) {
         final net.minecraft.item.ItemStack itemStack = ItemStackUtil.toNative(record);
-        if (!(itemStack.func_77973_b() instanceof MusicDiscItem)) {
+        if (!(itemStack.getItem() instanceof MusicDiscItem)) {
             return;
         }
         final BlockState block = this.world.func_180495_p(this.pos);

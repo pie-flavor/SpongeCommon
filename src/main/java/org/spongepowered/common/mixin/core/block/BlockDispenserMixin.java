@@ -74,7 +74,7 @@ import javax.annotation.Nullable;
 @Mixin(DispenserBlock.class)
 public abstract class BlockDispenserMixin extends BlockMixin {
 
-    private ItemStack originalItem = ItemStack.field_190927_a;
+    private ItemStack originalItem = ItemStack.EMPTY;
     private PhaseContext<?> impl$context = PhaseContext.empty();
 
     @Shadow protected abstract void dispense(World worldIn, BlockPos pos);
@@ -116,7 +116,7 @@ public abstract class BlockDispenserMixin extends BlockMixin {
     private void impl$CreateContextOnDispensing(final World worldIn, final BlockPos pos, final CallbackInfo ci) {
         final net.minecraft.block.BlockState state = worldIn.func_180495_p(pos);
         final SpongeBlockSnapshot spongeBlockSnapshot = ((WorldServerBridge) worldIn).bridge$createSnapshot(state, state, pos, BlockChangeFlags.ALL);
-        final ChunkBridge mixinChunk = (ChunkBridge) worldIn.func_175726_f(pos);
+        final ChunkBridge mixinChunk = (ChunkBridge) worldIn.getChunk(pos);
         this.impl$context = BlockPhase.State.DISPENSE.createPhaseContext()
             .source(spongeBlockSnapshot)
             .owner(() -> mixinChunk.bridge$getBlockOwner(pos))
@@ -151,7 +151,7 @@ public abstract class BlockDispenserMixin extends BlockMixin {
         final PhaseContext<?> context = PhaseTracker.getInstance().getCurrentContext();
         // If we captured nothing, simply set the slot contents and return
         if (context.getCapturedItemsOrEmptyList().isEmpty()) {
-            dispenser.func_70299_a(index, stack);
+            dispenser.setInventorySlotContents(index, stack);
             return;
         }
         final ItemStack dispensedItem = context.getCapturedItems().get(0).func_92059_d();
@@ -163,7 +163,7 @@ public abstract class BlockDispenserMixin extends BlockMixin {
             final DropItemEvent.Pre dropEvent = SpongeEventFactory.createDropItemEventPre(frame.getCurrentCause(), ImmutableList.of(snapshot), original);
             SpongeImpl.postEvent(dropEvent);
             if (dropEvent.isCancelled()) {
-                dispenser.func_70299_a(index, this.originalItem);
+                dispenser.setInventorySlotContents(index, this.originalItem);
                 context.getCapturedItems().clear();
                 return;
             }
@@ -171,7 +171,7 @@ public abstract class BlockDispenserMixin extends BlockMixin {
                 context.getCapturedItems().clear();
             }
 
-            dispenser.func_70299_a(index, stack);
+            dispenser.setInventorySlotContents(index, stack);
         }
     }
 

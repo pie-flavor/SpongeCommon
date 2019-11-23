@@ -101,7 +101,7 @@ public abstract class WorldGenBigMushroomMixin_API extends Feature implements Bi
         for (int i = 0; i < n; ++i) {
             x = random.nextInt(size.getX());
             z = random.nextInt(size.getZ());
-            final BlockPos pos = world.func_175645_m(chunkPos.func_177982_a(x, 0, z));
+            final BlockPos pos = world.getHeight(chunkPos.add(x, 0, z));
             if (this.api$override != null) {
                 final Location<Extent> pos2 = new Location<>(extent, VecHelper.toVector3i(pos));
                 type = this.api$override.apply(pos2);
@@ -112,8 +112,8 @@ public abstract class WorldGenBigMushroomMixin_API extends Feature implements Bi
                 }
                 type = result.get(0);
             }
-            if (type.canPlaceAt((org.spongepowered.api.world.World) world, pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p())) {
-                type.placeObject((org.spongepowered.api.world.World) world, random, pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
+            if (type.canPlaceAt((org.spongepowered.api.world.World) world, pos.getX(), pos.getY(), pos.getZ())) {
+                type.placeObject((org.spongepowered.api.world.World) world, random, pos.getX(), pos.getY(), pos.getZ());
             }
         }
     }

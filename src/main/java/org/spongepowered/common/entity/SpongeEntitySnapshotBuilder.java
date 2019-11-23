@@ -215,7 +215,7 @@ public class SpongeEntitySnapshotBuilder extends AbstractDataBuilder<EntitySnaps
     public SpongeEntitySnapshotBuilder from(net.minecraft.entity.Entity minecraftEntity) {
         this.entityType = ((Entity) minecraftEntity).getType();
         this.worldId = ((Entity) minecraftEntity).getWorld().getUniqueId();
-        this.entityId = minecraftEntity.func_110124_au();
+        this.entityId = minecraftEntity.getUniqueID();
         final Transform<World> transform = ((Entity) minecraftEntity).getTransform();
         this.position = transform.getPosition();
         this.rotation = transform.getRotation();

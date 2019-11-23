@@ -55,14 +55,14 @@ public abstract class BlockCactusMixin extends BlockMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;attackEntityFrom(Lnet/minecraft/util/DamageSource;F)Z"))
     private boolean impl$reAssignForBlockDamageSource(final Entity entity, final DamageSource source, final float damage,
         final net.minecraft.world.World world, final BlockPos pos, final net.minecraft.block.BlockState state, final Entity entityIn) {
-        if (world.field_72995_K) {
-            return entity.func_70097_a(source, damage);
+        if (world.isRemote) {
+            return entity.attackEntityFrom(source, damage);
         }
         try {
-            final Location<World> location = new Location<>((World) world, pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
+            final Location<World> location = new Location<>((World) world, pos.getX(), pos.getY(), pos.getZ());
             final MinecraftBlockDamageSource cactus = new MinecraftBlockDamageSource("cactus", location);
             ((DamageSourceBridge) cactus).bridge$setCactusSource();
-            return entity.func_70097_a(DamageSource.field_76367_g, damage);
+            return entity.attackEntityFrom(DamageSource.CACTUS, damage);
         } finally {
             ((DamageSourceBridge) source).bridge$setCactusSource();
         }

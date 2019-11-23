@@ -217,10 +217,10 @@ public class InventoryArchetypeRegistryModule implements AlternateCatalogRegistr
             .property(InventoryTitle.of(Text.of(new SpongeTranslation("container.crafting"))))
             .property(new GuiIdProperty(GuiIds.CRAFTING_TABLE))
             .container((i, p) -> {
-                WorkbenchContainer container = new WorkbenchContainer(p.field_71071_by, p.func_130014_f_(), p.func_180425_c());
+                WorkbenchContainer container = new WorkbenchContainer(p.field_71071_by, p.getEntityWorld(), p.getPosition());
                 // Pre-Fills the container input with the items from the inventory
-                for (int index = 0; index < container.field_75162_e.func_70302_i_(); index++) {
-                    container.field_75162_e.func_70299_a(index, i.func_70301_a(index));
+                for (int index = 0; index < container.field_75162_e.getSizeInventory(); index++) {
+                    container.field_75162_e.setInventorySlotContents(index, i.getStackInSlot(index));
                 }
                 return container;
             })
@@ -258,10 +258,10 @@ public class InventoryArchetypeRegistryModule implements AlternateCatalogRegistr
             .property(InventoryTitle.of(Text.of(new SpongeTranslation("container.enchant"))))
             .property(new GuiIdProperty(GuiIds.ENCHANTING_TABLE))
             .container((i, p) -> {
-                EnchantmentContainer container = new EnchantmentContainer(p.field_71071_by, p.func_130014_f_(), p.func_180425_c());
+                EnchantmentContainer container = new EnchantmentContainer(p.field_71071_by, p.getEntityWorld(), p.getPosition());
                 // Pre-Fills the container with the items from the inventory
-                for (int index = 0; index < container.field_75168_e.func_70302_i_(); index++) {
-                    container.field_75168_e.func_70299_a(index, i.func_70301_a(index));
+                for (int index = 0; index < container.field_75168_e.getSizeInventory(); index++) {
+                    container.field_75168_e.setInventorySlotContents(index, i.getStackInSlot(index));
                 }
                 return container;
             })
@@ -276,10 +276,10 @@ public class InventoryArchetypeRegistryModule implements AlternateCatalogRegistr
             .property(InventoryTitle.of(Text.of(new SpongeTranslation("container.repair"))))
             .property(new GuiIdProperty(GuiIds.ANVIL))
             .container((i, p) -> {
-                RepairContainer container = new RepairContainer(p.field_71071_by, p.func_130014_f_(), p.func_180425_c(), p);
+                RepairContainer container = new RepairContainer(p.field_71071_by, p.getEntityWorld(), p.getPosition(), p);
                 // Pre-Fills the container input with the items from the inventory
-                for (int index = 0; index < ((ContainerRepairAccessor) container).accessor$getInputSlots().func_70302_i_(); index++) {
-                    ((ContainerRepairAccessor) container).accessor$getInputSlots().func_70299_a(index, i.func_70301_a(index));
+                for (int index = 0; index < ((ContainerRepairAccessor) container).accessor$getInputSlots().getSizeInventory(); index++) {
+                    ((ContainerRepairAccessor) container).accessor$getInputSlots().setInventorySlotContents(index, i.getStackInSlot(index));
                 }
                 return container;
             })
@@ -297,7 +297,7 @@ public class InventoryArchetypeRegistryModule implements AlternateCatalogRegistr
                             && ((CarriedInventory) i).getCarrier().isPresent()
                             && ((CarriedInventory) i).getCarrier().get() instanceof IMerchant) {
                         IMerchant merchant = ((IMerchant) ((CarriedInventory) i).getCarrier().get());
-                        MerchantContainer container = new MerchantContainer(p.field_71071_by, merchant, p.func_130014_f_());
+                        MerchantContainer container = new MerchantContainer(p.field_71071_by, merchant, p.getEntityWorld());
                         // TODO Pre-Fill the Container?
                         return container;
                     }

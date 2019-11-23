@@ -81,6 +81,6 @@ public abstract class BlockBedMixin extends BlockHorizontalMixin {
 
     @Inject(method = "hasRoomForPlayer", at = @At(value = "RETURN"), cancellable = true)
     private static void onHasRoomForPlayer(final World world, final BlockPos pos, final CallbackInfoReturnable<Boolean> ci ) {
-        ci.setReturnValue(ci.getReturnValue() && world.func_175723_af().func_177746_a(pos));
+        ci.setReturnValue(ci.getReturnValue() && world.getWorldBorder().contains(pos));
     }
 }

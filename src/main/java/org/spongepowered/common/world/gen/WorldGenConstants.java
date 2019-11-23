@@ -307,8 +307,8 @@ public final class WorldGenConstants {
             gensettings.getGroundCoverLayers().add(new SandstoneGroundCoverLayer(type.getDefaultState()));
         }
 
-        final String s = world.func_72912_H().func_82571_y();
-        final ChunkGeneratorSettings settings = ChunkGeneratorSettings.Factory.func_177865_a(s).func_177864_b();
+        final String s = world.getWorldInfo().getGeneratorOptions();
+        final ChunkGeneratorSettings settings = ChunkGeneratorSettings.Factory.jsonToFactory(s).build();
 
         final Ore dirt = Ore.builder()
                 .ore((BlockState) Blocks.field_150346_d.func_176223_P())
@@ -579,7 +579,7 @@ public final class WorldGenConstants {
                 .build();
         gensettings.getPopulators().add(quartz);
 
-        final int halfSeaLevel = world.func_181545_F() / 2 + 1;
+        final int halfSeaLevel = world.getSeaLevel() / 2 + 1;
         final Ore magma = Ore.builder()
                 .height(VariableAmount.baseWithRandomAddition(halfSeaLevel - 5, 10))
                 .ore(BlockTypes.MAGMA.getDefaultState())
@@ -717,8 +717,8 @@ public final class WorldGenConstants {
 
     public static void buildMesaPopulators(
         final net.minecraft.world.World world, final SpongeBiomeGenerationSettings gensettings, final BiomeDecorator decorator) {
-        final String s = world.func_72912_H().func_82571_y();
-        final ChunkGeneratorSettings settings = ChunkGeneratorSettings.Factory.func_177865_a(s).func_177864_b();
+        final String s = world.getWorldInfo().getGeneratorOptions();
+        final ChunkGeneratorSettings settings = ChunkGeneratorSettings.Factory.jsonToFactory(s).build();
 
         // Extra gold is generated in mesa biomes
         final Ore gold = Ore.builder()

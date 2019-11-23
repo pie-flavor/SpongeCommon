@@ -64,13 +64,13 @@ public class InstrumentPropertyStore extends AbstractBlockPropertyStore<Instrume
             return InstrumentTypes.XYLOPHONE;
         }
         final Material material = block.func_177230_c().func_149688_o(block);
-        if (material == Material.field_151576_e) {
+        if (material == Material.ROCK) {
             return InstrumentTypes.BASS_DRUM;
-        } else if (material == Material.field_151595_p) {
+        } else if (material == Material.SAND) {
             return InstrumentTypes.SNARE;
-        } else if (material == Material.field_151592_s) {
+        } else if (material == Material.GLASS) {
             return InstrumentTypes.HIGH_HAT;
-        } else if (material == Material.field_151575_d) {
+        } else if (material == Material.WOOD) {
             return InstrumentTypes.BASS_ATTACK;
         }
         return InstrumentTypes.HARP;

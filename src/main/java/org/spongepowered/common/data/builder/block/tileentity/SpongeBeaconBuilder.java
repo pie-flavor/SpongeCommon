@@ -57,7 +57,7 @@ public class SpongeBeaconBuilder extends SpongeLockableBuilder<Beacon> {
                 .map(potion -> (PotionEffectType) potion)
                 .ifPresent(potion -> beaconData.set(Keys.BEACON_SECONDARY_EFFECT, Optional.of(potion)));
             beacon.offer(beaconData);
-            ((BeaconTileEntity) beacon).func_145829_t();
+            ((BeaconTileEntity) beacon).validate();
             return Optional.of(beacon);
         });
     }

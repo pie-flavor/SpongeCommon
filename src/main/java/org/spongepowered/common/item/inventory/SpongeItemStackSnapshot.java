@@ -82,7 +82,7 @@ public class SpongeItemStackSnapshot implements ItemStackSnapshot {
     @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "ConstantConditions"})
     public SpongeItemStackSnapshot(ItemStack itemStack) {
         checkNotNull(itemStack);
-        if (itemStack == net.minecraft.item.ItemStack.field_190927_a) {
+        if (itemStack == net.minecraft.item.ItemStack.EMPTY) {
             this.itemType = (ItemType) null; // Empty itemstack has an invalid item type that we have to have null.
             this.quantity = 0;
             this.damageValue = 0;
@@ -103,7 +103,7 @@ public class SpongeItemStackSnapshot implements ItemStackSnapshot {
             keyBuilder.addAll(manipulator.getKeys());
             valueBuilder.addAll(manipulator.getValues());
         }
-        this.damageValue = ((net.minecraft.item.ItemStack) itemStack).func_77952_i();
+        this.damageValue = ((net.minecraft.item.ItemStack) itemStack).getItemDamage();
         this.manipulators = builder.build();
         this.privateStack = itemStack.copy();
         this.keys = keyBuilder.build();
@@ -120,7 +120,7 @@ public class SpongeItemStackSnapshot implements ItemStackSnapshot {
                 }
             }
             Constants.NBT.filterSpongeCustomData(compound);
-            if (!compound.func_82582_d()) {
+            if (!compound.isEmpty()) {
                 this.compound = compound;
             } else {
                 this.compound = null;
@@ -154,7 +154,7 @@ public class SpongeItemStackSnapshot implements ItemStackSnapshot {
 
     @Override
     public ItemType getType() {
-        return this.itemType == null ? (ItemType) net.minecraft.item.ItemStack.field_190927_a.func_77973_b() : this.itemType;
+        return this.itemType == null ? (ItemType) net.minecraft.item.ItemStack.EMPTY.getItem() : this.itemType;
     }
 
     @Override

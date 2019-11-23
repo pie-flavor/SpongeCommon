@@ -43,10 +43,10 @@ public class SpongeUserInventory implements IInventory {
     // sourced from InventoryPlayer
 
     /** An array of 36 item stacks indicating the main player inventory (including the visible bar). */
-    final NonNullList<ItemStack> mainInventory = NonNullList.func_191197_a(36, ItemStack.field_190927_a);
+    final NonNullList<ItemStack> mainInventory = NonNullList.withSize(36, ItemStack.EMPTY);
     /** An array of 4 item stacks containing the currently worn armor pieces. */
-    final NonNullList<ItemStack> armorInventory = NonNullList.func_191197_a(4, ItemStack.field_190927_a);
-    final NonNullList<ItemStack> offHandInventory = NonNullList.func_191197_a(1, ItemStack.field_190927_a);
+    final NonNullList<ItemStack> armorInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+    final NonNullList<ItemStack> offHandInventory = NonNullList.withSize(1, ItemStack.EMPTY);
     private final List<NonNullList<ItemStack>> allInventories;
     /** The index of the currently held item (0-8). */
     public int currentItem;
@@ -60,15 +60,15 @@ public class SpongeUserInventory implements IInventory {
     }
 
     public ItemStack getCurrentItem() {
-        return PlayerInventory.func_184435_e(this.currentItem) ? this.mainInventory.get(this.currentItem) : ItemStack.field_190927_a;
+        return PlayerInventory.func_184435_e(this.currentItem) ? this.mainInventory.get(this.currentItem) : ItemStack.EMPTY;
     }
 
     /**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
      */
     @Override
-    public ItemStack func_70298_a(int index, int count) {
-        this.func_70296_d();
+    public ItemStack decrStackSize(int index, int count) {
+        this.markDirty();
         List<ItemStack> list = null;
 
         for (NonNullList<ItemStack> nonnulllist : this.allInventories) {
@@ -80,15 +80,15 @@ public class SpongeUserInventory implements IInventory {
             index -= nonnulllist.size();
         }
 
-        return list != null && !list.get(index).func_190926_b() ? ItemStackHelper.func_188382_a(list, index, count) : ItemStack.field_190927_a;
+        return list != null && !list.get(index).isEmpty() ? ItemStackHelper.getAndSplit(list, index, count) : ItemStack.EMPTY;
     }
 
     /**
      * Removes a stack from the given slot and returns it.
      */
     @Override
-    public ItemStack func_70304_b(int index) {
-        this.func_70296_d();
+    public ItemStack removeStackFromSlot(int index) {
+        this.markDirty();
         NonNullList<ItemStack> nonnulllist = null;
 
         for (NonNullList<ItemStack> nonnulllist1 : this.allInventories) {
@@ -100,12 +100,12 @@ public class SpongeUserInventory implements IInventory {
             index -= nonnulllist1.size();
         }
 
-        if (nonnulllist != null && !nonnulllist.get(index).func_190926_b()) {
+        if (nonnulllist != null && !nonnulllist.get(index).isEmpty()) {
             ItemStack itemstack = nonnulllist.get(index);
-            nonnulllist.set(index, ItemStack.field_190927_a);
+            nonnulllist.set(index, ItemStack.EMPTY);
             return itemstack;
         } else {
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
         }
     }
 
@@ -113,8 +113,8 @@ public class SpongeUserInventory implements IInventory {
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
     @Override
-    public void func_70299_a(int index, ItemStack stack) {
-        this.func_70296_d();
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        this.markDirty();
         NonNullList<ItemStack> nonnulllist = null;
 
         for (NonNullList<ItemStack> nonnulllist1 : this.allInventories) {
@@ -137,7 +137,7 @@ public class SpongeUserInventory implements IInventory {
      */
     public ListNBT writeToNBT(ListNBT nbtTagListIn) {
         for (int i = 0; i < this.mainInventory.size(); ++i) {
-            if (!this.mainInventory.get(i).func_190926_b()) {
+            if (!this.mainInventory.get(i).isEmpty()) {
                 CompoundNBT nbttagcompound = new CompoundNBT();
                 nbttagcompound.func_74774_a("Slot", (byte) i);
                 this.mainInventory.get(i).func_77955_b(nbttagcompound);
@@ -146,7 +146,7 @@ public class SpongeUserInventory implements IInventory {
         }
 
         for (int j = 0; j < this.armorInventory.size(); ++j) {
-            if (!this.armorInventory.get(j).func_190926_b()) {
+            if (!this.armorInventory.get(j).isEmpty()) {
                 CompoundNBT nbttagcompound1 = new CompoundNBT();
                 nbttagcompound1.func_74774_a("Slot", (byte) (j + 100));
                 this.armorInventory.get(j).func_77955_b(nbttagcompound1);
@@ -155,7 +155,7 @@ public class SpongeUserInventory implements IInventory {
         }
 
         for (int k = 0; k < this.offHandInventory.size(); ++k) {
-            if (!this.offHandInventory.get(k).func_190926_b()) {
+            if (!this.offHandInventory.get(k).isEmpty()) {
                 CompoundNBT nbttagcompound2 = new CompoundNBT();
                 nbttagcompound2.func_74774_a("Slot", (byte) (k + 150));
                 this.offHandInventory.get(k).func_77955_b(nbttagcompound2);
@@ -181,7 +181,7 @@ public class SpongeUserInventory implements IInventory {
             int j = nbttagcompound.func_74771_c("Slot") & 255;
             ItemStack itemstack = new ItemStack(nbttagcompound);
 
-            if (!itemstack.func_190926_b()) {
+            if (!itemstack.isEmpty()) {
                 if (j >= 0 && j < this.mainInventory.size()) {
                     this.mainInventory.set(j, itemstack);
                 } else if (j >= 100 && j < this.armorInventory.size() + 100) {
@@ -197,26 +197,26 @@ public class SpongeUserInventory implements IInventory {
      * Returns the number of slots in the inventory.
      */
     @Override
-    public int func_70302_i_() {
+    public int getSizeInventory() {
         return this.mainInventory.size() + this.armorInventory.size() + this.offHandInventory.size();
     }
 
     @Override
-    public boolean func_191420_l() {
+    public boolean isEmpty() {
         for (ItemStack itemstack : this.mainInventory) {
-            if (!itemstack.func_190926_b()) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
 
         for (ItemStack itemstack1 : this.armorInventory) {
-            if (!itemstack1.func_190926_b()) {
+            if (!itemstack1.isEmpty()) {
                 return false;
             }
         }
 
         for (ItemStack itemstack2 : this.offHandInventory) {
-            if (!itemstack2.func_190926_b()) {
+            if (!itemstack2.isEmpty()) {
                 return false;
             }
         }
@@ -228,7 +228,7 @@ public class SpongeUserInventory implements IInventory {
      * Returns the stack in the given slot.
      */
     @Override
-    public ItemStack func_70301_a(int index) {
+    public ItemStack getStackInSlot(int index) {
         List<ItemStack> list = null;
 
         for (NonNullList<ItemStack> nonnulllist : this.allInventories) {
@@ -240,7 +240,7 @@ public class SpongeUserInventory implements IInventory {
             index -= nonnulllist.size();
         }
 
-        return list == null ? ItemStack.field_190927_a : list.get(index);
+        return list == null ? ItemStack.EMPTY : list.get(index);
     }
 
     /**
@@ -271,7 +271,7 @@ public class SpongeUserInventory implements IInventory {
      * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
      */
     @Override
-    public int func_70297_j_() {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
@@ -280,7 +280,7 @@ public class SpongeUserInventory implements IInventory {
      * hasn't changed and skip it.
      */
     @Override
-    public void func_70296_d() {
+    public void markDirty() {
         this.dirty = true;
         this.player.markDirty();
     }
@@ -306,26 +306,26 @@ public class SpongeUserInventory implements IInventory {
      * guis use Slot.isItemValid
      */
     @Override
-    public boolean func_94041_b(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
         return true;
     }
 
     @Override
-    public int func_174887_a_(int id) {
+    public int getField(int id) {
         return 0;
     }
 
     @Override
-    public void func_174885_b(int id, int value) {
+    public void setField(int id, int value) {
     }
 
     @Override
-    public int func_174890_g() {
+    public int getFieldCount() {
         return 0;
     }
 
     @Override
-    public void func_174888_l() {
+    public void clear() {
         for (List<ItemStack> list : this.allInventories) {
             list.clear();
         }

@@ -163,18 +163,18 @@ public final class ContainerUtil {
             final Multimap<BlockPos, ItemEntity> multimap = context.getBlockItemDropSupplier().get();
             final BlockPos pos = new BlockPos(x, y, z);
             final Collection<ItemEntity> itemStacks = multimap.get(pos);
-            for (int j = 0; j < inventory.func_70302_i_(); j++) {
-                final net.minecraft.item.ItemStack itemStack = inventory.func_70301_a(j);
-                if (!itemStack.func_190926_b()) {
+            for (int j = 0; j < inventory.getSizeInventory(); j++) {
+                final net.minecraft.item.ItemStack itemStack = inventory.getStackInSlot(j);
+                if (!itemStack.isEmpty()) {
                     final float f = RANDOM.nextFloat() * 0.8F + 0.1F;
                     final float f1 = RANDOM.nextFloat() * 0.8F + 0.1F;
                     final float f2 = RANDOM.nextFloat() * 0.8F + 0.1F;
 
-                    while (!itemStack.func_190926_b())
+                    while (!itemStack.isEmpty())
                     {
                         final int i = RANDOM.nextInt(21) + 10;
 
-                        final ItemEntity entityitem = new ItemEntity(worldServer, x + f, y + f1, z + f2, itemStack.func_77979_a(i));
+                        final ItemEntity entityitem = new ItemEntity(worldServer, x + f, y + f1, z + f2, itemStack.splitStack(i));
 
                         entityitem.field_70159_w = RANDOM.nextGaussian() * 0.05;
                         entityitem.field_70181_x = RANDOM.nextGaussian() * 0.05 + 0.2;
@@ -186,10 +186,10 @@ public final class ContainerUtil {
             return;
         }
         // Finally, just default to spawning the entities normally, regardless of the case.
-        for (int i = 0; i < inventory.func_70302_i_(); i++) {
-            final net.minecraft.item.ItemStack itemStack = inventory.func_70301_a(i);
-            if (!itemStack.func_190926_b()) {
-                InventoryHelper.func_180173_a(worldServer, x, y, z, itemStack);
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            final net.minecraft.item.ItemStack itemStack = inventory.getStackInSlot(i);
+            if (!itemStack.isEmpty()) {
+                InventoryHelper.spawnItemStack(worldServer, x, y, z, itemStack);
             }
         }
     }
@@ -285,7 +285,7 @@ public final class ContainerUtil {
         if (adapterLens == null) {
             return null;
         }
-        if (subInventory.func_70302_i_() == 0) {
+        if (subInventory.getSizeInventory() == 0) {
             return new DefaultEmptyLens(((InventoryAdapter) subInventory));
         }
 
@@ -464,8 +464,8 @@ public final class ContainerUtil {
                     return new DefaultSingleBlockCarrier() {
                         @Override
                         public Location<org.spongepowered.api.world.World> getLocation() {
-                            final BlockPos pos = ((TileEntity) slot.field_75224_c).func_174877_v();
-                            return new Location<>(((org.spongepowered.api.world.World) ((TileEntity) slot.field_75224_c).func_145831_w()), pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
+                            final BlockPos pos = ((TileEntity) slot.field_75224_c).getPos();
+                            return new Location<>(((org.spongepowered.api.world.World) ((TileEntity) slot.field_75224_c).getWorld()), pos.getX(), pos.getY(), pos.getZ());
                         }
 
                         @SuppressWarnings("rawtypes")

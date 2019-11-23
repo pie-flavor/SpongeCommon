@@ -101,7 +101,7 @@ public final class RecordTypeRegistryModule implements CatalogRegistryModule<Rec
             final MusicDiscItem recordItem = recordEntry.getValue();
             final String key = Item.field_150901_e.func_177774_c(recordItem).toString();
             if(!mappings.containsKey(key)) {
-                this.add(new SpongeRecordType(key, recordItem.func_77658_a(), (ItemType) recordItem, (SoundType) ((ItemRecordAccessor) recordItem).accessor$getSoundEvent()));
+                this.add(new SpongeRecordType(key, recordItem.getTranslationKey(), (ItemType) recordItem, (SoundType) ((ItemRecordAccessor) recordItem).accessor$getSoundEvent()));
             }
         }
 

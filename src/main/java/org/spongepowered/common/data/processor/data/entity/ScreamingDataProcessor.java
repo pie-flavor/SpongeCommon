@@ -54,7 +54,7 @@ public class ScreamingDataProcessor
 
     @Override
     protected boolean set(final EndermanEntity entity, final Boolean value) {
-        entity.func_184212_Q().func_187227_b(EntityEndermanAccessor.accessor$getScreamingParameter(), value);
+        entity.getDataManager().set(EntityEndermanAccessor.accessor$getScreamingParameter(), value);
         return true;
     }
 

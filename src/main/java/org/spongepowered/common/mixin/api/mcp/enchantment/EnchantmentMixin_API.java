@@ -75,7 +75,7 @@ public abstract class EnchantmentMixin_API implements EnchantmentType {
 
     @Override
     public int getWeight() {
-        return this.rarity.func_185270_a();
+        return this.rarity.getWeight();
     }
 
     @Override

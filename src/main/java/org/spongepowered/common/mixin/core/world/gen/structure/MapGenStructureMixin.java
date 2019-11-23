@@ -63,14 +63,14 @@ public abstract class MapGenStructureMixin extends MapGenBase {
         if (impl$isGeneratingStructures) {
             return false;
         }
-        final Chunk chunk = ((ChunkProviderBridge) worldIn.func_72863_F()).bridge$getLoadedChunkWithoutMarkingActive(chunkCoord.field_77276_a, chunkCoord.field_77275_b);
+        final Chunk chunk = ((ChunkProviderBridge) worldIn.func_72863_F()).bridge$getLoadedChunkWithoutMarkingActive(chunkCoord.x, chunkCoord.z);
         if (chunk == null) {
             return false;
         }
 
         this.initializeStructureData(worldIn);
-        final int i = (chunkCoord.field_77276_a << 4) + 8;
-        final int j = (chunkCoord.field_77275_b << 4) + 8;
+        final int i = (chunkCoord.x << 4) + 8;
+        final int j = (chunkCoord.z << 4) + 8;
         boolean flag = false;
 
         impl$isGeneratingStructures = true;

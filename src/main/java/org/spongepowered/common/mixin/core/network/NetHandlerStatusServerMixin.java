@@ -54,7 +54,7 @@ public abstract class NetHandlerStatusServerMixin {
     @Overwrite
     public void processServerQuery(final CServerQueryPacket packetIn) {
         if (this.handled) {
-            this.networkManager.func_150718_a(EXIT_MESSAGE);
+            this.networkManager.closeChannel(EXIT_MESSAGE);
         } else {
             this.handled = true;
 
@@ -62,7 +62,7 @@ public abstract class NetHandlerStatusServerMixin {
             if (response != null) {
                 this.networkManager.func_179290_a(new SServerInfoPacket(response));
             } else {
-                this.networkManager.func_150718_a(null);
+                this.networkManager.closeChannel(null);
             }
         }
     }

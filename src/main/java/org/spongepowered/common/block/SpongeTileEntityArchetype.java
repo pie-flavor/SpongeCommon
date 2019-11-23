@@ -82,19 +82,19 @@ public class SpongeTileEntityArchetype extends AbstractArchetype<TileEntityType,
 
         BlockPos blockpos = VecHelper.toBlockPos(location);
         if (currentBlock != newBlock) {
-            ((World) minecraftWorld).setBlock(blockpos.func_177958_n(), blockpos.func_177956_o(), blockpos.func_177952_p(), this.blockState, BlockChangeFlags.ALL);
+            ((World) minecraftWorld).setBlock(blockpos.getX(), blockpos.getY(), blockpos.getZ(), this.blockState, BlockChangeFlags.ALL);
         }
         final CompoundNBT compound = this.data.func_74737_b();
 
-        TileEntity tileEntity = minecraftWorld.func_175625_s(blockpos);
+        TileEntity tileEntity = minecraftWorld.getTileEntity(blockpos);
         if (tileEntity == null) {
             return Optional.empty();
         }
-        compound.func_74768_a("x", blockpos.func_177958_n());
-        compound.func_74768_a("y", blockpos.func_177956_o());
-        compound.func_74768_a("z", blockpos.func_177952_p());
+        compound.func_74768_a("x", blockpos.getX());
+        compound.func_74768_a("y", blockpos.getY());
+        compound.func_74768_a("z", blockpos.getZ());
         tileEntity.func_145839_a(compound);
-        tileEntity.func_70296_d();
+        tileEntity.markDirty();
         return Optional.of((org.spongepowered.api.block.tileentity.TileEntity) tileEntity);
     }
 

@@ -196,11 +196,11 @@ public class SpongeBanService implements BanService {
     }
 
     private BanList getUserBanList() {
-        return SpongeImpl.getServer().func_184103_al().func_152608_h();
+        return SpongeImpl.getServer().getPlayerList().func_152608_h();
     }
 
     private IPBanList getIPBanList() {
-        return SpongeImpl.getServer().func_184103_al().func_72363_f();
+        return SpongeImpl.getServer().getPlayerList().func_72363_f();
     }
 
 }

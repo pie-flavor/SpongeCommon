@@ -143,7 +143,7 @@ public abstract class ItemStackMixin implements CustomDataHolderBridge {       /
         } else {
             if (hasTagCompound()) {
                 this.getTagCompound().func_82580_o(Constants.Sponge.SPONGE_DATA);
-                if (this.getTagCompound().func_82582_d()) {
+                if (this.getTagCompound().isEmpty()) {
                     this.setTagCompound(null);
                 }
             }

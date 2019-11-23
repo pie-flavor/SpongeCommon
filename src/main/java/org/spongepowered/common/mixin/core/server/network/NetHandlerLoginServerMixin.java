@@ -74,9 +74,9 @@ public abstract class NetHandlerLoginServerMixin implements NetHandlerLoginServe
 
     private void impl$closeConnection(final ITextComponent reason) {
         try {
-            LOGGER.info("Disconnecting " + this.getConnectionInfo() + ": " + reason.func_150260_c());
+            LOGGER.info("Disconnecting " + this.getConnectionInfo() + ": " + reason.getUnformattedText());
             this.networkManager.func_179290_a(new SPacketDisconnect(reason));
-            this.networkManager.func_150718_a(reason);
+            this.networkManager.closeChannel(reason);
         } catch (Exception exception) {
             LOGGER.error("Error whilst disconnecting player", exception);
         }

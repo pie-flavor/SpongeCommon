@@ -63,13 +63,13 @@ public class SpongeDamageSourceBuilder extends AbstractDamageSourceBuilder<Damag
             accessor.accessor$setDamageAllowedInCreativeMode();
         }
         if (this.magical) {
-            source.func_82726_p();
+            source.setMagicDamage();
         }
         if (this.scales) {
-            source.func_76351_m();
+            source.setDifficultyScaled();
         }
         if (this.explosion) {
-            source.func_94540_d();
+            source.setExplosion();
         }
         if (this.exhaustion != null) {
             accessor.accessor$setHungerDamage(this.exhaustion.floatValue());

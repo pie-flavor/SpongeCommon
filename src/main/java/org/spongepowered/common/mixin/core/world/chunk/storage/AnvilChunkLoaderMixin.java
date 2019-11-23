@@ -213,7 +213,7 @@ public abstract class AnvilChunkLoaderMixin implements AnvilChunkLoaderBridge {
         }
         // Sponge end
 
-        return RegionFileCache.func_76549_c(this.chunkSaveLocation, x, z) != null;
+        return RegionFileCache.getChunkInputStream(this.chunkSaveLocation, x, z) != null;
     }
 
     /**
@@ -230,7 +230,7 @@ public abstract class AnvilChunkLoaderMixin implements AnvilChunkLoaderBridge {
         }
         this.impl$queue.add(new QueuedChunk(pos, compound));
 
-        ThreadedFileIOBase.func_178779_a().func_75735_a((AnvilChunkLoader) (Object) this);
+        ThreadedFileIOBase.getThreadedIOInstance().queueIO((AnvilChunkLoader) (Object) this);
     }
 
     /**

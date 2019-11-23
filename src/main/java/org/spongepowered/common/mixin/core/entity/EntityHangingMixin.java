@@ -107,7 +107,7 @@ public abstract class EntityHangingMixin extends EntityMixin {
             // Sponge End
             ItemEntity entityitem = new ItemEntity(this.world, this.posX + xOffset, this.posY + (double) offsetY, this.posZ + zOffset, stack);
             entityitem.func_174869_p();
-            this.world.func_72838_d(entityitem);
+            this.world.spawnEntity(entityitem);
             return entityitem;
         }
         // Sponge - redirect server sided logic to sponge to handle cause stacks and phase states

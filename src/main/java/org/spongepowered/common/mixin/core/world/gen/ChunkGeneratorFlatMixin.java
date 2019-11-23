@@ -68,7 +68,7 @@ public class ChunkGeneratorFlatMixin implements  PopulatorProviderBridge {
             }
         }
 
-        if (this.flatWorldGenInfo.func_82644_b().containsKey("lake")) {
+        if (this.flatWorldGenInfo.getWorldFeatures().containsKey("lake")) {
             final Lake lake = Lake.builder()
                     .chance(1 / 4d)
                     .liquidType((BlockState) Blocks.field_150355_j.func_176223_P())
@@ -79,7 +79,7 @@ public class ChunkGeneratorFlatMixin implements  PopulatorProviderBridge {
             generator.getPopulators().add(lake);
         }
 
-        if (this.flatWorldGenInfo.func_82644_b().containsKey("lava_lake")) {
+        if (this.flatWorldGenInfo.getWorldFeatures().containsKey("lava_lake")) {
             final Lake lake = Lake.builder()
                     .chance(1 / 8d)
                     .liquidType((BlockState) Blocks.field_150355_j.func_176223_P())

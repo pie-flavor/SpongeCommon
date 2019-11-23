@@ -56,7 +56,7 @@ public class ChunkBufferPrimer extends ChunkPrimer {
     }
 
     @Override
-    public int func_186138_a(int x, int z) {
+    public int findGroundBlockIdx(int x, int z) {
         for (int y = 255; y >= 0; --y) {
             net.minecraft.block.BlockState iblockstate = func_177856_a(x, y, z);
 

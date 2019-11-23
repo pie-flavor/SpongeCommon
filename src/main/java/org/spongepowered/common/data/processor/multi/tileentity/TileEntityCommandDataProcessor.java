@@ -88,7 +88,7 @@ public class TileEntityCommandDataProcessor extends AbstractTileEntityDataProces
         ((CommandBlockBaseLogicAccessor) logic).accessor$setCommandStored((String) keyValues.get(Keys.COMMAND));
         ((CommandBlockBaseLogicAccessor) logic).accessor$setSuccessCount((int) keyValues.get(Keys.SUCCESS_COUNT));
         logic.func_175573_a((boolean) keyValues.get(Keys.TRACKS_OUTPUT));
-        entity.func_70296_d();
+        entity.markDirty();
         return true;
     }
 

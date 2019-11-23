@@ -43,7 +43,7 @@ public class PoweredPropertyStore extends AbstractSpongePropertyStore<PoweredPro
     public Optional<PoweredProperty> getFor(Location<World> location) {
         final BlockPos pos = VecHelper.toBlockPos(location);
         final net.minecraft.world.World world = (net.minecraft.world.World) location.getExtent();
-        return Optional.of(world.func_175640_z(pos) ? TRUE : FALSE);
+        return Optional.of(world.isBlockPowered(pos) ? TRUE : FALSE);
     }
 
     @Override
