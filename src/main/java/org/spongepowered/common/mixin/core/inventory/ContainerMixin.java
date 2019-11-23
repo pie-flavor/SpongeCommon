@@ -511,6 +511,7 @@ public abstract class ContainerMixin implements ContainerBridge, InventoryAdapte
                 result = ItemStack.EMPTY; // Return empty to stop shift-crafting
             }
         }
+
         this.impl$shiftCraft = false;
 
         return result;

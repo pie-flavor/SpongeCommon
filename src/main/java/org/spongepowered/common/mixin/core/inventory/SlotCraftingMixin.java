@@ -180,7 +180,7 @@ public abstract class SlotCraftingMixin extends Slot {
 
         final SlotTransaction last;
         if (previewTransactions.isEmpty()) {
-            last = new SlotTransaction(craftingInventory.getResult(), ItemStackSnapshot.NONE, ItemStackUtil.snapshotOf(this.func_75211_c()));
+            last = new SlotTransaction(craftingInventory.getResult(), ItemStackSnapshot.empty(), ItemStackUtil.snapshotOf(this.func_75211_c()));
             previewTransactions.add(last);
         } else {
             last = previewTransactions.get(0);
